@@ -1,0 +1,268 @@
+"""Custom Click classes for pyclif."""
+
+from dataclasses import dataclass
+from pathlib import Path
+
+import click_extra
+from boltons.iterutils import flatten, unique
+from click_extra import get_app_dir, get_current_context
+from click_extra.config import ConfigOption
+from extra_platforms import is_linux
+from rich_click import RichGroup, RichHelpConfiguration
+
+from .mixins import GlobalOptionsMixin, HandleResponseMixin, StoreInMetaMixin
+
+
+class PyclifOption(StoreInMetaMixin, click_extra.Option):
+    """Custom Click Option that can be marked as global for propagation."""
+
+    def __init__(self, *args, is_global: bool = False, **kwargs):
+        """Initialize the option.
+
+        Args:
+            *args: Positional arguments for click.Option.
+            is_global: If True, this option will be propagated to subcommands.
+            **kwargs: Keyword arguments for click.Option.
+        """
+        self.is_global = is_global
+        super().__init__(*args, **kwargs)
+
+
+class PyclifExtraGroup(HandleResponseMixin, GlobalOptionsMixin, click_extra.ExtraGroup):
+    """Custom group based on click-extra that propagates global options."""
+
+
+class PyclifRichGroup(HandleResponseMixin, GlobalOptionsMixin, RichGroup):
+    """Custom group based on rich-click that propagates global options."""
+
+
+# Alias for convenience
+PyclifGroup = PyclifExtraGroup
+
+
+class CustomConfigOption(StoreInMetaMixin, ConfigOption):
+    """Custom ConfigOption to add support for /etc/<cli_name> on Linux systems.
+
+    This class extends the default click-extra ConfigOption to include system-wide
+    configuration directories following Linux conventions while maintaining
+    cross-platform compatibility.
+    """
+
+    def __init__(self, *args, is_global: bool = False, **kwargs):
+        """Initialize the custom config option.
+
+        Args:
+            *args: Positional arguments.
+            is_global: If True, this option will be propagated to subcommands.
+            **kwargs: Keyword arguments.
+        """
+        self.is_global = is_global
+        super().__init__(*args, **kwargs)
+
+    def get_default(self, ctx, call=True):
+        """Override get_default to fix rich-click help rendering.
+
+        rich-click fetches the default with call=False during help generation,
+        which returns the raw bound method. We intercept this and force
+        evaluation to display the actual path cleanly.
+        """
+        default = super().get_default(ctx, call=call)
+        # If call=False returned a callable (our bound method), evaluate it anyway
+        if not call and callable(default):
+            # noinspection PyBroadException
+            try:
+                return default()
+            except Exception:
+                pass
+        return default
+
+    def default_pattern(self) -> str:
+        """Generate the default configuration search pattern.
+
+        Creates search patterns for configuration files, prioritizing Linux system
+        directories when running on Linux platforms. Falls back to standard
+        user configuration directories on other platforms.
+
+        Returns:
+            str: The primary configuration search pattern (typically the system path
+                on Linux, or user path on other platforms).
+
+        Raises:
+            RuntimeError: If no click context is available to determine CLI name.
+        """
+        # Get all possible configuration patterns
+        all_patterns = self._get_all_config_patterns()
+
+        if not all_patterns:
+            return self._get_fallback_pattern()
+
+        # Return the first pattern as the primary default
+        # On Linux: /etc/<cli_name>/*.{extensions}
+        # On other OS: ~/.config/<cli_name>/*.{extensions}
+        return ", ".join(all_patterns)
+
+    # noinspection PyUnresolvedReferences
+    def search_and_read_conf(self, pattern: str):
+        """Search and read configuration files from multiple locations.
+
+        Overrides the parent method to search in multiple configuration
+        directories in order of priority:
+        1. System-wide configuration (/etc/<cli_name>/ on Linux)
+        2. User configuration (~/.config/<cli_name>/)
+        3. Any explicitly provided pattern
+
+        Args:
+            pattern: The configuration file search pattern.
+
+        Yields:
+            Tuple containing configuration location and content for each
+            matching configuration file found.
+        """
+        # Get all possible configuration patterns
+        all_patterns = self._get_all_config_patterns()
+
+        # Search in each pattern location
+        for search_pattern in all_patterns:
+            yield from super().search_and_read_conf(search_pattern)
+
+        # Also search the explicitly provided pattern if it's not in our list
+        if pattern not in all_patterns:
+            yield from super().search_and_read_conf(pattern)
+
+    def _get_extension_pattern(self) -> str:
+        """Build a file extension pattern from supported formats.
+
+        Creates a glob-compatible extension pattern from the configured
+        formats, using either single extension or brace notation for
+        multiple extensions.
+
+        Returns:
+            str: Extension pattern for glob matching (e.g., 'toml' or '{toml,yaml,json}').
+        """
+        # Build file extension pattern from supported formats
+        extensions = []
+
+        if self.file_format_patterns:
+            patterns = unique(flatten(self.file_format_patterns.values()))
+            # Keep only generic extensions (e.g., "*.toml" -> "toml")
+            # and ignore specific file patterns like "pyproject.toml"
+            extensions.extend(pat[2:] for pat in patterns if pat.startswith("*."))
+
+        extensions = unique([ext for ext in extensions if ext])
+
+        if not extensions:
+            return "*"
+
+        # Create an extension pattern for glob matching
+        if len(extensions) == 1:
+            return extensions[0]
+        else:
+            # Use brace notation for multiple extension matching
+            return f"{{{','.join(extensions)}}}"
+
+    def _get_all_config_patterns(self) -> list[str]:
+        """Get all configuration search patterns in priority order.
+
+        Constructs file search patterns for different configuration locations
+        based on the current platform and supported file formats.
+
+        Returns:
+            List of glob patterns for configuration file search, ordered by
+            priority (system-wide first, then user-specific).
+
+        Raises:
+            RuntimeError: If no click context is available to determine CLI name.
+        """
+        patterns = []
+
+        # Get extension pattern
+        ext_pattern = self._get_extension_pattern()
+
+        # Get CLI name from click context
+        try:
+            ctx = get_current_context()
+            cli_name = ctx.find_root().info_name
+        except RuntimeError:
+            # No click context available - this can happen during testing
+            # or when called outside a click command context
+            return []
+
+        if not cli_name:
+            return []
+
+        # 1. Add a system-wide configuration path (Linux only)
+        if is_linux():
+            system_config_dir = Path(f"/etc/{cli_name}")
+            system_pattern = str(system_config_dir / f"*.{ext_pattern}")
+            patterns.append(system_pattern)
+
+        # 2. Add a user configuration directory (all platforms)
+        try:
+            roaming = getattr(self, "roaming", False)
+            force_posix = getattr(self, "force_posix", False)
+            app_dir = Path(
+                get_app_dir(cli_name, roaming=roaming, force_posix=force_posix)
+            ).resolve()
+            user_pattern = str(app_dir / f"*.{ext_pattern}")
+            patterns.append(user_pattern)
+        except (OSError, ValueError, TypeError) as e:
+            # Handle specific exceptions that can be raised by get_app_dir or Path operations:
+            # - OSError: File system-related errors (permissions, path issues, etc.)
+            # - ValueError: Invalid arguments passed to get_app_dir or Path
+            # - TypeError: Type-related issues with arguments
+            import logging
+
+            # noinspection PyUnresolvedReferences
+            logger = logging.getLogger(__name__)
+            logger.debug(f"Failed to get user config directory: {e}")
+            # Continue without user config pattern - system config may still work
+
+        return patterns
+
+    def _get_fallback_pattern(self) -> str:
+        """Get a fallback configuration pattern when normal detection fails.
+
+        Provides a basic configuration search pattern for cases where
+        the click context is not available or CLI name cannot be determined.
+
+        Returns:
+            str: A basic configuration file search pattern.
+        """
+        # Basic fallback pattern in the current directory
+        ext_pattern = self._get_extension_pattern()
+        return f"*.{ext_pattern}"
+
+
+@dataclass
+class GroupConfig:
+    """Configuration settings for CLI groups and applications."""
+
+    name: str | None = None
+    auto_envvar_prefix: str | None = None
+    show_envvar: bool = True
+
+    # Feature flags
+    add_config_option: bool = False
+    add_verbosity_option: bool = False
+    add_log_file_option: bool = False
+    add_version_option: bool = False
+    add_output_format_option: bool = False
+
+    # Logging settings
+    verbosity_default_level: str = "WARNING"
+    use_rich_logging: bool = True
+    enable_secrets_filter: bool = True
+
+    # Log file settings
+    log_file_default_level: str = "TRACE"
+    log_file_rotation_when: str = "midnight"
+    log_file_rotation_interval: int = 1
+    log_file_rotation_backup_count: int = 7
+
+    # Output format settings
+    output_format_default: str = "table"
+    handle_response: bool = False
+
+    # Help formatting
+    use_rich_help: bool = True
+    rich_help_config: "dict | str | RichHelpConfiguration | None" = None
