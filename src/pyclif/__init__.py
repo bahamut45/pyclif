@@ -13,8 +13,24 @@ from .core.decorators import (
     output_filter_option,
     returns_response,
 )
-from .core.logging import get_logger, logger
-from .core.logging.config import configure_rich_logging
+from .core.logging import (
+    PYCLIF_LOG_LEVELS,
+    TRACE,
+    RichExtraFormatter,
+    RichExtraStreamHandler,
+    SecretsMasker,
+    add_trace_method,
+    configure_rich_logging,
+    get_configured_logger,
+    get_logger,
+    logger,
+)
+from .core.mixins import (
+    GlobalOptionsMixin,
+    HandleResponseMixin,
+    OutputFormatMixin,
+    RichHelpersMixin,
+)
 from .core.output import CliTable, CliTableColumn, ExceptionTable, Response
 
 __all__ = [
@@ -29,6 +45,8 @@ __all__ = [
     "returns_response",
     "get_logger",
     "logger",
+    "add_trace_method",
+    "get_configured_logger",
     "configure_rich_logging",
     # class
     "BaseContext",
@@ -39,4 +57,14 @@ __all__ = [
     "CustomConfigOption",
     "PyclifGroup",
     "PyclifOption",
+    "GlobalOptionsMixin",
+    "HandleResponseMixin",
+    "OutputFormatMixin",
+    "RichHelpersMixin",
+    "RichExtraFormatter",
+    "RichExtraStreamHandler",
+    "SecretsMasker",
+    # Constants
+    "PYCLIF_LOG_LEVELS",
+    "TRACE",
 ]
