@@ -1,0 +1,145 @@
+[project]
+name = "pyclif"
+version = "0.0.1"
+description = "PYthon Command Line Interface Framework — decorator-driven CLI framework built on click-extra and rich-click"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Nicolas JOUBERT", email = "njoubert45@gmail.com" }
+]
+dependencies = [
+    "click-extra>=7.11.0,<8.0.0",
+    "rich-click>=1.9.7,<2.0.0",
+    "pyyaml>=6.0.3,<7.0.0",
+    "xmltodict>=1.0.0,<2.0.0",
+    "jinja2>=3.1.0,<4.0.0",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Utilities",
+]
+
+[project.scripts]
+pyclif = "pyclif.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/bahamut45/pyclif"
+Repository = "https://github.com/bahamut45/pyclif"
+Issues = "https://github.com/bahamut45/pyclif/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff",
+    "tox>=4.0",
+    "tox-uv>=1.0",
+    "bump-my-version>=0.28.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pyclif"]
+
+[tool.tox]
+env_list = ["py310", "py311", "py312", "py313"]
+isolated_build = true
+
+[tool.tox.env_run_base]
+runner = "uv-venv-lock-runner"
+deps = []
+package = "editable"
+extras = ["dev"]
+allowlist_externals = [
+    "python",
+]
+pass_env = [
+    "PATH",
+    "PYENV_ROOT",
+    "PYENV_VERSION",
+]
+commands_pre = [
+    ["python", "--version"],
+]
+commands = [
+    ["python", "-m", "pytest", "tests/", "-v"],
+    ["pyclif", "--help"],
+]
+
+[tool.tox.env.py310]
+base_python = ["python3.10"]
+
+[tool.tox.env.py311]
+base_python = ["python3.11"]
+
+[tool.tox.env.py312]
+base_python = ["python3.12"]
+
+[tool.tox.env.py313]
+base_python = ["python3.13"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "tox: marks tests as tox compatibility tests (deselect with '-m \"not tox\"')",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["pyclif"]
+
+[tool.bumpversion]
+current_version = "0.0.1"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+search = "{current_version}"
+replace = "{new_version}"
+regex = false
+ignore_missing_version = false
+tag = true
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "🚀 RELEASE: {current_version} → {new_version}"
+allow_dirty = false
+commit = true
+message = "🚀 RELEASE: {current_version} → {new_version}"
+commit_args = ""
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "README.md"
+search = 'version-{current_version}-green'
+replace = 'version-{new_version}-green'
+
+[[tool.bumpversion.files]]
+filename = "src/pyclif/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
