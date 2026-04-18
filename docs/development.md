@@ -80,7 +80,7 @@ uv run python -m pytest tests/ --cov=pyclif --cov-report=html
 ```python
 import pytest
 from click.testing import CliRunner
-from pyclif.core import app_group, command, option
+from pyclif import app_group, command, option
 
 
 @app_group()
@@ -207,15 +207,15 @@ commands = [
 
 pyclif uses conventional commits with emoji prefixes:
 
-| Prefix | Type       |
-|--------|------------|
-| ✨      | feat       |
-| 🐛      | fix        |
-| 📝      | docs       |
-| 🧪      | test       |
-| ♻️      | refactor   |
-| 🎨      | style      |
-| 🚀      | release    |
+| Prefix | Type     |
+|--------|----------|
+| ✨      | feat     |
+| 🐛     | fix      |
+| 📝     | docs     |
+| 🧪     | test     |
+| ♻️     | refactor |
+| 🎨     | style    |
+| 🚀     | release  |
 
 ## Release Process
 

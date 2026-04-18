@@ -32,7 +32,7 @@ pyclif is built on top of `click-extra` and `rich-click` and exposes four main d
 ## Quick Example
 
 ```python
-from pyclif.core import app_group, command, option
+from pyclif import app_group, command, option
 
 
 @app_group()

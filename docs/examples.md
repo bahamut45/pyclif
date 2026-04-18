@@ -5,7 +5,7 @@ Comprehensive examples of using pyclif decorators to build various types of CLI 
 ## Basic CLI Application
 
 ```python
-from pyclif.core import app_group, command, option
+from pyclif import app_group, command, option
 
 
 @app_group(
@@ -38,7 +38,7 @@ python myapp.py --log-file /tmp/myapp.log hello
 ## Database Management CLI
 
 ```python
-from pyclif.core import app_group, group, option
+from pyclif import app_group, group, option
 import click
 
 
@@ -96,7 +96,7 @@ dbmanager database backup -d /backups --tables users orders --no-compress
 ## Web Service CLI
 
 ```python
-from pyclif.core import app_group, group, option
+from pyclif import app_group, group, option
 import click
 
 
@@ -159,8 +159,7 @@ WEBCTL_PORT=9090 webctl service start
 ## Structured Output with Response
 
 ```python
-from pyclif.core import app_group, returns_response
-from pyclif.core.output import Response, CliTable, CliTableColumn
+from pyclif import app_group, returns_response, Response, CliTable, CliTableColumn
 import click
 
 
@@ -208,7 +207,7 @@ myapp -o yaml list-users                # YAML output
 ### Custom Validation
 
 ```python
-from pyclif.core import app_group, option
+from pyclif import app_group, option
 import click
 
 
@@ -241,7 +240,7 @@ def create_user(email, role):
 ### Global Options
 
 ```python
-from pyclif.core import app_group, option
+from pyclif import app_group, option
 import click
 
 

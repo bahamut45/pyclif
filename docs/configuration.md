@@ -70,7 +70,7 @@ For a CLI named "myapp" with prefix "MYAPP":
 ### Setting the Environment Variable Prefix
 
 ```python
-from pyclif.core import app_group
+from pyclif import app_group
 
 
 @app_group(auto_envvar_prefix="MYAPP")
@@ -93,7 +93,7 @@ options. The structure mirrors your command hierarchy — you don't manually cre
 ### Example CLI Structure
 
 ```python
-from pyclif.core import app_group, command, option
+from pyclif import app_group, command, option
 import click
 
 
@@ -233,7 +233,7 @@ myapp --config /path/to/custom-config.toml connect
 `@app_group` adds the configuration option automatically:
 
 ```python
-from pyclif.core import app_group
+from pyclif import app_group
 
 
 @app_group(add_config_option=True)  # default
@@ -245,7 +245,7 @@ def cli():
 ### Disabling Automatic Configuration
 
 ```python
-from pyclif.core import app_group
+from pyclif import app_group
 
 
 @app_group(add_config_option=False)
@@ -258,7 +258,7 @@ def cli():
 
 ```python
 import click_extra
-from pyclif.core import app_group, CustomConfigOption
+from pyclif import app_group, CustomConfigOption
 
 
 @click_extra.option(

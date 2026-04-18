@@ -46,7 +46,7 @@ The logging system lives in `src/pyclif/core/logging/`:
 ### Automatic Rich Logging with `@app_group`
 
 ```python
-from pyclif.core import app_group
+from pyclif import app_group
 
 
 @app_group()  # Rich logging enabled by default
@@ -69,7 +69,7 @@ def advanced_cli():
 ### Logging from Code
 
 ```python
-from pyclif.core.logging import logger, get_logger
+from pyclif import logger, get_logger
 
 # Use the pre-configured global logger
 logger.info("Application starting...")
@@ -96,12 +96,12 @@ MYAPP_VERBOSITY=TRACE myapp command
 ### File Logging
 
 ```python
-from pyclif.core import app_group
+from pyclif import app_group
 
 
 @app_group(
-    add_log_file_option=True,         # Adds --log-file option
-    log_file_default_level="TRACE",   # Default file log level
+    add_log_file_option=True,  # Adds --log-file option
+    log_file_default_level="TRACE",  # Default file log level
     log_file_rotation_when="midnight",
     log_file_rotation_backup_count=7
 )
@@ -119,8 +119,7 @@ Console verbosity (`--verbosity`) and file log level are independent.
 ### Centralized Configuration
 
 ```python
-from pyclif.core.logging.config import configure_rich_logging
-from pyclif.core.logging import get_logger
+from pyclif import get_logger, configure_rich_logging
 
 # Done automatically by @app_group — shown here for reference
 configure_rich_logging(
@@ -159,8 +158,7 @@ logger = get_logger()  # Automatically Rich-enabled
 ### Basic CLI with Rich Logging
 
 ```python
-from pyclif.core import app_group
-from pyclif.core.logging import logger
+from pyclif import app_group, logger
 
 
 @app_group()
@@ -181,7 +179,7 @@ def test():
 ### Advanced Configuration
 
 ```python
-from pyclif.core import app_group
+from pyclif import app_group
 
 
 @app_group(
@@ -202,6 +200,8 @@ def simple_cli():
 ### Rich Markup in Log Messages
 
 ```python
+from pyclif import logger
+
 logger.info("[green]✓[/green] Success!")
 logger.warning("[yellow]⚠[/yellow] Warning!")
 

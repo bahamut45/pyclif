@@ -26,8 +26,7 @@ without manually calling `ctx.print_response(response)`.
 ### Level 1 — App-wide: `@app_group(handle_response=True)`
 
 ```python
-from pyclif.core import app_group, option
-from pyclif.core.output import Response
+from pyclif import app_group, option, Response
 import click
 
 
@@ -59,8 +58,7 @@ def raw_cmd(ctx):
 ### Level 2 — Standalone command: `@command(handle_response=True)`
 
 ```python
-from pyclif.core import command, option
-from pyclif.core.output import Response
+from pyclif import command, option, Response
 import click
 
 
@@ -78,8 +76,7 @@ app.add_command(hello)
 ### Level 3 — Explicit decorator: `@returns_response`
 
 ```python
-from pyclif.core import returns_response
-from pyclif.core.output import Response
+from pyclif import returns_response, Response
 import click
 
 
@@ -112,8 +109,7 @@ Add `@output_filter_option()` to expose `--output-filter` / `-f`, which extracts
 response payload. Most useful with `raw` format for scripting and pipelines.
 
 ```python
-from pyclif.core import app_group, output_filter_option, returns_response
-from pyclif.core.output import Response
+from pyclif import app_group, output_filter_option, returns_response, Response
 import click
 
 
@@ -149,7 +145,7 @@ The filter looks first inside `data`, then falls back to top-level response fiel
 ## The Response Object
 
 ```python
-from pyclif.core.output import Response
+from pyclif import Response
 
 # Basic response
 response = Response(
@@ -157,6 +153,7 @@ response = Response(
     message="Operation completed successfully",
     data={"id": 1, "status": "active"}
 )
+
 
 # Response with custom table formatting
 def format_my_table(resp):
@@ -166,6 +163,7 @@ def format_my_table(resp):
         "status": CliTableColumn(header="Status"),
     }
     return CliTable(fields=fields, rows=[resp.data])
+
 
 response_with_table = Response(
     success=True,
@@ -179,9 +177,7 @@ response_with_table = Response(
 
 ```python
 import click
-from pyclif.core import app_group
-from pyclif.core.context import BaseContext
-from pyclif.core.output import Response
+from pyclif import app_group, BaseContext, Response
 
 
 @app_group()
@@ -205,13 +201,13 @@ def get_users(ctx):
 
 ## Supported Formats
 
-| Format  | Description                                                                    |
-|---------|--------------------------------------------------------------------------------|
-| `json`  | Response serialized as formatted JSON                                          |
-| `yaml`  | Response serialized as YAML with syntax highlighting                           |
-| `table` | Rich CLI table — uses `callback_table_output` if provided                      |
-| `rich`  | Rich rendering — uses `callback_rich_output` if provided                       |
-| `raw`   | Response serialized to dict and printed; supports key filtering                |
+| Format  | Description                                                     |
+|---------|-----------------------------------------------------------------|
+| `json`  | Response serialized as formatted JSON                           |
+| `yaml`  | Response serialized as YAML with syntax highlighting            |
+| `table` | Rich CLI table — uses `callback_table_output` if provided       |
+| `rich`  | Rich rendering — uses `callback_rich_output` if provided        |
+| `raw`   | Response serialized to dict and printed; supports key filtering |
 
 ### Error Handling
 
@@ -255,7 +251,7 @@ pyclif provides built-in table components:
 - **`ExceptionTable`**: Specialized table for displaying formatted exception details.
 
 ```python
-from pyclif.core.output import CliTable, CliTableColumn
+from pyclif import CliTable, CliTableColumn
 
 fields = {
     "id": CliTableColumn(header="ID", justify="right"),

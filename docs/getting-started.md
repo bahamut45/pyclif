@@ -18,7 +18,7 @@ pip install pyclif
 Here's a minimal example:
 
 ```python
-from pyclif.core import app_group, command, option
+from pyclif import app_group, command, option
 
 
 @app_group()
@@ -51,7 +51,7 @@ python my_cli.py hello -n "Alice"
 ### Step 1: Create the main group
 
 ```python
-from pyclif.core import app_group
+from pyclif import app_group
 
 
 @app_group(
@@ -66,7 +66,7 @@ def cli():
 ### Step 2: Add a simple command
 
 ```python
-from pyclif.core import app_group, option
+from pyclif import app_group, option
 
 
 @app_group(name="myapp", auto_envvar_prefix="MYAPP")
@@ -85,7 +85,7 @@ def hello(message):
 ### Step 3: Add a command group
 
 ```python
-from pyclif.core import group, option
+from pyclif import group, option
 
 
 @group(name="database")
