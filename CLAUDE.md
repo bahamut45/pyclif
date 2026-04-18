@@ -74,24 +74,24 @@ from pyclif import BaseContext, Response, get_logger
 - **Global option propagation**: Options marked `is_global=True` via `PyclifOption` are
   automatically propagated from parent groups to all subcommands via `GlobalOptionsMixin`.
 - **Automatic response handling**: `handle_response=True` on `@app_group` automatically wraps
-  all commands (including those added via `add_command()` and nested sub-groups) with
+  all commands (including those added via `add_command()` and nested subgroups) with
   `returns_response`, which intercepts `Response` return values and prints them.
 
 ### Key Modules
 
-| Module                     | Responsibility                                                                                     |
-|----------------------------|----------------------------------------------------------------------------------------------------|
-| `core/decorators.py`       | The four public decorators + `GroupDecorator` class + `returns_response`                           |
-| `core/classes.py`          | `PyclifOption`, `PyclifExtraGroup`/`PyclifRichGroup`, `CustomConfigOption`, `GroupConfig`          |
-| `core/context.py`          | `BaseContext` — composites RichHelpersMixin + OutputFormatMixin                                    |
-| `core/mixins/cli.py`       | `GlobalOptionsMixin`, `StoreInMetaMixin`                                                           |
-| `core/mixins/response.py`  | `HandleResponseMixin` — auto-wraps commands via `command()` and `add_command()`                    |
-| `core/mixins/output.py`    | `OutputFormatMixin` — dispatches to JSON/YAML/Table/Rich/Raw, `_FallbackEncoder` for JSON         |
-| `core/mixins/rich.py`      | `RichHelpersMixin` — Rich console helpers: panels, rules, status spinners, prompts                |
-| `core/output/responses.py` | `Response` dataclass: `(success, message, data, error_code)` + table/rich callbacks              |
-| `core/output/tables.py`    | `CliTable`, `CliTableColumn`, `ExceptionTable`                                                    |
-| `core/logging/`            | Rich-enhanced logging, custom `TRACE` level (5), `SecretsMasker`, `get_logger()` factory         |
-| `apps/project/`            | Scaffolding CLI — `pyclif project init / add app / add command / add integration`                 |
+| Module                     | Responsibility                                                                            |
+|----------------------------|-------------------------------------------------------------------------------------------|
+| `core/decorators.py`       | The four public decorators + `GroupDecorator` class + `returns_response`                  |
+| `core/classes.py`          | `PyclifOption`, `PyclifExtraGroup`/`PyclifRichGroup`, `CustomConfigOption`, `GroupConfig` |
+| `core/context.py`          | `BaseContext` — composites RichHelpersMixin + OutputFormatMixin                           |
+| `core/mixins/cli.py`       | `GlobalOptionsMixin`, `StoreInMetaMixin`                                                  |
+| `core/mixins/response.py`  | `HandleResponseMixin` — auto-wraps commands via `command()` and `add_command()`           |
+| `core/mixins/output.py`    | `OutputFormatMixin` — dispatches to JSON/YAML/Table/Rich/Raw, `_FallbackEncoder` for JSON |
+| `core/mixins/rich.py`      | `RichHelpersMixin` — Rich console helpers: panels, rules, status spinners, prompts        |
+| `core/output/responses.py` | `Response` dataclass: `(success, message, data, error_code)` + table/rich callbacks       |
+| `core/output/tables.py`    | `CliTable`, `CliTableColumn`, `ExceptionTable`                                            |
+| `core/logging/`            | Rich-enhanced logging, custom `TRACE` level (5), `SecretsMasker`, `get_logger()` factory  |
+| `apps/project/`            | Scaffolding CLI — `pyclif project init / add app / add command / add integration`         |
 
 ### Internal structure
 
