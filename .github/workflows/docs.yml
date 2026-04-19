@@ -8,6 +8,10 @@ on:
       - "v*"
   workflow_dispatch:
 
+concurrency:
+  group: docs-deploy
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -43,4 +47,6 @@ jobs:
 
       - name: Deploy dev docs (on main push)
         if: github.ref == 'refs/heads/main'
-        run: mike deploy --push dev
+        run: |
+          mike deploy --push --update-aliases dev latest
+          mike set-default --push latest

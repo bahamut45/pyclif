@@ -215,21 +215,22 @@ class GroupDecorator:
         return None
 
 
-# noinspection PyIncorrectDocstring
 def app_group(**kwargs: Any) -> Callable[[Callable[..., Any]], click_extra.Group]:
     """Decorator for the main CLI application entry point.
 
     Enables all automatic features (config, logging, version, etc.) by default.
     Options like --verbosity will be propagated to all subcommands.
 
+    All keyword arguments map to `GroupConfig` fields or are forwarded to Click.
+    Notable options:
+
+    - `handle_response` (bool): intercept and print `Response` objects automatically.
+    - `timer` (bool): inject `--time/--no-time`. Prints elapsed time in rich/table/raw;
+      injects `execution_time` and `execution_time_str` into `Response.data` in json/yaml.
+    - `output_format_default` (str): default for `--output-format` (json, yaml, table, rich, raw).
+
     Args:
-        handle_response: If True, automatically intercept and print Response objects
-            returned by any command in the group.
-        timer: If True, inject a --time/--no-time flag. In rich/table/raw output modes,
-            prints elapsed execution time after the command. In json/yaml modes, injects
-            execution_time (float, seconds) and execution_time_str into Response.data instead.
-        output_format_default: Default value for --output-format (json, yaml, table, rich, raw).
-        **kwargs: Additional GroupConfig fields or Click group arguments.
+        **kwargs: GroupConfig fields or Click group arguments.
 
     Returns:
         A decorator that wraps the function as a pyclif CLI group.
