@@ -38,9 +38,7 @@ class TestGlobalOptionPropagation:
         """Ensure that an option marked as global is available to child commands."""
         runner = CliRunner()
 
-        result = runner.invoke(
-            sample_cli, ["fetch-data", "--api-key", "secret-key-123"]
-        )
+        result = runner.invoke(sample_cli, ["fetch-data", "--api-key", "secret-key-123"])
 
         assert result.exit_code == 0, f"Command failed with output: {result.output}"
         assert "Using API Key: secret-key-123" in result.output
@@ -52,12 +50,12 @@ class TestGlobalOptionPropagation:
         result = runner.invoke(sample_cli, ["fetch-data", "--help"])
 
         print(
-            f"\n--- Help Output for fetch-data ---\n{result.output}----------------------------------"
+            f"\n--- Help Output for fetch-data ---\n"
+            f"{result.output}"
+            f"\n------------------------------------"
         )
 
-        assert result.exit_code == 0, (
-            f"Help command failed with output: {result.output}"
-        )
+        assert result.exit_code == 0, f"Help command failed with output: {result.output}"
         assert "--api-key" in result.output
         assert "Global API Key for" in result.output
 

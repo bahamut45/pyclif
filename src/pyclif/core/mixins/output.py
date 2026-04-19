@@ -7,8 +7,7 @@ from typing import Any
 import yaml
 from rich.syntax import Syntax
 
-from pyclif.core.output import ExceptionTable
-from pyclif.core.output import Response
+from pyclif.core.output import ExceptionTable, Response
 
 
 class _FallbackEncoder(json.JSONEncoder):
@@ -48,9 +47,7 @@ class OutputFormatMixin:
             "data": traceback.format_exc(),
         }
         if getattr(self, "output_format", None) == "table":
-            self.print_result_based_on_format(
-                message, options={"callback": ExceptionTable}
-            )
+            self.print_result_based_on_format(message, options={"callback": ExceptionTable})
         else:
             self.print_result_based_on_format(message)
 

@@ -63,7 +63,14 @@ def get_verbose_pyclif_rich_config() -> "RichHelpConfiguration | None":
         style_command="bold green",
         show_arguments=True,
         options_table_column_types=["required", "opt_short", "opt_long", "metavar", "help"],
-        options_table_help_sections=["help", "deprecated", "envvar", "default", "required", "metavar"],
+        options_table_help_sections=[
+            "help",
+            "deprecated",
+            "envvar",
+            "default",
+            "required",
+            "metavar",
+        ],
         style_options_table_show_lines=True,
         text_markup="rich",
     )

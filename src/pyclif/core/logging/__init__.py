@@ -1,7 +1,5 @@
 """Logging module for pyclif with Rich integration and click-extra compatibility."""
 
-import logging
-
 from .config import PyclifVerbosityOption, configure_rich_logging, get_configured_logger
 from .filters import SecretsMasker
 from .formatters import RichExtraFormatter

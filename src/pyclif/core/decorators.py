@@ -1,8 +1,9 @@
 """Core decorators for pyclif applications."""
 
 import functools
+from collections.abc import Callable
 from dataclasses import fields
-from typing import Any, Callable
+from typing import Any
 
 import click_extra
 from rich_click import rich_config
@@ -137,9 +138,7 @@ class GroupDecorator:
             def custom_make_context(info_name, args, parent=None, **extra):
                 """Dynamically generate auto_envvar_prefix based on the CLI name."""
                 if parent is None and info_name:
-                    derived_prefix = (
-                        info_name.upper().replace("-", "_").replace(" ", "_")
-                    )
+                    derived_prefix = info_name.upper().replace("-", "_").replace(" ", "_")
                     extra.setdefault("auto_envvar_prefix", derived_prefix)
                 return original_make_context(info_name, args, parent=parent, **extra)
 
@@ -596,9 +595,7 @@ def output_format_option(
 
     kwargs.setdefault(
         "type",
-        click_extra.Choice(
-            ["json", "yaml", "table", "rich", "raw"], case_sensitive=False
-        ),
+        click_extra.Choice(["json", "yaml", "table", "rich", "raw"], case_sensitive=False),
     )
     kwargs.setdefault("help", "Specify the output format for the command.")
 

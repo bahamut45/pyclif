@@ -10,11 +10,13 @@ from pyclif.apps.project.tables import ScaffoldingTable
 @pytest.fixture
 def response_factory():
     """Return a factory that builds a mock Response with given files and message."""
+
     def _make(files: list[dict], message: str = "Project 'my-app' created."):
         response = MagicMock()
         response.message = message
         response.data = {"files": files}
         return response
+
     return _make
 
 

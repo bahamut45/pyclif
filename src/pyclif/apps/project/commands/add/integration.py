@@ -1,6 +1,6 @@
 """pyclif project add integration <name>."""
 
-from pyclif import argument, command, option, pass_context, Response
+from pyclif import Response, argument, command, option, pass_context
 
 from ...interfaces import ScaffoldingInterface
 from ...tables import ErrorTable, ScaffoldingTable
@@ -8,7 +8,9 @@ from ...tables import ErrorTable, ScaffoldingTable
 
 @command()
 @argument("name")
-@option("--package", is_flag=True, default=False, help="Generate a package instead of a single file.")
+@option(
+    "--package", is_flag=True, default=False, help="Generate a package instead of a single file."
+)
 @pass_context
 def integration(ctx, name: str, package: bool) -> Response:
     """Add an integration to the current project."""
@@ -22,4 +24,6 @@ def integration(ctx, name: str, package: bool) -> Response:
             callback_table_output=ScaffoldingTable,
         )
     except (FileExistsError, FileNotFoundError) as e:
-        return Response(success=False, message=str(e), error_code=1, callback_table_output=ErrorTable)
+        return Response(
+            success=False, message=str(e), error_code=1, callback_table_output=ErrorTable
+        )

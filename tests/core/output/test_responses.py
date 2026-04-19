@@ -82,9 +82,7 @@ class TestResponse:
     def test_to_table_with_callback(self) -> None:
         """Test that to_table executes the callback_table_output if provided."""
         mock_callback = MagicMock(return_value="Table Output")
-        response = Response(
-            success=True, message="Table test", callback_table_output=mock_callback
-        )
+        response = Response(success=True, message="Table test", callback_table_output=mock_callback)
 
         assert response.to_table() == "Table Output"
         mock_callback.assert_called_once_with(response)
@@ -93,17 +91,13 @@ class TestResponse:
         """Test that to_table raises a RuntimeError when no callback is provided."""
         response = Response(success=True, message="No callback test")
 
-        with pytest.raises(
-            RuntimeError, match="No Callback to generate table output available"
-        ):
+        with pytest.raises(RuntimeError, match="No Callback to generate table output available"):
             response.to_table()
 
     def test_to_rich_with_callback(self) -> None:
         """Test that to_rich executes the callback_rich_output if provided."""
         mock_callback = MagicMock(return_value="Rich Output")
-        response = Response(
-            success=True, message="Rich test", callback_rich_output=mock_callback
-        )
+        response = Response(success=True, message="Rich test", callback_rich_output=mock_callback)
 
         assert response.to_rich() == "Rich Output"
         mock_callback.assert_called_once_with(response)
@@ -112,7 +106,5 @@ class TestResponse:
         """Test that to_rich raises a RuntimeError when no callback is provided."""
         response = Response(success=True, message="No callback test")
 
-        with pytest.raises(
-            RuntimeError, match="No Callback to generate rich output available"
-        ):
+        with pytest.raises(RuntimeError, match="No Callback to generate rich output available"):
             response.to_rich()

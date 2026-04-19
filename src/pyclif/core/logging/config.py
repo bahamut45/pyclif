@@ -62,7 +62,7 @@ class PyclifVerbosityOption(BaseVerbosityOption):
     def __init__(
         self,
         param_decls=None,
-        type=Choice(PYCLIF_LOG_LEVELS, case_sensitive=False),
+        type=Choice(PYCLIF_LOG_LEVELS, case_sensitive=False),  # noqa: B008
         help="Either TRACE, DEBUG, INFO, WARNING, ERROR, CRITICAL.",
         is_global: bool = False,
         **kwargs,
@@ -126,9 +126,7 @@ def configure_rich_logging(
 
         # Save existing file handlers before force configuration wipes them
         root_logger = logging.getLogger()
-        file_handlers = [
-            h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)
-        ]
+        file_handlers = [h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)]
 
         _preconfigure_click_extra_logger(shared_handler)
 
@@ -164,9 +162,7 @@ def _preconfigure_click_extra_logger(handler: logging.Handler):
 
     # Preserve existing file handlers
     file_handlers = [
-        h
-        for h in click_extra_logger.handlers
-        if isinstance(h, TimedRotatingFileHandler)
+        h for h in click_extra_logger.handlers if isinstance(h, TimedRotatingFileHandler)
     ]
 
     click_extra_logger.handlers.clear()
@@ -213,17 +209,14 @@ def setup_file_logging(
                 break
 
     console_level_name = (
-        ctx.meta.get("click_extra.verbosity_level", default_verbosity)
-        if ctx
-        else default_verbosity
+        ctx.meta.get("click_extra.verbosity_level", default_verbosity) if ctx else default_verbosity
     )
     console_level_int = PYCLIF_LOG_LEVELS.get(console_level_name, logging.WARNING)
 
     # Ensure stream handlers don't spam if we lower the root logger level
     for h in root_logger.handlers:
-        if isinstance(h, RichExtraStreamHandler):
-            if h.level == logging.NOTSET:
-                h.setLevel(console_level_int)
+        if isinstance(h, RichExtraStreamHandler) and h.level == logging.NOTSET:
+            h.setLevel(console_level_int)
 
     click_extra_logger = logging.getLogger("click_extra")
 

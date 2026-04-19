@@ -50,9 +50,7 @@ class GlobalOptionsMixin:
                 self._propagate_global_options(subcommand, global_options)
 
     # noinspection PyUnresolvedReferences
-    def add_command(
-        self, cmd: click_extra.Command, name: str | None = None, **kwargs: Any
-    ) -> None:
+    def add_command(self, cmd: click_extra.Command, name: str | None = None, **kwargs: Any) -> None:
         """Register a subcommand and inject global options.
 
         Args:
@@ -62,9 +60,7 @@ class GlobalOptionsMixin:
         """
         # 1. Find global options attached to this group
         global_options = [
-            param
-            for param in getattr(self, "params", [])
-            if getattr(param, "is_global", False)
+            param for param in getattr(self, "params", []) if getattr(param, "is_global", False)
         ]
 
         # 2. Inject them recursively into the subcommand and all its descendants

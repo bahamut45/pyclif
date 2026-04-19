@@ -1,18 +1,15 @@
 """Tests for the returns_response decorator and command/group handle_response support."""
 
-from unittest.mock import MagicMock, patch
-
 import click
-import pytest
 from click.testing import CliRunner
 
 from pyclif.core import app_group, command, group, option, output_filter_option, returns_response
 from pyclif.core.output import Response
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_app(handle_response_at_group=False, output_format_default="raw"):
     """Build a minimal CLI for testing.
@@ -35,6 +32,7 @@ def _make_app(handle_response_at_group=False, output_format_default="raw"):
 # ---------------------------------------------------------------------------
 # returns_response decorator
 # ---------------------------------------------------------------------------
+
 
 class TestReturnsResponseDecorator:
     """Tests for the standalone @returns_response decorator."""
@@ -110,6 +108,7 @@ class TestReturnsResponseDecorator:
 # @command(handle_response=True) — standalone decorator
 # ---------------------------------------------------------------------------
 
+
 class TestCommandHandleResponse:
     """Tests for @command(handle_response=True) used with add_command."""
 
@@ -154,6 +153,7 @@ class TestCommandHandleResponse:
 # ---------------------------------------------------------------------------
 # @app_group(handle_response=True) — group-level default
 # ---------------------------------------------------------------------------
+
 
 class TestGroupHandleResponse:
     """Tests for handle_response propagation from @app_group."""
@@ -297,6 +297,7 @@ class TestGroupHandleResponse:
 # ---------------------------------------------------------------------------
 # output_filter_option decorator
 # ---------------------------------------------------------------------------
+
 
 class TestOutputFilterOption:
     """Tests for the @output_filter_option() decorator."""

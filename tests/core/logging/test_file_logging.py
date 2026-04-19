@@ -36,9 +36,7 @@ def test_setup_file_logging(tmp_path):
     setup_file_logging(str(log_file), level="DEBUG", enable_secrets_filter=True)
 
     root_logger = logging.getLogger()
-    file_handlers = [
-        h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)
-    ]
+    file_handlers = [h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)]
 
     assert len(file_handlers) == 1
 
@@ -58,9 +56,7 @@ def test_setup_file_logging_idempotency(tmp_path):
     setup_file_logging(str(log_file), level="DEBUG")
 
     root_logger = logging.getLogger()
-    file_handlers = [
-        h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)
-    ]
+    file_handlers = [h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)]
 
     assert len(file_handlers) == 1
 

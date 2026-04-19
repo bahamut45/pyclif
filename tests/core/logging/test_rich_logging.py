@@ -44,7 +44,9 @@ class TestLoggingConfiguration:
     @patch("pyclif.core.logging.config.extraBasicConfig")
     @patch("pyclif.core.logging.config._preconfigure_click_extra_logger")
     @patch("pyclif.core.logging.config.logging.getLogger")
-    def test_configure_rich_logging_basic(self, mock_get_logger, mock_preconfigure, mock_extra_config):
+    def test_configure_rich_logging_basic(
+        self, mock_get_logger, mock_preconfigure, mock_extra_config
+    ):
         """Test basic configure_rich_logging functionality."""
         mock_root_logger = Mock()
         mock_root_logger.handlers = []
@@ -253,9 +255,7 @@ class TestSecretsMasker:
 
     def test_masker_handles_nested_structures(self, masker):
         """Test that SecretsMasker handles nested data structures."""
-        test_data = {
-            "config": {"database": {"host": "localhost", "password": "db_secret"}}
-        }
+        test_data = {"config": {"database": {"host": "localhost", "password": "db_secret"}}}
 
         redacted = masker.redact(test_data)
 
@@ -307,9 +307,7 @@ class TestPyclifVerbosityOption:
         assert "--verbosity" in verbosity_option.opts
 
     @patch("pyclif.core.logging.config.configure_rich_logging")
-    def test_set_level_calls_configure_rich_logging(
-        self, mock_configure, verbosity_option
-    ):
+    def test_set_level_calls_configure_rich_logging(self, mock_configure, verbosity_option):
         """Test that set_level calls configure_rich_logging."""
         mock_ctx = Mock()
         mock_ctx.meta = {}

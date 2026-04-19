@@ -25,9 +25,7 @@ class TestRichHelpersMixin:
         """Test that rich_panel creates a Panel and prints it if requested."""
         context = DummyRichContext()
 
-        panel = context.rich_panel(
-            text="Test content", title="Test Title", console_print=True
-        )
+        panel = context.rich_panel(text="Test content", title="Test Title", console_print=True)
 
         assert isinstance(panel, Panel)
         assert panel.renderable == "Test content"
@@ -53,9 +51,7 @@ class TestRichHelpersMixin:
 
         context.show_status(message="Loading...", spinner="bouncingBar")
 
-        context.console.status.assert_called_once_with(
-            "Loading...", spinner="bouncingBar"
-        )
+        context.console.status.assert_called_once_with("Loading...", spinner="bouncingBar")
 
     @patch("pyclif.core.mixins.rich.Prompt.ask")
     def test_ask_user(self, mock_prompt_ask: MagicMock) -> None:

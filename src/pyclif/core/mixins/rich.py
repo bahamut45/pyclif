@@ -84,7 +84,9 @@ class RichHelpersMixin:
         Returns:
             The user's input.
         """
-        return Prompt.ask(question, default=default, choices=choices, password=password, console=self.console)  # type: ignore
+        return Prompt.ask(
+            question, default=default, choices=choices, password=password, console=self.console
+        )  # type: ignore
 
     def ask_confirmation(self, question: str, default: bool = False) -> bool:
         """Ask the user a yes or no confirmation question.

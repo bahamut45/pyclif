@@ -133,15 +133,13 @@ class HandleResponseMixin:
                     cmd.callback = returns_response(cmd.callback)
                 else:
                     _log.debug(
-                        "HandleResponseMixin.add_command: skipping leaf '%s' "
-                        "(already_decided=%s)",
+                        "HandleResponseMixin.add_command: skipping leaf '%s' (already_decided=%s)",
                         cmd.name,
                         already_decided,
                     )
         else:
             _log.debug(
-                "HandleResponseMixin.add_command: handle_response_by_default=False, "
-                "skipping '%s'",
+                "HandleResponseMixin.add_command: handle_response_by_default=False, skipping '%s'",
                 cmd.name,
             )
         # noinspection PyUnresolvedReferences

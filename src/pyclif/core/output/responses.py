@@ -1,8 +1,9 @@
 """Response class"""
 
 import dataclasses
+from collections.abc import Callable
 from operator import attrgetter
-from typing import Any, Callable
+from typing import Any
 
 NON_SERIALIZABLE_FIELDS = ["callback_table_output", "callback_rich_output"]
 

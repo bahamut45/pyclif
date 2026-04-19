@@ -41,4 +41,6 @@ def init(ctx, name: str, integrations: str, package_manager: str) -> Response:
             callback_table_output=ScaffoldingTable,
         )
     except (FileExistsError, FileNotFoundError, ValueError) as e:
-        return Response(success=False, message=str(e), error_code=1, callback_table_output=ErrorTable)
+        return Response(
+            success=False, message=str(e), error_code=1, callback_table_output=ErrorTable
+        )

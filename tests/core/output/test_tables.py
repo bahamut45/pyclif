@@ -54,7 +54,7 @@ class TestCliTableColumn:
         assert col_dict["style"] == "blue"
 
         assert "no_wrap" not in col_dict
-        assert not any(key.startswith("_") for key in col_dict.keys())
+        assert not any(key.startswith("_") for key in col_dict)
 
 
 class TestCliTable:

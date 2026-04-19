@@ -1,6 +1,7 @@
 """Core callback functions for pyclif applications."""
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import click_extra
 from click_extra import ParameterSource

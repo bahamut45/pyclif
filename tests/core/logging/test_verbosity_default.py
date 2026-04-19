@@ -4,7 +4,7 @@ import logging
 
 from click.testing import CliRunner
 
-from pyclif.core.decorators import app_group, group
+from pyclif.core.decorators import app_group
 from pyclif.core.logging.config import configure_rich_logging
 
 # Store original logging state to restore after tests
@@ -156,9 +156,7 @@ class TestVerbosityIsGlobalPropagation:
             pass
 
         verbosity_param = next((p for p in cli.params if p.name == "verbosity"), None)
-        assert verbosity_param is not None, (
-            "The --verbosity option must exist on app_group"
-        )
+        assert verbosity_param is not None, "The --verbosity option must exist on app_group"
         assert getattr(verbosity_param, "is_global", False) is True, (
             "The --verbosity option must have is_global=True to be propagated to subcommands"
         )
@@ -176,9 +174,7 @@ class TestVerbosityIsGlobalPropagation:
             """Dummy command."""
             pass
 
-        verbosity_param = next(
-            (p for p in do_work.params if p.name == "verbosity"), None
-        )
+        verbosity_param = next((p for p in do_work.params if p.name == "verbosity"), None)
         assert verbosity_param is not None, (
             "The --verbosity parameter must be propagated to the subcommand via is_global=True"
         )

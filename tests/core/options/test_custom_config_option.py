@@ -71,9 +71,7 @@ class TestCustomConfigOption:
     @patch("pyclif.core.classes.is_linux")
     @patch("pyclif.core.classes.get_app_dir")
     @patch("pyclif.core.classes.get_current_context")
-    def test_get_all_config_patterns_linux(
-        self, mock_get_context, mock_get_app_dir, mock_is_linux
-    ):
+    def test_get_all_config_patterns_linux(self, mock_get_context, mock_get_app_dir, mock_is_linux):
         """Test _get_all_config_patterns on a Linux platform."""
         mock_is_linux.return_value = True
         mock_context = Mock()
@@ -105,9 +103,7 @@ class TestCustomConfigOption:
         mock_context = Mock()
         mock_context.find_root().info_name = "test-cli"
         mock_get_context.return_value = mock_context
-        mock_get_app_dir.return_value = (
-            "/Users/user/Library/Application Support/test-cli"
-        )
+        mock_get_app_dir.return_value = "/Users/user/Library/Application Support/test-cli"
 
         option = CustomConfigOption()
         patch_option_formats(option, {"yaml": ["*.yaml"]})
@@ -122,9 +118,7 @@ class TestCustomConfigOption:
 
     @patch("pyclif.core.classes.get_app_dir")
     @patch("pyclif.core.classes.get_current_context")
-    def test_get_all_config_patterns_app_dir_error(
-        self, mock_get_context, mock_get_app_dir
-    ):
+    def test_get_all_config_patterns_app_dir_error(self, mock_get_context, mock_get_app_dir):
         """Test _get_all_config_patterns handles get_app_dir errors gracefully."""
         mock_context = Mock()
         mock_context.find_root().info_name = "test-cli"

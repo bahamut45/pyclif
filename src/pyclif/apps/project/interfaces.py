@@ -51,18 +51,18 @@ class ScaffoldingInterface:
         pkg = f"src/{ns['name_snake']}"
         pm_tmpl = f"pyproject_{package_manager}.toml.jinja2"
         files = [
-            (root / "pyproject.toml",                        pm_tmpl),
-            (root / "README.md",                             "readme.md.jinja2"),
-            (root / ".gitignore",                            "gitignore.jinja2"),
-            (root / f"{pkg}/__init__.py",                    "project_package_init.py.jinja2"),
-            (root / f"{pkg}/cli.py",                         "project_cli.py.jinja2"),
-            (root / f"{pkg}/core/context.py",                "project_context.py.jinja2"),
-            (root / f"{pkg}/core/constants.py",              "project_constants.py.jinja2"),
-            (root / f"{pkg}/core/options.py",                "project_options.py.jinja2"),
-            (root / f"{pkg}/core/integrations/__init__.py",  "project_integrations_init.py.jinja2"),
-            (root / f"{pkg}/apps/__init__.py",               "project_apps_init.py.jinja2"),
-            (root / "tests/__init__.py",                     "tests_init.py.jinja2"),
-            (root / "tests/conftest.py",                     "tests_conftest.py.jinja2"),
+            (root / "pyproject.toml", pm_tmpl),
+            (root / "README.md", "readme.md.jinja2"),
+            (root / ".gitignore", "gitignore.jinja2"),
+            (root / f"{pkg}/__init__.py", "project_package_init.py.jinja2"),
+            (root / f"{pkg}/cli.py", "project_cli.py.jinja2"),
+            (root / f"{pkg}/core/context.py", "project_context.py.jinja2"),
+            (root / f"{pkg}/core/constants.py", "project_constants.py.jinja2"),
+            (root / f"{pkg}/core/options.py", "project_options.py.jinja2"),
+            (root / f"{pkg}/core/integrations/__init__.py", "project_integrations_init.py.jinja2"),
+            (root / f"{pkg}/apps/__init__.py", "project_apps_init.py.jinja2"),
+            (root / "tests/__init__.py", "tests_init.py.jinja2"),
+            (root / "tests/conftest.py", "tests_conftest.py.jinja2"),
         ]
         return [p for dest, tmpl in files for p in self._write_rendered(dest, tmpl, ns)]
 
@@ -241,7 +241,9 @@ class ScaffoldingInterface:
         """
         return self._env.get_template(template_name).render(**variables)
 
-    def _write_rendered(self, path: Path, template_name: str, variables: dict) -> list[dict[str, str]]:
+    def _write_rendered(
+        self, path: Path, template_name: str, variables: dict
+    ) -> list[dict[str, str]]:
         """Render a template and write it to disk.
 
         Args:
