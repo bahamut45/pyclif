@@ -1,8 +1,9 @@
 """pyclif project add app <name>."""
 
-from pyclif import Response, argument, command, pass_context
+from pyclif import argument, command, pass_context, Response
 
 from ...interfaces import ScaffoldingInterface
+from ...tables import ScaffoldingTable
 
 
 @command()
@@ -16,4 +17,5 @@ def app(ctx, name: str) -> Response:
         success=True,
         message=f"App '{name}' created.",
         data={"files": created},
+        callback_table_output=ScaffoldingTable,
     )

@@ -5,6 +5,7 @@ from pathlib import Path
 from pyclif import Choice, Response, argument, command, option, pass_context
 
 from ..interfaces import ScaffoldingInterface
+from ..tables import ScaffoldingTable
 
 
 @command()
@@ -36,4 +37,5 @@ def init(ctx, name: str, integrations: str, package_manager: str) -> Response:
         success=True,
         message=f"Project '{name}' created.",
         data={"files": created},
+        callback_table_output=ScaffoldingTable,
     )

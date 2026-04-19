@@ -5,7 +5,7 @@ from pyclif import app_group
 from .apps import groups
 
 
-@app_group()
+@app_group(handle_response=True)
 def app():
     """pyclif — CLI framework and project scaffolding."""
 

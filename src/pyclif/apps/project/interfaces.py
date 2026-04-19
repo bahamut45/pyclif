@@ -24,7 +24,7 @@ class ScaffoldingInterface:
             keep_trailing_newline=True,
         )
 
-    def init_project(self, name: str, package_manager: str = "uv") -> list[str]:
+    def init_project(self, name: str, package_manager: str = "uv") -> list[dict[str, str]]:
         """Create a full project skeleton in a new directory.
 
         Args:
@@ -66,7 +66,7 @@ class ScaffoldingInterface:
         ]
         return [p for dest, tmpl in files for p in self._write_rendered(dest, tmpl, ns)]
 
-    def add_app(self, name: str) -> list[str]:
+    def add_app(self, name: str) -> list[dict[str, str]]:
         """Create an app skeleton inside the current project's apps/ directory.
 
         Args:
@@ -94,7 +94,7 @@ class ScaffoldingInterface:
         created = [p for dest, tmpl in files for p in self._write_rendered(dest, tmpl, ns)]
         return created + self._wire_app(ns["name_snake"])
 
-    def add_command(self, name: str, app: str) -> list[str]:
+    def add_command(self, name: str, app: str) -> list[dict[str, str]]:
         """Create a command file inside an app's commands/ directory.
 
         Args:
@@ -123,7 +123,7 @@ class ScaffoldingInterface:
             ns["name_snake"], app
         )
 
-    def add_integration(self, name: str, package: bool = False) -> list[str]:
+    def add_integration(self, name: str, package: bool = False) -> list[dict[str, str]]:
         """Create an integration module inside core/integrations/.
 
         Args:
@@ -164,7 +164,7 @@ class ScaffoldingInterface:
 
         return created + self._wire_integration(ns["name_snake"], ns["name_pascal"])
 
-    def _wire_app(self, name_snake: str) -> list[str]:
+    def _wire_app(self, name_snake: str) -> list[dict[str, str]]:
         """Append import and groups.append call to apps/__init__.py.
 
         Args:
@@ -179,9 +179,9 @@ class ScaffoldingInterface:
             apps_init,
             f"\nfrom .{name_snake} import {name_snake}\ngroups.append({name_snake})\n",
         )
-        return [str(apps_init)]
+        return [{"file": str(apps_init), "action": "modified"}]
 
-    def _wire_command(self, name_snake: str, app: str) -> list[str]:
+    def _wire_command(self, name_snake: str, app: str) -> list[dict[str, str]]:
         """Append import and commands.append call to the app's commands/__init__.py.
 
         Args:
@@ -197,9 +197,9 @@ class ScaffoldingInterface:
             commands_init,
             f"\nfrom .{name_snake} import {name_snake}\ncommands.append({name_snake})\n",
         )
-        return [str(commands_init)]
+        return [{"file": str(commands_init), "action": "modified"}]
 
-    def _wire_integration(self, name_snake: str, name_pascal: str) -> list[str]:
+    def _wire_integration(self, name_snake: str, name_pascal: str) -> list[dict[str, str]]:
         """Inject an integration import and property stub into core/context.py.
 
         Args:
@@ -227,7 +227,7 @@ class ScaffoldingInterface:
             1,
         )
         context_file.write_text(content)
-        return [str(context_file)]
+        return [{"file": str(context_file), "action": "modified"}]
 
     def _render(self, template_name: str, variables: dict) -> str:
         """Render a Jinja2 template with the given variables.
@@ -241,7 +241,7 @@ class ScaffoldingInterface:
         """
         return self._env.get_template(template_name).render(**variables)
 
-    def _write_rendered(self, path: Path, template_name: str, variables: dict) -> list[str]:
+    def _write_rendered(self, path: Path, template_name: str, variables: dict) -> list[dict[str, str]]:
         """Render a template and write it to disk.
 
         Args:
@@ -259,7 +259,7 @@ class ScaffoldingInterface:
             raise FileExistsError(f"File '{path}' already exists.")
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(self._render(template_name, variables))
-        return [str(path)]
+        return [{"file": str(path), "action": "created"}]
 
     @staticmethod
     def _append_to_file(path: Path, content: str) -> None:
