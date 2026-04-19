@@ -120,6 +120,22 @@ When you use `@app_group`, you automatically get:
 - **Output format option**: `--output-format` / `-o`
 - **Environment variable support**: With your custom prefix
 
+### Execution timer
+
+Pass `timer=True` to enable a `--time/--no-time` flag:
+
+```python
+@app_group(handle_response=True, timer=True)
+def cli():
+    """My CLI."""
+```
+
+```bash
+my-app --time deploy
+# rich/table/raw → prints: Execution time: 1.234 seconds.
+# json/yaml      → injects {"execution_time": 1.234, "execution_time_str": "1.234s"} into Response.data
+```
+
 ## Testing Your CLI
 
 ```bash

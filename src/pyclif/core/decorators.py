@@ -18,6 +18,7 @@ from .classes import (
     PyclifExtraGroup,
     PyclifOption,
     PyclifRichGroup,
+    PyclifTimerOption,
     StoreInMetaMixin,
 )
 from .logging.config import PyclifVerbosityOption, create_log_file_callback
@@ -86,6 +87,9 @@ class GroupDecorator:
 
     def _apply_automatic_options(self, f: Callable) -> Callable:
         """Inject options like --config, --verbosity, etc., based on the config."""
+        if self.config.timer:
+            f = click_extra.option("--time/--no-time", cls=PyclifTimerOption)(f)
+
         if getattr(self.config, "add_output_format_option", True):
             f = output_format_option(
                 default_output_format=self.config.output_format_default, is_global=True
@@ -211,11 +215,24 @@ class GroupDecorator:
         return None
 
 
+# noinspection PyIncorrectDocstring
 def app_group(**kwargs: Any) -> Callable[[Callable[..., Any]], click_extra.Group]:
     """Decorator for the main CLI application entry point.
 
     Enables all automatic features (config, logging, version, etc.) by default.
     Options like --verbosity will be propagated to all subcommands.
+
+    Args:
+        handle_response: If True, automatically intercept and print Response objects
+            returned by any command in the group.
+        timer: If True, inject a --time/--no-time flag. In rich/table/raw output modes,
+            prints elapsed execution time after the command. In json/yaml modes, injects
+            execution_time (float, seconds) and execution_time_str into Response.data instead.
+        output_format_default: Default value for --output-format (json, yaml, table, rich, raw).
+        **kwargs: Additional GroupConfig fields or Click group arguments.
+
+    Returns:
+        A decorator that wraps the function as a pyclif CLI group.
     """
     config_fields = {f.name for f in fields(GroupConfig)}
     config_kwargs = {k: v for k, v in kwargs.items() if k in config_fields}
@@ -277,6 +294,7 @@ def returns_response(f: Callable) -> Callable:
     def wrapper(*args: Any, **kwargs: Any) -> Any:
         """Wrapper for returning a Response object based on command output"""
         import logging
+        from time import perf_counter
 
         _log = logging.getLogger(__name__)
         result = f(*args, **kwargs)
@@ -305,6 +323,18 @@ def returns_response(f: Callable) -> Callable:
             output_ctx = obj if isinstance(obj, BaseContext) else BaseContext()
             meta = root.meta if root is not None else {}
             output_format = meta.get("pyclif.output_format", "raw")
+
+            # Inject execution time into structured output when timer is active.
+            start_time = meta.get("click_extra.start_time")
+            if (
+                start_time is not None
+                and output_format in ("json", "yaml")
+                and isinstance(result.data, dict)
+            ):
+                # noinspection PyTypeChecker
+                elapsed = perf_counter() - start_time
+                result.data["execution_time"] = round(elapsed, 3)
+                result.data["execution_time_str"] = f"{elapsed:.3f}s"
             output_ctx.output_format = output_format
             _log.debug(
                 "returns_response: ctx.obj type=%s, using output_ctx type=%s, "

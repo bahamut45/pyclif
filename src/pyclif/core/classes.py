@@ -3,11 +3,12 @@
 from collections.abc import Generator
 from dataclasses import dataclass
 from pathlib import Path
+from time import perf_counter
 from typing import Any
 
 import click_extra
 from boltons.iterutils import flatten, unique
-from click_extra import get_app_dir, get_current_context
+from click_extra import TimerOption, get_app_dir, get_current_context
 from click_extra.config import ConfigOption
 from extra_platforms import is_linux
 from rich_click import RichGroup, RichHelpConfiguration
@@ -28,6 +29,38 @@ class PyclifOption(StoreInMetaMixin, click_extra.Option):
         """
         self.is_global = is_global
         super().__init__(*args, **kwargs)
+
+
+class PyclifTimerOption(TimerOption):
+    """TimerOption integrated with pyclif output format.
+
+    Skips the text echo in json/yaml mode — timing data is injected directly
+    into the Response by returns_response instead.
+    """
+
+    # noinspection PyAttributeOutsideInit
+    def register_timer_on_close(
+        self, ctx: click_extra.Context, param: click_extra.Parameter, value: bool
+    ) -> None:
+        """Register the timer and store the context for deferred format check."""
+        if not value:
+            return
+        self.start_time = perf_counter()
+        self._close_ctx = ctx
+        ctx.meta["click_extra.start_time"] = self.start_time
+        ctx.call_on_close(self.print_timer)
+
+    def print_timer(self) -> None:
+        """Print elapsed time unless the output format is json or yaml.
+
+        Output format is read at close time so that eager option processing
+        order does not matter — meta is fully populated by then.
+        """
+        output_format = self._close_ctx.find_root().meta.get("pyclif.output_format", "table")
+        if output_format in ("json", "yaml"):
+            return
+        elapsed = perf_counter() - self.start_time
+        click_extra.echo(f"Execution time: {elapsed:.3f} seconds.")
 
 
 class PyclifExtraGroup(HandleResponseMixin, GlobalOptionsMixin, click_extra.ExtraGroup):
@@ -264,6 +297,7 @@ class GroupConfig:
     # Output format settings
     output_format_default: str = "table"
     handle_response: bool = False
+    timer: bool = False
 
     # Help formatting
     use_rich_help: bool = True

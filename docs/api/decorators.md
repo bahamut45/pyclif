@@ -50,3 +50,13 @@ Decorator that intercepts a `Response` return value and dispatches it to the for
 Applied automatically when `handle_response=True` on `@app_group`.
 
 ::: pyclif.returns_response
+
+---
+
+## PyclifTimerOption
+
+Internal option class powering `timer=True` on `@app_group`. Subclasses click-extra's
+`TimerOption` to integrate with pyclif's output format: suppresses the text echo in
+`json`/`yaml` mode and injects timing fields into `Response.data` via `returns_response`.
+
+::: pyclif.core.classes.PyclifTimerOption
