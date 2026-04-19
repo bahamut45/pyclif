@@ -54,7 +54,7 @@ class SecretsMasker(logging.Filter):
         super().__init__()
         self.replacer = REGEX_SENSITIVE_FIELDS
 
-    def filter(self, record):
+    def filter(self, record: logging.LogRecord) -> bool:
         """Filter a log record by redacting sensitive values.
 
         Checks whether the record was already processed to avoid duplicate
@@ -93,9 +93,7 @@ class SecretsMasker(logging.Filter):
             }
         elif isinstance(item, (tuple, set)):
             # Turn set in to tuple!
-            return tuple(
-                self._redact_all(nested_item, depth + 1) for nested_item in item
-            )
+            return tuple(self._redact_all(nested_item, depth + 1) for nested_item in item)
         elif isinstance(item, list):
             return [self._redact_all(nested_item, depth + 1) for nested_item in item]
         else:
@@ -111,33 +109,25 @@ class SecretsMasker(logging.Filter):
                 return self._redact_all(item, depth)
             if isinstance(item, dict):
                 return {
-                    dict_key: self._redact(
-                        nested_item, name=dict_key, depth=(depth + 1)
-                    )
+                    dict_key: self._redact(nested_item, name=dict_key, depth=(depth + 1))
                     for dict_key, nested_item in item.items()
                 }
-            elif (
-                isinstance(item, tuple)
-                and hasattr(item, "_asdict")
-                and hasattr(item, "_fields")
-            ):
+            elif isinstance(item, tuple) and hasattr(item, "_asdict") and hasattr(item, "_fields"):
                 named_tuple = item.__class__.__name__
                 # noinspection PyProtectedMember
                 item = item._asdict()
                 masked_dict = {
-                    dict_key: self._redact(
-                        nested_item, name=dict_key, depth=(depth + 1)
-                    )
+                    dict_key: self._redact(nested_item, name=dict_key, depth=(depth + 1))
                     for dict_key, nested_item in item.items()
                 }
+                # noinspection PyArgumentList
                 return namedtuple(named_tuple, masked_dict.keys())(**masked_dict)
             elif isinstance(item, str):
                 return item
             elif isinstance(item, (tuple, set)):
                 # Turn set in to tuple!
                 return tuple(
-                    self._redact(nested_item, name=None, depth=(depth + 1))
-                    for nested_item in item
+                    self._redact(nested_item, name=None, depth=(depth + 1)) for nested_item in item
                 )
             elif isinstance(item, list):
                 return [

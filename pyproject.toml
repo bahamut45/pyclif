@@ -34,9 +34,10 @@ classifiers = [
 pyclif = "pyclif.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/bahamut45/pyclif"
+Homepage = "https://bahamut45.github.io/pyclif"
 Repository = "https://github.com/bahamut45/pyclif"
 Issues = "https://github.com/bahamut45/pyclif/issues"
+Documentation = "https://bahamut45.github.io/pyclif"
 
 [project.optional-dependencies]
 dev = [
@@ -45,6 +46,12 @@ dev = [
     "tox>=4.0",
     "tox-uv>=1.0",
     "bump-my-version>=0.28.0",
+]
+docs = [
+    "mkdocs>=1.6,<2.0",
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.25",
+    "mike>=2.1",
 ]
 
 [build-system]

@@ -1,7 +1,9 @@
 """Custom Click classes for pyclif."""
 
+from collections.abc import Generator
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import click_extra
 from boltons.iterutils import flatten, unique
@@ -16,7 +18,7 @@ from .mixins import GlobalOptionsMixin, HandleResponseMixin, StoreInMetaMixin
 class PyclifOption(StoreInMetaMixin, click_extra.Option):
     """Custom Click Option that can be marked as global for propagation."""
 
-    def __init__(self, *args, is_global: bool = False, **kwargs):
+    def __init__(self, *args: Any, is_global: bool = False, **kwargs: Any) -> None:
         """Initialize the option.
 
         Args:
@@ -48,7 +50,7 @@ class CustomConfigOption(StoreInMetaMixin, ConfigOption):
     cross-platform compatibility.
     """
 
-    def __init__(self, *args, is_global: bool = False, **kwargs):
+    def __init__(self, *args: Any, is_global: bool = False, **kwargs: Any) -> None:
         """Initialize the custom config option.
 
         Args:
@@ -102,7 +104,7 @@ class CustomConfigOption(StoreInMetaMixin, ConfigOption):
         return ", ".join(all_patterns)
 
     # noinspection PyUnresolvedReferences
-    def search_and_read_conf(self, pattern: str):
+    def search_and_read_conf(self, pattern: str) -> Generator[tuple[Any, Any], None, None]:
         """Search and read configuration files from multiple locations.
 
         Overrides the parent method to search in multiple configuration

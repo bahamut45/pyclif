@@ -46,7 +46,7 @@ class SupportsTraceLogger(Protocol):
         """Log a message at the TRACE level."""
 
 
-def add_trace_method(logger_class):
+def add_trace_method(logger_class: type) -> type:
     """Add a trace method to a logger class.
 
     Args:

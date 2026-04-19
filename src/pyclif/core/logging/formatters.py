@@ -1,8 +1,10 @@
 """Rich formatters for pyclif logging."""
 
+import logging
+
 import click
-from click_extra.logging import ExtraFormatter
 from click_extra.colorize import default_theme
+from click_extra.logging import ExtraFormatter
 from rich.text import Text
 
 from .levels import TRACE
@@ -12,10 +14,10 @@ class RichExtraFormatter(ExtraFormatter):
     """Enhanced ExtraFormatter with Rich text capabilities and TRACE level support.
 
     Extends click-extra's ExtraFormatter to support Rich markup and custom TRACE level
-    while preserving click-extra's colorization system.
+    while preserving a click-extra's colorization system.
     """
 
-    def formatMessage(self, record):
+    def formatMessage(self, record: logging.LogRecord) -> str:
         """Enhanced formatting with Rich support and TRACE level.
 
         Args:
@@ -26,7 +28,7 @@ class RichExtraFormatter(ExtraFormatter):
         """
         # Handle TRACE level coloring
         if record.levelno == TRACE:
-            # Style TRACE level with a custom color (dim blue for example)
+            # Style TRACE level with a custom color (dim blue, for example)
             record.levelname = click.style("TRACE", fg="blue", dim=True)
         else:
             # Let the parent handle click-extra's standard colorization

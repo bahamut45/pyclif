@@ -1,13 +1,15 @@
 """Rich handlers for pyclif logging."""
 
-import sys
 import logging
+import sys
+from io import TextIOBase
+from typing import Any
+
+from click_extra.logging import ExtraStreamHandler
 from rich.console import Console
 from rich.logging import RichHandler
-from click_extra.logging import ExtraStreamHandler
 
 from .filters import SecretsMasker
-from .levels import TRACE, add_trace_method
 
 
 class RichExtraStreamHandler(ExtraStreamHandler):
@@ -20,11 +22,11 @@ class RichExtraStreamHandler(ExtraStreamHandler):
 
     def __init__(
         self,
-        stream=None,
-        rich_tracebacks=True,
-        enable_secrets_filter=True,
-        **kwargs,
-    ):
+        stream: TextIOBase | None = None,
+        rich_tracebacks: bool = True,
+        enable_secrets_filter: bool = True,
+        **kwargs: Any,
+    ) -> None:
         """Initialize the Rich Extra Stream Handler.
 
         Args:
@@ -49,18 +51,19 @@ class RichExtraStreamHandler(ExtraStreamHandler):
             **kwargs,
         )
 
-        # Add secrets filter by default
+        # Add secret filter by default
         if enable_secrets_filter:
             self.addFilter(SecretsMasker())
 
-    def emit(self, record):
+    def emit(self, record: logging.LogRecord) -> None:
         """Use Rich handler for enhanced output while maintaining click-extra compatibility.
 
         Args:
             record: LogRecord to emit.
         """
+        # noinspection PyBroadException
         try:
-            # Use Rich handler's emit method for better formatting
+            # Use Rich handlers emit method for better formatting
             self._rich_handler.emit(record)
         except RecursionError:
             raise

@@ -20,7 +20,7 @@ def is_bool(value: Any) -> bool:
     return isinstance(value, bool)
 
 
-def convert_bool_to_emoji(value: object) -> str | bool:
+def convert_bool_to_emoji(value: object) -> str | bool | object:
     """Convert boolean values to emoji representation.
 
     Converts True to a green checkmark and False to a red X mark.
@@ -43,14 +43,14 @@ def convert_bool_to_emoji(value: object) -> str | bool:
 class CliTableColumn(Column):
     """Column definition for CLI tables with serialization support."""
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Convert the column object to a dictionary.
 
         Returns a dictionary of all non-private fields and their values,
         excluding fields that have default values.
 
         Returns:
-            dict: Dictionary representation of the column.
+            Dictionary representation of the column.
         """
         return dict(
             (f.name, attrgetter(f.name)(self))
@@ -74,7 +74,7 @@ class CliTable:
         "box": box.ROUNDED,
     }
 
-    def __init__(self, fields: dict, rows: list | dict, table_style=None):
+    def __init__(self, fields: dict, rows: list | dict, table_style: dict | None = None):
         """Initialize the CLI table with columns and rows.
 
         Args:
@@ -84,21 +84,20 @@ class CliTable:
         """
         if isinstance(table_style, dict):
             self.table_style |= table_style
+        # noinspection PyArgumentList
         self.table = Table(**self.table_style)
         self.update_columns(fields)
         self.update_rows(fields, rows)
 
-    def __rich__(self):
+    def __rich__(self) -> Table | str:
         """Return the table for rich rendering.
 
         Returns:
-            Table or str: The rich Table object or a message if no data exists.
+            The rich Table object or a message if no data exists.
         """
-        return (
-            self.table if self.table.row_count != 0 else "[i]No dataset available.[/i]"
-        )
+        return self.table if self.table.row_count != 0 else "[i]No dataset available.[/i]"
 
-    def table(self):
+    def table(self) -> Table:
         """Return the internal table object.
 
         Returns:
@@ -147,13 +146,13 @@ class CliTable:
             list: List of formatted column values for the row.
         """
         columns = []
-        for field in fields.keys():
+        for field in fields:
             if "." in field:
                 relation, target = field.split(".")
                 if row.get(relation):
+                    # noinspection PyTypeChecker
                     row_field = [
-                        self.__rich_field__(item.get(target, None))
-                        for item in row.get(relation)
+                        self.__rich_field__(item.get(target, None)) for item in row.get(relation)
                     ]
                     columns.append(",".join(row_field))
                 else:
