@@ -584,6 +584,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Automatic Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-timer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution timer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1169,6 +1186,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Automatic Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-timer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution timer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1309,19 +1343,29 @@
 <li><strong>Output format option</strong>: <code>--output-format</code> / <code>-o</code></li>
 <li><strong>Environment variable support</strong>: With your custom prefix</li>
 </ul>
+<h3 id="execution-timer">Execution timer<a class="headerlink" href="#execution-timer" title="Permanent link">&para;</a></h3>
+<p>Pass <code>timer=True</code> to enable a <code>--time/--no-time</code> flag:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@app_group</span><span class="p">(</span><span class="n">handle_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">cli</span><span class="p">():</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;My CLI.&quot;&quot;&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>my-app<span class="w"> </span>--time<span class="w"> </span>deploy
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># rich/table/raw → prints: Execution time: 1.234 seconds.</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># json/yaml      → injects {&quot;execution_time&quot;: 1.234, &quot;execution_time_str&quot;: &quot;1.234s&quot;} into Response.data</span>
+</code></pre></div>
 <h2 id="testing-your-cli">Testing Your CLI<a class="headerlink" href="#testing-your-cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show help</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>--help
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Use environment variables</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MYAPP_MESSAGE</span><span class="o">=</span><span class="s2">&quot;Hello from environment!&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>hello
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Use a configuration file</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>--config<span class="w"> </span>/path/to/config.toml<span class="w"> </span>hello
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Use verbosity</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>-vv<span class="w"> </span>hello<span class="w"> </span>--message<span class="w"> </span><span class="s2">&quot;Debug mode&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Show help</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>--help
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Use environment variables</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MYAPP_MESSAGE</span><span class="o">=</span><span class="s2">&quot;Hello from environment!&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>hello
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Use a configuration file</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>--config<span class="w"> </span>/path/to/config.toml<span class="w"> </span>hello
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Use verbosity</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>python<span class="w"> </span>my_cli.py<span class="w"> </span>-vv<span class="w"> </span>hello<span class="w"> </span>--message<span class="w"> </span><span class="s2">&quot;Debug mode&quot;</span>
 </code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
