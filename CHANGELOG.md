@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ### Documentation
 
+- Update `CHANGELOG.md` and `pyproject.toml` for streamlined development workflow
+
+## [0.0.2] - 2026-04-19
+
+### Documentation
+
 - Add repository guidelines for contribution and code style
 - Refine `CLAUDE.md` formatting and update `.gitignore`
 - Add comprehensive documentation for `pyclif` features and usage

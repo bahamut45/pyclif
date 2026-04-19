@@ -1,7 +1,7 @@
 """pyclif — PYthon Command Line Interface Framework"""
 
 __app_name__ = "pyclif"
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 from click_extra import (
     BOOL,
