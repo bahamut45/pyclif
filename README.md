@@ -16,6 +16,15 @@ pip install pyclif
 
 Requires Python 3.10+.
 
+## Contributing
+
+```bash
+uv sync --dev
+pre-commit install
+```
+
+`pre-commit install` activates the git hooks (ruff check + format) that run automatically on every commit.
+
 ## Quick Start
 
 ```python
