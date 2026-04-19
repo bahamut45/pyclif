@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Features
+
+- **timer**: Add `--time/--no-time` option for execution timing
+
+## [0.0.3] - 2026-04-19
+
 ### Documentation
 
 - Update `CHANGELOG.md` and `pyproject.toml` for streamlined development workflow
