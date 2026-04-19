@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Streamline imports across documentation examples
 - Add API documentation and deployment workflow
 - Add comprehensive `README.md` for project overview and usage
+- Update `README.md` with version badge
 
 ### Features
 
@@ -22,6 +23,8 @@ All notable changes to this project will be documented in this file.
 - **core**: Expand `__all__` and imports for enhanced CLI capabilities
 - **project**: Add scaffolding for `pyclif project` commands
 - **tables**: Add `ScaffoldingTable` for enriched CLI output
+- **project**: Integrate `git-cliff` for auto-generated changelogs
+- **dev**: Integrate pre-commit hooks with Ruff for code linting and formatting
 
 ### Miscellaneous
 
@@ -35,5 +38,9 @@ All notable changes to this project will be documented in this file.
 
 - **core**: Add comprehensive unit tests for `pyclif` core modules
 - **project**: Add unit tests for `ScaffoldingInterface` and `ScaffoldingTable`
+
+### Style
+
+- **core**: Apply consistent code formatting across the project
 
 

@@ -137,7 +137,7 @@ allow_dirty = false
 commit = true
 message = "🚀 RELEASE: {current_version} → {new_version}"
 commit_args = ""
-pre_commit_hooks = ["git-cliff --output CHANGELOG.md"]
+pre_commit_hooks = ["git-cliff --output CHANGELOG.md", "git add CHANGELOG.md"]
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"
