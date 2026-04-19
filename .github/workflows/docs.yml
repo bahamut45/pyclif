@@ -47,6 +47,4 @@ jobs:
 
       - name: Deploy dev docs (on main push)
         if: github.ref == 'refs/heads/main'
-        run: |
-          mike deploy --push --update-aliases dev latest
-          mike set-default --push latest
+        run: mike deploy --push dev
