@@ -1,6 +1,35 @@
 """Table definitions for project scaffolding output."""
 
+from rich import box
+
 from pyclif import CliTable, CliTableColumn, Response
+
+
+class ErrorTable(CliTable):
+    """Table displaying a single scaffolding error message."""
+
+    table_style = {
+        "show_lines": True,
+        "border_style": "bright_red",
+        "header_style": "bold red",
+        "box": box.ROUNDED,
+    }
+
+    fields = {
+        "message": CliTableColumn(header=":x:  Error", style="red"),
+    }
+
+    def __init__(self, response: Response):
+        """Initialize the error table from a failed command response.
+
+        Args:
+            response: The failed scaffolding command response.
+        """
+        super().__init__(
+            fields=self.fields,
+            rows={"message": response.message},
+            table_style=self.table_style,
+        )
 
 
 class ScaffoldingTable(CliTable):

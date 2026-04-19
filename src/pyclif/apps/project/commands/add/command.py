@@ -3,7 +3,7 @@
 from pyclif import argument, command, option, pass_context, Response
 
 from ...interfaces import ScaffoldingInterface
-from ...tables import ScaffoldingTable
+from ...tables import ErrorTable, ScaffoldingTable
 
 
 @command()
@@ -12,11 +12,14 @@ from ...tables import ScaffoldingTable
 @pass_context
 def command_(ctx, name: str, app_name: str) -> Response:
     """Add a command to an existing app."""
-    interface = ScaffoldingInterface(ctx)
-    created = interface.add_command(name, app_name)
-    return Response(
-        success=True,
-        message=f"Command '{name}' added to app '{app_name}'.",
-        data={"files": created},
-        callback_table_output=ScaffoldingTable,
-    )
+    try:
+        interface = ScaffoldingInterface(ctx)
+        created = interface.add_command(name, app_name)
+        return Response(
+            success=True,
+            message=f"Command '{name}' added to app '{app_name}'.",
+            data={"files": created},
+            callback_table_output=ScaffoldingTable,
+        )
+    except (FileExistsError, FileNotFoundError) as e:
+        return Response(success=False, message=str(e), error_code=1, callback_table_output=ErrorTable)
