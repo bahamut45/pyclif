@@ -1,0 +1,41 @@
+# {{ name }}
+
+## Installation
+
+```bash
+uv sync --dev
+```
+
+## Usage
+
+```bash
+{{ name }} --help
+```
+
+## Development
+
+### Run tests
+
+```bash
+pytest tests/ -v
+```
+
+### Lint & format
+
+```bash
+ruff check src/ tests/
+ruff format src/ tests/
+```
+
+### Bump version
+
+```bash
+# Patch release (0.0.1 → 0.0.2)
+bump-my-version bump patch
+
+# Minor release (0.0.1 → 0.1.0)
+bump-my-version bump minor
+
+# Major release (0.0.1 → 1.0.0)
+bump-my-version bump major
+```

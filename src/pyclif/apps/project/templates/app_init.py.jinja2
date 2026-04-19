@@ -1,0 +1,11 @@
+from pyclif import group
+from .commands import commands
+
+
+@group()
+def {{ name_snake }}():
+    """{{ name_pascal }} group."""
+
+
+for command in commands:
+    {{ name_snake }}.add_command(command)

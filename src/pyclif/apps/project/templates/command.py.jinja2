@@ -1,0 +1,9 @@
+from pyclif import command, Response
+from ....core.context import pass_cli_context
+
+
+@command()
+@pass_cli_context
+def {{ name_snake }}(ctx):
+    """{{ name_pascal }} description."""
+    return Response(success=True, message="{{ name_pascal }} executed.", data={})
