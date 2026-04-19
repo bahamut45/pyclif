@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Miscellaneous
+
+- **docs**: Update workflow config and deploy logic
+
+## [0.0.4] - 2026-04-19
+
 ### Features
 
 - **timer**: Add `--time/--no-time` option for execution timing
