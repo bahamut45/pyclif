@@ -1,0 +1,89 @@
+site_name: pyclif
+site_description: PYthon Command Line Interface Framework — decorator-driven CLI framework built on click-extra and rich-click
+site_url: https://bahamut45.github.io/pyclif
+repo_url: https://github.com/bahamut45/pyclif
+repo_name: bahamut45/pyclif
+docs_dir: docs
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - User Guide:
+      - Configuration: configuration.md
+      - Logging: logging.md
+      - Output Formatting: output-formatting.md
+  - Examples: examples.md
+  - Development: development.md
+  - API Reference:
+      - Decorators: api/decorators.md
+      - Context: api/context.md
+      - Output & Response: api/output.md
+      - Logging: api/logging.md
+      - Core Classes: api/classes.md
+      - Mixins: api/mixins.md
+
+not_in_nav: |
+  versions.json
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            members_order: source
+
+extra:
+  version:
+    provider: mike
+    default: latest
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/bahamut45/pyclif
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
