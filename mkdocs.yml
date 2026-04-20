@@ -39,6 +39,7 @@ nav:
       - Configuration: configuration.md
       - Logging: logging.md
       - Output Formatting: output-formatting.md
+      - Error Handling: error-handling.md
   - Examples: examples.md
   - Development: development.md
   - API Reference:
