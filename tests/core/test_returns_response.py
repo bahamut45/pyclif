@@ -370,6 +370,7 @@ class TestOutputFilterOption:
 
     def test_filter_missing_key_returns_none(self):
         """Filtering a non-existent key returns None (no crash)."""
+
         app = _make_app(output_format_default="raw")
 
         @app.command()
@@ -388,3 +389,69 @@ class TestOutputFilterOption:
         result = runner.invoke(app, ["greet", "-f", "nonexistent"])
         assert result.exit_code == 0
         assert "None" in result.output
+
+
+# ---------------------------------------------------------------------------
+# Last resort handler
+# ---------------------------------------------------------------------------
+
+
+class TestLastResortHandler:
+    """Tests for the unhandled exception handler in returns_response."""
+
+    def test_unhandled_exception_returns_failed_response(self):
+        """An exception escaping a command is caught and returned as a failed Response."""
+        app = _make_app(handle_response_at_group=True, output_format_default="raw")
+
+        @app.command()
+        @click.pass_context
+        def boom(ctx):
+            """Raise unexpectedly"""
+            raise RuntimeError("something broke")
+
+        runner = CliRunner()
+        result = runner.invoke(app, ["boom"])
+        assert result.exit_code == 0
+        assert "something broke" in result.output
+
+    def test_unhandled_exception_log_level_stored_in_meta(self):
+        """unhandled_exception_log_level is stored in ctx.meta at root context creation."""
+        captured = {}
+
+        @app_group(
+            handle_response=True,
+            output_format_default="raw",
+            unhandled_exception_log_level="warning",
+        )
+        @click.pass_context
+        def app(ctx):
+            """Test app"""
+
+        @app.command()
+        @click.pass_context
+        def probe(ctx):
+            """Capture meta"""
+            root = ctx
+            while root.parent:
+                root = root.parent
+            captured["level"] = root.meta.get("pyclif.unhandled_exception_log_level")
+
+        runner = CliRunner()
+        runner.invoke(app, ["probe"])
+        assert captured["level"] == "warning"
+
+    def test_output_format_respected_on_unhandled_exception(self):
+        """Even on unhandled exception, JSON output format is respected."""
+        app = _make_app(handle_response_at_group=True, output_format_default="json")
+
+        @app.command()
+        @click.pass_context
+        def boom(ctx):
+            """Raise unexpectedly"""
+            raise ValueError("bad input")
+
+        runner = CliRunner()
+        result = runner.invoke(app, ["boom"])
+        assert result.exit_code == 0
+        assert '"success"' in result.output
+        assert "false" in result.output.lower()

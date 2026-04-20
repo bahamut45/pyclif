@@ -5,6 +5,8 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
+from pyclif import OperationResult
+
 
 class ScaffoldingInterface:
     """Renders templates and manages generated project files.
@@ -24,7 +26,7 @@ class ScaffoldingInterface:
             keep_trailing_newline=True,
         )
 
-    def init_project(self, name: str, package_manager: str = "uv") -> list[dict[str, str]]:
+    def init_project(self, name: str, package_manager: str = "uv") -> list[OperationResult]:
         """Create a full project skeleton in a new directory.
 
         Args:
@@ -32,21 +34,22 @@ class ScaffoldingInterface:
             package_manager: Toolchain to target — "uv" (default) or "poetry".
 
         Returns:
-            Paths of all files created, relative to the new project root.
-
-        Raises:
-            FileExistsError: If the target directory already exists.
-            ValueError: If package_manager is not supported.
+            OperationResult for each file created.
         """
         if package_manager not in ("uv", "poetry"):
-            raise ValueError(
-                f"Unsupported package manager '{package_manager}'. Use 'uv' or 'poetry'."
-            )
+            return [
+                OperationResult.error(
+                    name,
+                    f"Unsupported package manager '{package_manager}'. Use 'uv' or 'poetry'.",
+                )
+            ]
 
         ns = self._names(name)
         root = Path(name)
         if root.exists():
-            raise FileExistsError(f"Directory '{name}' already exists.")
+            return [
+                OperationResult.error(name, f"Directory '{name}' already exists.", error_code=2)
+            ]
 
         pkg = f"src/{ns['name_snake']}"
         pm_tmpl = f"pyproject_{package_manager}.toml.jinja2"
@@ -64,25 +67,25 @@ class ScaffoldingInterface:
             (root / "tests/__init__.py", "tests_init.py.jinja2"),
             (root / "tests/conftest.py", "tests_conftest.py.jinja2"),
         ]
-        return [p for dest, tmpl in files for p in self._write_rendered(dest, tmpl, ns)]
+        return [self._write_rendered(dest, tmpl, ns) for dest, tmpl in files]
 
-    def add_app(self, name: str) -> list[dict[str, str]]:
+    def add_app(self, name: str) -> list[OperationResult]:
         """Create an app skeleton inside the current project's apps/ directory.
 
         Args:
             name: App name (snake_case).
 
         Returns:
-            Paths of all files created or modified.
-
-        Raises:
-            FileExistsError: If the app directory already exists.
-            FileNotFoundError: If apps/__init__.py is not found (not a project root).
+            OperationResult for each file created or modified.
         """
         ns = self._names(name)
         app_dir = self._root / "src" / self._detect_package() / "apps" / ns["name_snake"]
         if app_dir.exists():
-            raise FileExistsError(f"App '{name}' already exists at {app_dir}.")
+            return [
+                OperationResult.error(
+                    str(app_dir), f"App '{name}' already exists at {app_dir}.", error_code=2
+                )
+            ]
 
         files = [
             (app_dir / "__init__.py", "app_init.py.jinja2"),
@@ -91,10 +94,10 @@ class ScaffoldingInterface:
             (app_dir / "tables.py", "app_tables.py.jinja2"),
             (app_dir / "commands/__init__.py", "app_commands_init.py.jinja2"),
         ]
-        created = [p for dest, tmpl in files for p in self._write_rendered(dest, tmpl, ns)]
+        created = [self._write_rendered(dest, tmpl, ns) for dest, tmpl in files]
         return created + self._wire_app(ns["name_snake"])
 
-    def add_command(self, name: str, app: str) -> list[dict[str, str]]:
+    def add_command(self, name: str, app: str) -> list[OperationResult]:
         """Create a command file inside an app's commands/ directory.
 
         Args:
@@ -102,28 +105,31 @@ class ScaffoldingInterface:
             app: App name to add the command to.
 
         Returns:
-            Paths of all files created or modified.
-
-        Raises:
-            FileExistsError: If the command file already exists.
-            FileNotFoundError: If the target app does not exist.
+            OperationResult for each file created or modified.
         """
         ns = self._names(name)
         pkg = self._detect_package()
         commands_dir = self._root / "src" / pkg / "apps" / app / "commands"
         if not commands_dir.exists():
-            raise FileNotFoundError(
-                f"App '{app}' not found. Run `pyclif project add app {app}` first."
-            )
+            return [
+                OperationResult.error(
+                    str(commands_dir),
+                    f"App '{app}' not found. Run `pyclif project add app {app}` first.",
+                )
+            ]
         cmd_file = commands_dir / f"{ns['name_snake']}.py"
         if cmd_file.exists():
-            raise FileExistsError(f"Command '{name}' already exists at {cmd_file}.")
+            return [
+                OperationResult.error(
+                    str(cmd_file), f"Command '{name}' already exists at {cmd_file}.", error_code=2
+                )
+            ]
 
-        return self._write_rendered(cmd_file, "command.py.jinja2", ns) + self._wire_command(
+        return [self._write_rendered(cmd_file, "command.py.jinja2", ns)] + self._wire_command(
             ns["name_snake"], app
         )
 
-    def add_integration(self, name: str, package: bool = False) -> list[dict[str, str]]:
+    def add_integration(self, name: str, package: bool = False) -> list[OperationResult]:
         """Create an integration module inside core/integrations/.
 
         Args:
@@ -131,57 +137,70 @@ class ScaffoldingInterface:
             package: When True, generate a package with a client, helpers, models.
 
         Returns:
-            Paths of all files created or modified.
-
-        Raises:
-            FileExistsError: If the integration already exists.
-            FileNotFoundError: If core/integrations/ is not found.
+            OperationResult for each file created or modified.
         """
         ns = self._names(name)
         pkg = self._detect_package()
         integrations_dir = self._root / "src" / pkg / "core" / "integrations"
         if not integrations_dir.exists():
-            raise FileNotFoundError(
-                "core/integrations/ not found. Are you in a pyclif project root?"
-            )
+            return [
+                OperationResult.error(
+                    str(integrations_dir),
+                    "core/integrations/ not found. Are you in a pyclif project root?",
+                )
+            ]
 
         if package:
             pkg_dir = integrations_dir / ns["name_snake"]
             if pkg_dir.exists():
-                raise FileExistsError(f"Integration '{name}' already exists at {pkg_dir}.")
+                return [
+                    OperationResult.error(
+                        str(pkg_dir),
+                        f"Integration '{name}' already exists at {pkg_dir}.",
+                        error_code=2,
+                    )
+                ]
             files = [
                 (pkg_dir / "__init__.py", "integration_package_init.py.jinja2"),
                 (pkg_dir / "client.py", "integration_package_client.py.jinja2"),
                 (pkg_dir / "helpers.py", "integration_package_helpers.py.jinja2"),
                 (pkg_dir / "models.py", "integration_package_models.py.jinja2"),
             ]
-            created = [p for dest, tmpl in files for p in self._write_rendered(dest, tmpl, ns)]
+            created = [self._write_rendered(dest, tmpl, ns) for dest, tmpl in files]
         else:
             simple_file = integrations_dir / f"{ns['name_snake']}.py"
             if simple_file.exists():
-                raise FileExistsError(f"Integration '{name}' already exists at {simple_file}.")
-            created = self._write_rendered(simple_file, "integration_simple.py.jinja2", ns)
+                return [
+                    OperationResult.error(
+                        str(simple_file),
+                        f"Integration '{name}' already exists at {simple_file}.",
+                        error_code=2,
+                    )
+                ]
+            created = [self._write_rendered(simple_file, "integration_simple.py.jinja2", ns)]
 
         return created + self._wire_integration(ns["name_snake"], ns["name_pascal"])
 
-    def _wire_app(self, name_snake: str) -> list[dict[str, str]]:
+    def _wire_app(self, name_snake: str) -> list[OperationResult]:
         """Append import and groups.append call to apps/__init__.py.
 
         Args:
             name_snake: Snake-case app name.
 
         Returns:
-            List containing the path of the modified file.
+            OperationResult for the modified file.
         """
         pkg = self._detect_package()
         apps_init = self._root / "src" / pkg / "apps" / "__init__.py"
+        if not apps_init.exists():
+            return [OperationResult.error(str(apps_init), f"File '{apps_init}' not found.")]
         self._append_to_file(
             apps_init,
             f"\nfrom .{name_snake} import {name_snake}\ngroups.append({name_snake})\n",
         )
-        return [{"file": str(apps_init), "action": "modified"}]
+        return [OperationResult.ok(str(apps_init), message="modified", data={"action": "modified"})]
 
-    def _wire_command(self, name_snake: str, app: str) -> list[dict[str, str]]:
+    def _wire_command(self, name_snake: str, app: str) -> list[OperationResult]:
         """Append import and commands.append call to the app's commands/__init__.py.
 
         Args:
@@ -189,17 +208,21 @@ class ScaffoldingInterface:
             app: App name that owns this command.
 
         Returns:
-            List containing the path of the modified file.
+            OperationResult for the modified file.
         """
         pkg = self._detect_package()
         commands_init = self._root / "src" / pkg / "apps" / app / "commands" / "__init__.py"
+        if not commands_init.exists():
+            return [OperationResult.error(str(commands_init), f"File '{commands_init}' not found.")]
         self._append_to_file(
             commands_init,
             f"\nfrom .{name_snake} import {name_snake}\ncommands.append({name_snake})\n",
         )
-        return [{"file": str(commands_init), "action": "modified"}]
+        return [
+            OperationResult.ok(str(commands_init), message="modified", data={"action": "modified"})
+        ]
 
-    def _wire_integration(self, name_snake: str, name_pascal: str) -> list[dict[str, str]]:
+    def _wire_integration(self, name_snake: str, name_pascal: str) -> list[OperationResult]:
         """Inject an integration import and property stub into core/context.py.
 
         Args:
@@ -207,10 +230,12 @@ class ScaffoldingInterface:
             name_pascal: PascalCase integration name.
 
         Returns:
-            List containing the path of the modified file.
+            OperationResult for the modified file.
         """
         pkg = self._detect_package()
         context_file = self._root / "src" / pkg / "core" / "context.py"
+        if not context_file.exists():
+            return [OperationResult.error(str(context_file), f"File '{context_file}' not found.")]
         content = context_file.read_text()
 
         new_import = f"from .integrations.{name_snake} import {name_pascal}Integration\n"
@@ -227,7 +252,9 @@ class ScaffoldingInterface:
             1,
         )
         context_file.write_text(content)
-        return [{"file": str(context_file), "action": "modified"}]
+        return [
+            OperationResult.ok(str(context_file), message="modified", data={"action": "modified"})
+        ]
 
     def _render(self, template_name: str, variables: dict) -> str:
         """Render a Jinja2 template with the given variables.
@@ -241,9 +268,7 @@ class ScaffoldingInterface:
         """
         return self._env.get_template(template_name).render(**variables)
 
-    def _write_rendered(
-        self, path: Path, template_name: str, variables: dict
-    ) -> list[dict[str, str]]:
+    def _write_rendered(self, path: Path, template_name: str, variables: dict) -> OperationResult:
         """Render a template and write it to disk.
 
         Args:
@@ -252,16 +277,13 @@ class ScaffoldingInterface:
             variables: Template context variables.
 
         Returns:
-            Single-element list with the stringified path.
-
-        Raises:
-            FileExistsError: If the destination file already exists.
+            OperationResult indicating success or failure.
         """
         if path.exists():
-            raise FileExistsError(f"File '{path}' already exists.")
+            return OperationResult.error(str(path), f"File '{path}' already exists.", error_code=2)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(self._render(template_name, variables))
-        return [{"file": str(path), "action": "created"}]
+        return OperationResult.ok(str(path), message="created", data={"action": "created"})
 
     @staticmethod
     def _append_to_file(path: Path, content: str) -> None:
@@ -270,12 +292,7 @@ class ScaffoldingInterface:
         Args:
             path: File to append to.
             content: Text to append.
-
-        Raises:
-            FileNotFoundError: If the file does not exist.
         """
-        if not path.exists():
-            raise FileNotFoundError(f"File '{path}' not found.")
         with path.open("a") as fh:
             fh.write(content)
 
@@ -300,12 +317,12 @@ class ScaffoldingInterface:
             The package directory name found under src/.
 
         Raises:
-            FileNotFoundError: If src/ does not exist or contains no package.
+            RuntimeError: If src/ does not exist or contains no package.
         """
         src = self._root / "src"
         if not src.exists():
-            raise FileNotFoundError("src/ directory not found. Are you in a pyclif project root?")
+            raise RuntimeError("src/ directory not found. Are you in a pyclif project root?")
         candidates = [d for d in src.iterdir() if d.is_dir() and not d.name.startswith(".")]
         if not candidates:
-            raise FileNotFoundError("No package found under src/.")
+            raise RuntimeError("No package found under src/.")
         return candidates[0].name

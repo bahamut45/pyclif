@@ -5,7 +5,7 @@ from pathlib import Path
 from pyclif import Choice, Response, argument, command, option, pass_context
 
 from ..interfaces import ScaffoldingInterface
-from ..tables import ErrorTable, ScaffoldingTable
+from ..tables import ScaffoldingTable
 
 
 @command()
@@ -25,22 +25,17 @@ from ..tables import ErrorTable, ScaffoldingTable
 @pass_context
 def init(ctx, name: str, integrations: str, package_manager: str) -> Response:
     """Create a new pyclif project skeleton."""
-    try:
-        interface = ScaffoldingInterface(ctx)
-        created = interface.init_project(name, package_manager=package_manager)
+    interface = ScaffoldingInterface(ctx)
+    results = interface.init_project(name, package_manager=package_manager)
 
-        if integrations:
-            scoped = ScaffoldingInterface(ctx, root=Path(name))
-            for integration in [i.strip() for i in integrations.split(",") if i.strip()]:
-                created += scoped.add_integration(integration)
+    if all(r.success for r in results) and integrations:
+        scoped = ScaffoldingInterface(ctx, root=Path(name))
+        for integration in [i.strip() for i in integrations.split(",") if i.strip()]:
+            results += scoped.add_integration(integration)
 
-        return Response(
-            success=True,
-            message=f"Project '{name}' created.",
-            data={"files": created},
-            callback_table_output=ScaffoldingTable,
-        )
-    except (FileExistsError, FileNotFoundError, ValueError) as e:
-        return Response(
-            success=False, message=str(e), error_code=1, callback_table_output=ErrorTable
-        )
+    return Response.from_results(
+        results,
+        success_message=f"Project '{name}' created.",
+        failure_message=f"Project '{name}' creation failed.",
+        table=ScaffoldingTable,
+    )

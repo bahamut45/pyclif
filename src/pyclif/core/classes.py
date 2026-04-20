@@ -302,3 +302,6 @@ class GroupConfig:
     # Help formatting
     use_rich_help: bool = True
     rich_help_config: "dict | str | RichHelpConfiguration | None" = None
+
+    # Error handling
+    unhandled_exception_log_level: str = "error"

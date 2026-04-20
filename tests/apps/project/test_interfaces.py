@@ -2,6 +2,7 @@
 
 import pytest
 
+from pyclif import OperationResult
 from pyclif.apps.project.interfaces import ScaffoldingInterface
 
 
@@ -46,28 +47,38 @@ class TestInitProject:
         """All project skeleton files are written."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        created = iface.init_project("my-app")
-        paths = {r["file"] for r in created}
+        results = iface.init_project("my-app")
+        paths = {r.item for r in results}
 
         assert any("pyproject.toml" in p for p in paths)
         assert any("cli.py" in p for p in paths)
         assert any("context.py" in p for p in paths)
         assert any("conftest.py" in p for p in paths)
 
+    def test_all_results_are_successful(self, tmp_path, monkeypatch) -> None:
+        """init_project returns only successful results for a fresh project."""
+        monkeypatch.chdir(tmp_path)
+        iface = ScaffoldingInterface(ctx=None)
+        results = iface.init_project("my-app")
+        assert all(r.success for r in results)
+        assert all(isinstance(r, OperationResult) for r in results)
+
     def test_all_actions_are_created(self, tmp_path, monkeypatch) -> None:
         """init_project only creates files — no modified entries."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        created = iface.init_project("my-app")
-        assert all(r["action"] == "created" for r in created)
+        results = iface.init_project("my-app")
+        assert all(r.data.get("action") == "created" for r in results)
 
-    def test_raises_if_directory_exists(self, tmp_path, monkeypatch) -> None:
-        """Second init with the same name raises FileExistsError."""
+    def test_returns_error_if_directory_exists(self, tmp_path, monkeypatch) -> None:
+        """Second init with the same name returns a single error result."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
         iface.init_project("my-app")
-        with pytest.raises(FileExistsError, match="already exists"):
-            iface.init_project("my-app")
+        results = iface.init_project("my-app")
+        assert len(results) == 1
+        assert not results[0].success
+        assert "already exists" in results[0].message
 
     def test_uv_pyproject(self, tmp_path, monkeypatch) -> None:
         """uv template includes hatchling build backend."""
@@ -87,12 +98,14 @@ class TestInitProject:
         assert "poetry-core" in content
         assert "tool.poetry" in content
 
-    def test_invalid_package_manager(self, tmp_path, monkeypatch) -> None:
-        """Unsupported package manager raises ValueError."""
+    def test_returns_error_for_invalid_package_manager(self, tmp_path, monkeypatch) -> None:
+        """Unsupported package manager returns a single error result."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        with pytest.raises(ValueError, match="Unsupported package manager"):
-            iface.init_project("my-app", package_manager="pipenv")
+        results = iface.init_project("my-app", package_manager="pipenv")
+        assert len(results) == 1
+        assert not results[0].success
+        assert "Unsupported package manager" in results[0].message
 
 
 class TestAddApp:
@@ -100,8 +113,8 @@ class TestAddApp:
 
     def test_creates_app_files(self, project) -> None:
         """App skeleton files are written under apps/."""
-        created = project.add_app("repos")
-        paths = {r["file"] for r in created}
+        results = project.add_app("repos")
+        paths = {r.item for r in results}
 
         assert any("repos/__init__.py" in p for p in paths)
         assert any("repos/interfaces.py" in p for p in paths)
@@ -119,15 +132,17 @@ class TestAddApp:
     def test_modified_action_for_apps_init(self, project) -> None:
         """The apps/__init__.py entry is marked as modified."""
         results = project.add_app("repos")
-        modified = [r for r in results if r["action"] == "modified"]
+        modified = [r for r in results if r.success and r.data.get("action") == "modified"]
         assert len(modified) == 1
-        assert "__init__.py" in modified[0]["file"]
+        assert "__init__.py" in modified[0].item
 
-    def test_raises_if_app_exists(self, project) -> None:
-        """Second add_app with same name raises FileExistsError."""
+    def test_returns_error_if_app_exists(self, project) -> None:
+        """Second add_app with same name returns a single error result."""
         project.add_app("repos")
-        with pytest.raises(FileExistsError, match="already exists"):
-            project.add_app("repos")
+        results = project.add_app("repos")
+        assert len(results) == 1
+        assert not results[0].success
+        assert "already exists" in results[0].message
 
 
 class TestAddCommand:
@@ -136,8 +151,8 @@ class TestAddCommand:
     def test_creates_command_file(self, project) -> None:
         """Command file is written inside the app's commands/ directory."""
         project.add_app("repos")
-        created = project.add_command("list", "repos")
-        assert any("commands/list.py" in r["file"] for r in created)
+        results = project.add_command("list", "repos")
+        assert any("commands/list.py" in r.item for r in results)
 
     def test_wires_command_in_commands_init(self, project, tmp_path) -> None:
         """commands/__init__.py is updated with the new command import."""
@@ -150,17 +165,21 @@ class TestAddCommand:
         assert "from .list import list" in content
         assert "commands.append(list)" in content
 
-    def test_raises_if_app_not_found(self, project) -> None:
-        """add_command raises FileNotFoundError when the app does not exist."""
-        with pytest.raises(FileNotFoundError, match="App 'unknown' not found"):
-            project.add_command("list", "unknown")
+    def test_returns_error_if_app_not_found(self, project) -> None:
+        """add_command returns an error result when the app does not exist."""
+        results = project.add_command("list", "unknown")
+        assert len(results) == 1
+        assert not results[0].success
+        assert "App 'unknown' not found" in results[0].message
 
-    def test_raises_if_command_exists(self, project) -> None:
-        """Second add_command with the same name raises FileExistsError."""
+    def test_returns_error_if_command_exists(self, project) -> None:
+        """Second add_command with the same name returns an error result."""
         project.add_app("repos")
         project.add_command("list", "repos")
-        with pytest.raises(FileExistsError, match="already exists"):
-            project.add_command("list", "repos")
+        results = project.add_command("list", "repos")
+        assert len(results) == 1
+        assert not results[0].success
+        assert "already exists" in results[0].message
 
 
 class TestAddIntegration:
@@ -168,13 +187,13 @@ class TestAddIntegration:
 
     def test_creates_simple_integration(self, project) -> None:
         """Simple integration writes a single .py file."""
-        created = project.add_integration("github")
-        assert any("integrations/github.py" in r["file"] for r in created)
+        results = project.add_integration("github")
+        assert any("integrations/github.py" in r.item for r in results)
 
     def test_creates_package_integration(self, project) -> None:
         """Package integration writes client, helpers, models and __init__."""
-        created = project.add_integration("ssh", package=True)
-        paths = {r["file"] for r in created}
+        results = project.add_integration("ssh", package=True)
+        paths = {r.item for r in results}
         assert any("ssh/__init__.py" in p for p in paths)
         assert any("ssh/client.py" in p for p in paths)
         assert any("ssh/helpers.py" in p for p in paths)
@@ -187,8 +206,10 @@ class TestAddIntegration:
         assert "from .integrations.github import GithubIntegration" in content
         assert "self.github = GithubIntegration()" in content
 
-    def test_raises_if_integration_exists(self, project) -> None:
-        """Second add_integration with the same name raises FileExistsError."""
+    def test_returns_error_if_integration_exists(self, project) -> None:
+        """Second add_integration with the same name returns an error result."""
         project.add_integration("github")
-        with pytest.raises(FileExistsError, match="already exists"):
-            project.add_integration("github")
+        results = project.add_integration("github")
+        assert len(results) == 1
+        assert not results[0].success
+        assert "already exists" in results[0].message

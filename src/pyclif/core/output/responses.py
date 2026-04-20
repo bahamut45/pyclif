@@ -1,4 +1,4 @@
-"""Response class"""
+"""Response and OperationResult classes."""
 
 import dataclasses
 from collections.abc import Callable
@@ -6,6 +6,57 @@ from operator import attrgetter
 from typing import Any
 
 NON_SERIALIZABLE_FIELDS = ["callback_table_output", "callback_rich_output"]
+
+
+@dataclasses.dataclass
+class OperationResult:
+    """Outcome of a single interface action.
+
+    Interface methods return this instead of rising for expected business
+    failures. Exceptions are reserved for programming errors (broken invariant,
+    missing template, corrupt state).
+
+    Attributes:
+        success: Whether the action succeeded.
+        item: Human-readable identifier (file path, resource name, …).
+        data: Optional payload attached to the result.
+        message: Human-readable description of the outcome.
+        error_code: Non-zero on failure.
+    """
+
+    success: bool
+    item: str
+    data: Any = None
+    message: str = ""
+    error_code: int = 0
+
+    @classmethod
+    def ok(cls, item: str, message: str = "", data: Any = None) -> "OperationResult":
+        """Create a successful result.
+
+        Args:
+            item: Human-readable identifier for the operated resource.
+            message: Human-readable description of what happened.
+            data: Optional domain payload.
+
+        Returns:
+            A successful OperationResult with error_code 0.
+        """
+        return cls(success=True, item=item, message=message, data=data)
+
+    @classmethod
+    def error(cls, item: str, message: str, error_code: int = 1) -> "OperationResult":
+        """Create a failed result.
+
+        Args:
+            item: Human-readable identifier for the operated resource.
+            message: Description of the failure.
+            error_code: Exit code for this failure (default 1).
+
+        Returns:
+            A failed OperationResult with the given error_code.
+        """
+        return cls(success=False, item=item, message=message, error_code=error_code)
 
 
 @dataclasses.dataclass
@@ -34,7 +85,7 @@ class Response:
         Only includes fields whose values differ from their defaults.
 
         Returns:
-            Dictionary mapping attribute names to their values.
+            Dictionary mapping attributes names to their values.
         """
         return dict(
             (f.name, attrgetter(f.name)(self))
@@ -83,6 +134,52 @@ class Response:
             return self.callback_rich_output(self)
         else:
             raise RuntimeError("No Callback to generate rich output available")
+
+    @classmethod
+    def from_results(
+        cls,
+        results: list["OperationResult"],
+        message: str = "",
+        success_message: str = "",
+        failure_message: str = "",
+        table: type | None = None,
+    ) -> "Response":
+        """Build a Response from a list of OperationResult.
+
+        Aggregates a batch of interface results into a single Response.
+        success is True only if every result succeeded. error_code is taken
+        from the first failed result, or 0 if all passed.
+
+        Args:
+            results: Outcomes returned by the interface layer.
+            message: Fixed message used regardless of the outcome. When omitted,
+                success_message / failure_message are used, or a default
+                summary is generated from the result counts.
+            success_message: Message used when all results succeeded.
+            failure_message: Message used when at least one result failed.
+            table: Table callback class for rendering (passed as
+                callback_table_output).
+
+        Returns:
+            An aggregated Response reflecting the overall outcome.
+        """
+        failed = [r for r in results if not r.success]
+        success = not failed
+        error_code = failed[0].error_code if failed else 0
+
+        if not message:
+            if success:
+                message = success_message or f"{len(results)} operation(s) completed successfully."
+            else:
+                message = failure_message or f"{len(failed)}/{len(results)} operation(s) failed."
+
+        return cls(
+            success=success,
+            message=message,
+            data={"results": results},
+            error_code=error_code if not success else None,
+            callback_table_output=table,
+        )
 
     def _serialize_data(self):
         """Serialize dict values that expose a to_dict method in place."""

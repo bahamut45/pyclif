@@ -67,7 +67,7 @@ from .core.mixins import (
     OutputFormatMixin,
     RichHelpersMixin,
 )
-from .core.output import CliTable, CliTableColumn, ExceptionTable, Response
+from .core.output import CliTable, CliTableColumn, ExceptionTable, OperationResult, Response
 
 __all__ = [
     "__app_name__",
@@ -118,6 +118,7 @@ __all__ = [
     "configure_rich_logging",
     # class
     "BaseContext",
+    "OperationResult",
     "Response",
     "CliTable",
     "CliTableColumn",

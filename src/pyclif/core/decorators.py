@@ -189,11 +189,28 @@ class GroupDecorator:
     def _configure_handle_response(self, f: click_extra.Group) -> None:
         """Propagate the handle_response setting from GroupConfig to the group instance.
 
+        Also stores unhandled_exception_log_level in ctx.meta at root context
+        creation time so that returns_response can read it without holding a
+        reference to GroupConfig.
+
         Args:
             f: The Click group instance to configure.
         """
         if self.config.handle_response:
             f.handle_response_by_default = True
+
+        level = self.config.unhandled_exception_log_level
+        original_make_context = f.make_context
+
+        @functools.wraps(original_make_context)
+        def custom_make_context(info_name, args, parent=None, **extra):
+            """Store unhandled_exception_log_level in ctx.meta at root context."""
+            ctx = original_make_context(info_name, args, parent=parent, **extra)
+            if parent is None:
+                ctx.meta.setdefault("pyclif.unhandled_exception_log_level", level)
+            return ctx
+
+        f.make_context = custom_make_context
 
     @staticmethod
     def _extract_early_verbosity(args: list[str]) -> str | None:
@@ -297,8 +314,26 @@ def returns_response(f: Callable) -> Callable:
         import logging
         from time import perf_counter
 
+        from .output.responses import Response as _Response
+
         _log = logging.getLogger(__name__)
-        result = f(*args, **kwargs)
+        try:
+            result = f(*args, **kwargs)
+        except Exception as e:
+            ctx = click_extra.get_current_context(silent=True)
+            root = ctx
+            if root is not None:
+                while root.parent is not None:
+                    root = root.parent
+            meta = root.meta if root is not None else {}
+            log_level = meta.get("pyclif.unhandled_exception_log_level", "error")
+            _log.log(
+                logging.getLevelName(log_level.upper()),
+                "Unhandled exception in command '%s'",
+                f.__name__,
+                exc_info=True,
+            )
+            result = _Response(success=False, message=str(e), error_code=1)
         _log.debug(
             "returns_response: command '%s' returned %s",
             f.__name__,
