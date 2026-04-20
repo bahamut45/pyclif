@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Features
+
+- **dev**: Enhance development workflow with additional dependencies
+- **error-handling**: Standardize error handling across interfaces and commands
+
+### Miscellaneous
+
+- **docs**: Simplify deployment logic in workflow
+
+## [0.0.5] - 2026-04-19
+
 ### Miscellaneous
 
 - **docs**: Update workflow config and deploy logic
