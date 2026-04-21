@@ -26,3 +26,13 @@ Extends click-extra's config option with multi-location Linux config file search
 (`/etc/<app>/`, `~/.config/<app>/`, etc.).
 
 ::: pyclif.CustomConfigOption
+
+---
+
+## PyclifTimerOption
+
+Internal option class powering `timer=True` on `@app_group`. Subclasses click-extra's
+`TimerOption` to integrate with pyclif's output format: suppresses the text echo in
+`json`/`yaml` mode and injects timing fields into `Response.data` via `returns_response`.
+
+::: pyclif.core.classes.PyclifTimerOption
