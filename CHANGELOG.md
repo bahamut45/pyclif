@@ -6,6 +6,23 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- **docs**: Enhance pre-commit and documentation workflows
+- **docs**: Update API documentation and improve structure
+- **core**: Implement BaseInterface and Renderer foundations
+- **output**: Improve renderer and output handling across major components
+
+### Miscellaneous
+
+- **docs**: Add alias configuration for versioning
+
+### Tests
+
+- **output**: Add comprehensive unit tests for `Response` and `OperationResult`
+
+## [0.0.6] - 2026-04-20
+
+### Features
+
 - **dev**: Enhance development workflow with additional dependencies
 - **error-handling**: Standardize error handling across interfaces and commands
 
