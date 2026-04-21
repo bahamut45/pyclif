@@ -4,6 +4,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from pyclif.core.mixins.output import OutputFormatMixin
+from pyclif.core.output.renderer import BaseRenderer
 from pyclif.core.output.responses import OperationResult, Response
 
 
@@ -117,7 +119,8 @@ class TestResponseFromResults:
         """from_results forwards the table callback to callback_table_output."""
         mock_table = MagicMock()
         results = [OperationResult.ok("a.py")]
-        response = Response.from_results(results, table=mock_table)
+        with pytest.warns(DeprecationWarning, match="'table' parameter"):
+            response = Response.from_results(results, table=mock_table)
         assert response.callback_table_output is mock_table
 
 
@@ -198,14 +201,18 @@ class TestResponse:
         mock_callback = MagicMock(return_value="Table Output")
         response = Response(success=True, message="Table test", callback_table_output=mock_callback)
 
-        assert response.to_table() == "Table Output"
+        with pytest.warns(DeprecationWarning, match="callback_table_output"):
+            assert response.to_table() == "Table Output"
         mock_callback.assert_called_once_with(response)
 
     def test_to_table_without_callback_raises_error(self) -> None:
         """Test that to_table raises a RuntimeError when no callback is provided."""
         response = Response(success=True, message="No callback test")
 
-        with pytest.raises(RuntimeError, match="No Callback to generate table output available"):
+        with (
+            pytest.warns(DeprecationWarning, match="callback_table_output"),
+            pytest.raises(RuntimeError, match="No Callback to generate table output"),
+        ):
             response.to_table()
 
     def test_to_rich_with_callback(self) -> None:
@@ -213,12 +220,130 @@ class TestResponse:
         mock_callback = MagicMock(return_value="Rich Output")
         response = Response(success=True, message="Rich test", callback_rich_output=mock_callback)
 
-        assert response.to_rich() == "Rich Output"
+        with pytest.warns(DeprecationWarning, match="callback_rich_output"):
+            assert response.to_rich() == "Rich Output"
         mock_callback.assert_called_once_with(response)
 
     def test_to_rich_without_callback_raises_error(self) -> None:
         """Test that to_rich raises a RuntimeError when no callback is provided."""
         response = Response(success=True, message="No callback test")
 
-        with pytest.raises(RuntimeError, match="No Callback to generate rich output available"):
+        with (
+            pytest.warns(DeprecationWarning, match="callback_rich_output"),
+            pytest.raises(RuntimeError, match="No Callback to generate rich output available"),
+        ):
             response.to_rich()
+
+    def test_renderer_field_present(self) -> None:
+        """renderer field is present on Response and defaults to None."""
+        response = Response(success=True, message="ok")
+        assert response.renderer is None
+
+    def test_renderer_excluded_from_to_json(self) -> None:
+        """renderer is excluded from to_json() output."""
+        renderer = BaseRenderer()
+        response = Response(success=True, message="ok", renderer=renderer)
+        result = response.to_json()
+        assert "renderer" not in result
+
+
+class TestResponseFromStream:
+    """Test suite for Response.from_stream."""
+
+    def test_stores_generator_without_consuming(self) -> None:
+        """from_stream stores the generator without consuming it."""
+        calls: list[str] = []
+
+        def _gen():
+            calls.append("consumed")
+            yield OperationResult.ok("a")
+
+        renderer = BaseRenderer()
+        Response.from_stream(_gen(), renderer=renderer)
+        assert calls == []
+
+    def test_stream_in_data(self) -> None:
+        """from_stream stores the generator under data['stream']."""
+        renderer = BaseRenderer()
+        gen = iter([OperationResult.ok("a")])
+        response = Response.from_stream(gen, renderer=renderer)
+        assert "stream" in response.data
+
+    def test_renderer_attached(self) -> None:
+        """from_stream attaches the renderer to the response."""
+        renderer = BaseRenderer()
+        gen = iter([OperationResult.ok("a")])
+        response = Response.from_stream(gen, renderer=renderer)
+        assert response.renderer is renderer
+
+
+class TestMaterialiseStream:
+    """Test suite for OutputFormatMixin._materialise_stream."""
+
+    def _make_context(self) -> OutputFormatMixin:
+        ctx = OutputFormatMixin()
+        ctx.console = MagicMock()  # type: ignore[attr-defined]
+        return ctx
+
+    def test_replaces_stream_with_results(self) -> None:
+        """_materialise_stream replaces data['stream'] with data['results']."""
+        renderer = BaseRenderer()
+        gen = iter([OperationResult.ok("a"), OperationResult.ok("b")])
+        response = Response.from_stream(gen, renderer=renderer)
+        OutputFormatMixin._materialise_stream(response)
+        assert "stream" not in response.data
+        assert "results" in response.data
+        assert len(response.data["results"]) == 2
+
+    def test_success_true_when_all_ok(self) -> None:
+        """_materialise_stream sets success=True when all results succeeded."""
+        renderer = BaseRenderer()
+        gen = iter([OperationResult.ok("a"), OperationResult.ok("b")])
+        response = Response.from_stream(gen, renderer=renderer)
+        OutputFormatMixin._materialise_stream(response)
+        assert response.success is True
+
+    def test_success_false_when_any_failed(self) -> None:
+        """_materialise_stream sets success=False when any result failed."""
+        renderer = BaseRenderer()
+        gen = iter([OperationResult.ok("a"), OperationResult.error("b", "boom")])
+        response = Response.from_stream(gen, renderer=renderer)
+        OutputFormatMixin._materialise_stream(response)
+        assert response.success is False
+
+    def test_error_code_from_first_failure(self) -> None:
+        """_materialise_stream sets error_code from the first failed result."""
+        renderer = BaseRenderer()
+        gen = iter(
+            [
+                OperationResult.error("a", "err", error_code=3),
+                OperationResult.error("b", "err", error_code=5),
+            ]
+        )
+        response = Response.from_stream(gen, renderer=renderer)
+        OutputFormatMixin._materialise_stream(response)
+        assert response.error_code == 3
+
+    def test_message_from_renderer_on_success(self) -> None:
+        """_materialise_stream sets message from renderer.get_success_message on success."""
+
+        class _MsgRenderer(BaseRenderer):
+            success_message = "stream done"
+
+        renderer = _MsgRenderer()
+        gen = iter([OperationResult.ok("a")])
+        response = Response.from_stream(gen, renderer=renderer)
+        OutputFormatMixin._materialise_stream(response)
+        assert response.message == "stream done"
+
+    def test_message_from_renderer_on_failure(self) -> None:
+        """_materialise_stream sets message from renderer.get_failure_message on failure."""
+
+        class _MsgRenderer(BaseRenderer):
+            failure_message = "stream failed"
+
+        renderer = _MsgRenderer()
+        gen = iter([OperationResult.error("a", "boom")])
+        response = Response.from_stream(gen, renderer=renderer)
+        OutputFormatMixin._materialise_stream(response)
+        assert response.message == "stream failed"

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import dataclasses
+import warnings
 from collections.abc import Callable, Iterator
 from operator import attrgetter
 from typing import TYPE_CHECKING, Any
@@ -122,6 +123,12 @@ class Response:
         Raises:
             RuntimeError: If no table output callback is registered.
         """
+        warnings.warn(
+            "callback_table_output / to_table() is deprecated. "
+            "Use a BaseRenderer subclass instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if self.callback_table_output is not None:
             return self.callback_table_output(self)
         else:
@@ -136,6 +143,11 @@ class Response:
         Raises:
             RuntimeError: If no rich output callback is registered.
         """
+        warnings.warn(
+            "callback_rich_output / to_rich() is deprecated. Use a BaseRenderer subclass instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if self.callback_rich_output is not None:
             return self.callback_rich_output(self)
         else:
@@ -170,6 +182,14 @@ class Response:
         Returns:
             An aggregated Response reflecting the overall outcome.
         """
+        if table is not None:
+            warnings.warn(
+                "The 'table' parameter of from_results() is deprecated. "
+                "Pass a BaseRenderer instance via 'renderer' instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
         failed = [r for r in results if not r.success]
         success = not failed
         error_code = failed[0].error_code if failed else 0

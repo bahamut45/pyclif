@@ -43,11 +43,37 @@ available for direct use in error handlers.
 
 ---
 
+## Output formats
+
+| Format  | Output                                          | Filterable |
+|---------|-------------------------------------------------|------------|
+| `json`  | Syntax-highlighted JSON                         | yes        |
+| `yaml`  | Syntax-highlighted YAML                         | yes        |
+| `table` | Rich table                                      | no         |
+| `rich`  | Live / panels / markdown                        | no         |
+| `raw`   | Flat JSON, no highlighting — machine-readable   | yes        |
+| `text`  | Plain text: `response.message` only (default)   | no         |
+
+`text` is the default format for interactive use. `raw` is the machine-readable
+format for scripting — use it with `--output-filter` or pipe to `jq`.
+
+`--output-filter` extracts a single key from the serialized dict. It works with
+`raw`, `json`, and `yaml`. When a filter is active on `json` or `yaml`, the
+extracted value is printed without syntax highlighting.
+
+---
+
 ## BaseRenderer
 
 Declarative base class for all pyclif output renderers. Subclass and set class
 attributes (`fields`, `columns`, `rich_title`, `success_message`, `failure_message`)
 to control every output format without overriding methods.
+
+Key hooks:
+
+- `text(response)` — returns `response.message` as plain text (used by `--output-format text`)
+- `raw(response)` — returns a serialized dict for machine-readable output (used by `--output-format raw`)
+- `serialize(response)` — returns a JSON-serializable dict (used by `json`, `yaml`, and `raw`)
 
 ::: pyclif.BaseRenderer
 

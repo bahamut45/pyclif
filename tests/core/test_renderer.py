@@ -145,14 +145,42 @@ class TestSerialize:
 
 
 # ---------------------------------------------------------------------------
+# TestText
+# ---------------------------------------------------------------------------
+
+
+class TestText:
+    def test_returns_response_message(self) -> None:
+        response = Response(success=True, message="hello world")
+        assert BaseRenderer().text(response) == "hello world"
+
+    def test_returns_empty_string_when_no_message(self) -> None:
+        response = Response(success=True, message="")
+        assert BaseRenderer().text(response) == ""
+
+
+# ---------------------------------------------------------------------------
 # TestRaw
 # ---------------------------------------------------------------------------
 
 
 class TestRaw:
-    def test_returns_response_message(self) -> None:
-        response = Response(success=True, message="hello world")
-        assert BaseRenderer().raw(response) == "hello world"
+    def test_returns_dict(self) -> None:
+        results = [_ok("a")]
+        response = _response(results)
+        result = BaseRenderer().raw(response)
+        assert isinstance(result, dict)
+
+    def test_delegates_to_serialize(self) -> None:
+        results = [_ok("x")]
+        response = _response(results, renderer=_FullRenderer())
+        r = _FullRenderer()
+        assert r.raw(response) == r.serialize(response)
+
+    def test_contains_success_key(self) -> None:
+        results = [_ok("a")]
+        response = _response(results)
+        assert "success" in BaseRenderer().raw(response)
 
 
 # ---------------------------------------------------------------------------

@@ -6,9 +6,11 @@ from typing import Any
 
 import yaml
 from rich.live import Live
+from rich.panel import Panel
 from rich.syntax import Syntax
 
-from pyclif.core.output import ExceptionTable, Response
+from pyclif.core.output.renderer import BaseRenderer
+from pyclif.core.output.responses import OperationResult, Response
 
 
 class _FallbackEncoder(json.JSONEncoder):
@@ -29,28 +31,61 @@ class _FallbackEncoder(json.JSONEncoder):
         return str(obj)
 
 
+class _ExceptionRenderer(BaseRenderer):
+    """Internal renderer for unhandled exceptions.
+
+    Renders error details across all output formats. Not part of the public API.
+    """
+
+    fields = ["success", "error_code", "message"]
+
+    def table(self, response: Response) -> Any:
+        """Build an ExceptionTable from the first result's error data."""
+        # Lazy import — tables.py would create a circular import at module level
+        # because tables.py → output → renderer → responses → renderer.
+        from pyclif.core.output.tables import ExceptionTable  # noqa: PLC0415
+
+        result = response.data["results"][0]
+        tb = result.data.get("traceback", "") if isinstance(result.data, dict) else ""
+        return ExceptionTable({"error_code": result.item, "message": result.message, "data": tb})
+
+    def rich(self, response: Response, console: Any) -> None:
+        """Display the error message in a red panel.
+
+        Args:
+            response: The error response.
+            console: The Rich console to print to.
+        """
+        console.print(Panel(response.message, title="Error", style="red"))
+
+
 class OutputFormatMixin:
     """Provide methods for printing error messages and results based on a specified format.
 
     This mixin expects the inheriting class to have 'console' and 'output_format' attributes.
+    Every result must be a Response with a renderer attached.
     """
 
     def print_error_based_on_format(self, exception: Exception) -> None:
-        """Print the error message based on the specified format.
+        """Format and print an unhandled exception as a structured Response.
+
+        Creates a single-result Response from the exception and dispatches
+        it through the normal renderer path using _ExceptionRenderer.
 
         Args:
-            exception (Exception): The exception to be printed.
+            exception: The exception to display.
         """
-        message = {
-            "success": False,
-            "error_code": type(exception).__name__,
-            "message": str(exception),
-            "data": traceback.format_exc(),
-        }
-        if getattr(self, "output_format", None) == "table":
-            self.print_result_based_on_format(message, options={"callback": ExceptionTable})
-        else:
-            self.print_result_based_on_format(message)
+        result = OperationResult(
+            success=False,
+            item=type(exception).__name__,
+            message=str(exception),
+            error_code=1,
+            data={"traceback": traceback.format_exc()},
+        )
+        response = Response.from_results(
+            [result], message=str(exception), renderer=_ExceptionRenderer()
+        )
+        self.print_result_based_on_format(response)
 
     @staticmethod
     def _materialise_stream(response: Response) -> None:
@@ -75,132 +110,99 @@ class OutputFormatMixin:
         )
         response.data["results"] = items
 
-    def print_result_based_on_format(self, result: Any, options: dict | None = None) -> None:
-        """Print the result based on the specified format.
+    def print_result_based_on_format(self, result: Response, options: dict | None = None) -> None:
+        """Print a Response using its renderer.
 
-        When result is a Response with a renderer, all dispatch goes through
-        the renderer. Streaming responses (data["stream"] present) are handled
-        via the Live context for rich output, or materialised first for all
-        other formats. When renderer is None, the legacy callback/fallback
-        path is used for backward compatibility.
+        Streaming responses (data["stream"] present) are handled via the Live
+        context for rich output, or materialised first for all other formats.
 
         Args:
-            result: The result to be printed.
-            options: Additional options — callback, filter_value, default_filter_value.
-                Ignored when a renderer is present.
-        """
-        if options is None:
-            options = {}
+            result: The Response to print. Must have a renderer attached.
+            options: Optional dict with filter_value key for --output-filter support.
 
+        Raises:
+            RuntimeError: When result.renderer is None — a programming error.
+        """
+        renderer: BaseRenderer = result.renderer or BaseRenderer()
+        result.renderer = renderer
+
+        opts: dict = options or {}
         output_format: str | None = getattr(self, "output_format", None)
 
-        if isinstance(result, Response) and result.renderer is not None:
-            if "stream" in result.data:
-                if output_format == "rich":
-                    renderable = result.renderer.rich_setup()
-                    items: list = []
-                    with Live(renderable, console=self.console):  # type: ignore[attr-defined]
-                        for item in result.data.pop("stream"):
-                            items.append(item)
-                            result.renderer.rich_on_item(item, items)
-                    result.data["results"] = items
-                    result.renderer.rich_summary(result, self.console)  # type: ignore[attr-defined]
-                    return
-                self._materialise_stream(result)
+        if "stream" in result.data:
+            if output_format == "rich":
+                renderable = renderer.rich_setup()
+                items: list = []
+                with Live(renderable, console=self.console):  # type: ignore[attr-defined]
+                    for item in result.data.pop("stream"):
+                        items.append(item)
+                        renderer.rich_on_item(item, items)
+                result.data["results"] = items
+                renderer.rich_summary(result, self.console)  # type: ignore[attr-defined]
+                return
+            self._materialise_stream(result)
+        filter_key: str | None = opts.get("filter_value")
 
-            renderer = result.renderer
-            renderer_dispatch: dict[str, Any] = {
-                "json": lambda: self._print_json(renderer.serialize(result), {}),
-                "yaml": lambda: self._print_yaml(renderer.serialize(result), {}),
-                "table": lambda: self.console.print(renderer.table(result)),  # type: ignore[attr-defined]
-                "rich": lambda: renderer.rich(result, self.console),  # type: ignore[attr-defined]
-                "raw": lambda: self.console.print(renderer.raw(result)),  # type: ignore[attr-defined]
-            }
-            renderer_dispatch.get(output_format or "raw", renderer_dispatch["raw"])()
-            return
-
-        dispatch = {
-            "json": self._print_json,
-            "yaml": self._print_yaml,
-            "table": self._print_table,
-            "rich": self._print_rich,
-            "raw": self._print_raw,
-        }
-        print_func = dispatch.get(output_format, self._print_raw)  # type: ignore
-        # noinspection PyArgumentList
-        print_func(result, options)
-
-    def _print_json(self, result: Any, options: dict) -> None:
-        """Print the result as JSON, serializing a Response if needed.
-
-        Uses _FallbackEncoder so that domain objects not handled by
-        Response._serialize_data() (no to_dict(), non-standard types) are
-        still rendered rather than raising a TypeError.
-        """
-        if isinstance(result, Response):
-            result = result.to_json()
-        # Filter out options aren't supported by print_json
-        clean_options = {
-            k: v
-            for k, v in options.items()
-            if k not in ["callback", "filter_value", "default_filter_value"]
-        }
-        json_str = json.dumps(result, cls=_FallbackEncoder)
-        self.console.print_json(json_str, **clean_options)  # type: ignore
-
-    def _print_yaml(self, result: Any, options: dict) -> None:
-        """Print the result as syntax-highlighted YAML, serializing a Response if needed."""
-        if isinstance(result, Response):
-            result = result.to_json()
-        yaml_content = yaml.dump(result, allow_unicode=True, indent=2, sort_keys=False)
-        clean_options = {
-            k: v
-            for k, v in options.items()
-            if k not in ["callback", "filter_value", "default_filter_value"]
-        }
-        self.console.print(  # type: ignore
-            Syntax(yaml_content, "yaml", theme="ansi_dark"), soft_wrap=True, **clean_options
-        )
-
-    def _print_table(self, result: Any, options: dict) -> None:
-        """Print the result as a table using a Response callback or a direct callback."""
-        if isinstance(result, Response):
-            self.console.print(result.to_table())  # type: ignore
-            return
-
-        callback = options.get("callback")
-        if callback is not None:
-            self.console.print(callback(result))  # type: ignore
-        else:
-            self.console.print(result)  # type: ignore
-
-    def _print_rich(self, result: Any, options: dict) -> None:
-        """Print the result using rich rendering via a Response callback or a direct callback."""
-        if isinstance(result, Response):
-            self.console.print(result.to_rich())  # type: ignore
-            return
-
-        callback = options.get("callback")
-        if callback is not None:
-            self.console.print(callback(result))  # type: ignore
-        else:
-            self.console.print(result)  # type: ignore
-
-    def _print_raw(self, result: Any, options: dict) -> None:
-        """Print the result as plain text, optionally filtering a single key from the data."""
-        if isinstance(result, Response):
-            result = result.to_json()
-
-        filter_key = options.get("filter_value")
-        default_value = options.get("default_filter_value")
-
-        if filter_key and isinstance(result, dict):
-            # Look inside `data` first (the structured payload), then fall back
-            # to the top-level response fields (success, message, error_code…).
-            data = result.get("data")
-            if isinstance(data, dict) and filter_key in data:
-                self.console.print(data.get(filter_key, default_value))  # type: ignore
+        def _json() -> None:
+            serialized = renderer.serialize(result)
+            if filter_key:
+                self._print_raw_dict(serialized, filter_key)
             else:
-                self.console.print(result.get(filter_key, default_value))  # type: ignore
+                self._print_json(serialized)
+
+        def _yaml() -> None:
+            serialized = renderer.serialize(result)
+            if filter_key:
+                self._print_raw_dict(serialized, filter_key)
+            else:
+                self._print_yaml(serialized)
+
+        dispatch: dict[str, Any] = {
+            "json": _json,
+            "yaml": _yaml,
+            "table": lambda: self.console.print(renderer.table(result)),  # type: ignore[attr-defined]
+            "rich": lambda: renderer.rich(result, self.console),  # type: ignore[attr-defined]
+            "raw": lambda: self._print_raw_dict(renderer.raw(result), filter_key),
+            "text": lambda: self.console.print(renderer.text(result)),  # type: ignore[attr-defined]
+        }
+        dispatch.get(output_format or "text", dispatch["text"])()
+
+    def _print_raw_dict(self, data: dict, filter_key: str | None) -> None:
+        """Print a serialized dict as compact JSON, or extract and print a single key.
+
+        When filter_key is set, checks data["data"] first (the structured payload),
+        then falls back to top-level response fields (success, message, error_code).
+        When filter_key is None, prints the full dict as compact JSON without
+        syntax highlighting.
+
+        Args:
+            data: Serialized response dict from renderer.raw() or renderer.serialize().
+            filter_key: Key to extract, or None to print the full dict.
+        """
+        if filter_key:
+            sub = data.get("data")
+            if isinstance(sub, dict) and filter_key in sub:
+                self.console.print(sub[filter_key])  # type: ignore[attr-defined]
+            else:
+                self.console.print(data.get(filter_key))  # type: ignore[attr-defined]
         else:
-            self.console.print(result)  # type: ignore
+            self.console.print(json.dumps(data, cls=_FallbackEncoder))  # type: ignore[attr-defined]
+
+    def _print_json(self, data: dict) -> None:
+        """Print a dict as syntax-highlighted JSON.
+
+        Args:
+            data: Serialized response dict to display.
+        """
+        self.console.print_json(json.dumps(data, cls=_FallbackEncoder))  # type: ignore[attr-defined]
+
+    def _print_yaml(self, data: dict) -> None:
+        """Print a dict as syntax-highlighted YAML.
+
+        Args:
+            data: Serialized response dict to display.
+        """
+        yaml_content = yaml.dump(data, allow_unicode=True, indent=2, sort_keys=False)
+        self.console.print(  # type: ignore[attr-defined]
+            Syntax(yaml_content, "yaml", theme="ansi_dark"), soft_wrap=True
+        )

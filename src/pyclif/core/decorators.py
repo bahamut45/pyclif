@@ -358,7 +358,7 @@ def returns_response(f: Callable) -> Callable:
             obj = ctx.obj if ctx is not None else None
             output_ctx = obj if isinstance(obj, BaseContext) else BaseContext()
             meta = root.meta if root is not None else {}
-            output_format = meta.get("pyclif.output_format", "raw")
+            output_format = meta.get("pyclif.output_format", "text")
 
             # Inject execution time into structured output when timer is active.
             start_time = meta.get("click_extra.start_time")
@@ -384,14 +384,7 @@ def returns_response(f: Callable) -> Callable:
             output_filter = meta.get("pyclif.output_filter")
             if output_filter:
                 options["filter_value"] = output_filter
-            try:
-                output_ctx.print_result_based_on_format(result, options=options)
-            except RuntimeError as e:
-                # Format requires a callback (table/rich) that was not provided.
-                # Delegate to print_error_based_on_format so the error is rendered
-                # consistently with the chosen format (e.g. ExceptionTable for 'table').
-                _log.debug("returns_response: RuntimeError during print: %s", e)
-                output_ctx.print_error_based_on_format(e)
+            output_ctx.print_result_based_on_format(result, options=options)
         else:
             _log.debug(
                 "returns_response: result is not a Response instance — skipping output dispatch"

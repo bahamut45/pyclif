@@ -28,8 +28,12 @@ class ResponseRenderer(Protocol):
         """Build a CliTable from the response results."""
         ...
 
-    def raw(self, response: Response) -> str:
-        """Return a plain-text representation of the response."""
+    def text(self, response: Response) -> str:
+        """Return the response message as plain text."""
+        ...
+
+    def raw(self, response: Response) -> dict:
+        """Return a serialized dict for machine-readable output."""
         ...
 
     def rich(self, response: Response, console: Console) -> None:
@@ -174,7 +178,7 @@ class BaseRenderer:
         )
 
     # noinspection PyMethodMayBeStatic
-    def raw(self, response: Response) -> str:
+    def text(self, response: Response) -> str:
         """Return the response message as plain text.
 
         Args:
@@ -184,6 +188,19 @@ class BaseRenderer:
             The response message string.
         """
         return response.message
+
+    def raw(self, response: Response) -> dict:
+        """Return a serialized dict for machine-readable output.
+
+        Defaults to serialize() output. Override for a custom raw representation.
+
+        Args:
+            response: The command response.
+
+        Returns:
+            Serialized dict suitable for compact JSON output.
+        """
+        return self.serialize(response)
 
     def rich(self, response: Response, console: Console) -> None:
         """Display a panel with the response message.

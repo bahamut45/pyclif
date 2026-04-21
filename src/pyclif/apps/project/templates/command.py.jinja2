@@ -1,9 +1,10 @@
 from pyclif import command, Response
 from ....core.context import pass_cli_context
+from ..interfaces import {{ name_pascal }}Interface
 
 
 @command()
 @pass_cli_context
-def {{ name_snake }}(ctx):
+def {{ name_snake }}(ctx) -> Response:
     """{{ name_pascal }} description."""
-    return Response(success=True, message="{{ name_pascal }} executed.", data={})
+    return {{ name_pascal }}Interface(ctx).respond("list_items")

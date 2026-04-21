@@ -1,1 +1,29 @@
 """Business logic for the {{ name_pascal }} app."""
+
+from pyclif import BaseInterface, BaseRenderer, OperationResult
+
+
+class {{ name_pascal }}Renderer(BaseRenderer):
+    """Output renderer for {{ name_pascal }} commands."""
+
+    fields = ["item", "success", "message"]
+    columns = ["item", "success"]
+    success_message = "{{ name_pascal }} operation completed."
+    failure_message = "{{ name_pascal }} operation failed."
+
+
+class {{ name_pascal }}Interface(BaseInterface):
+    """Interface for {{ name_pascal }} business logic."""
+
+    renderers = {
+        "list_items": {{ name_pascal }}Renderer,
+    }
+
+    def list_items(self) -> list[OperationResult]:
+        """Return a list of items.
+
+        Returns:
+            List of OperationResult objects.
+        """
+        # TODO: implement business logic here
+        return [OperationResult.ok("example-item", message="fetched", data={"action": "fetched"})]
