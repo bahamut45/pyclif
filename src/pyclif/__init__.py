@@ -49,6 +49,7 @@ from .core.decorators import (
     output_filter_option,
     returns_response,
 )
+from .core.interfaces import BaseInterface
 from .core.logging import (
     PYCLIF_LOG_LEVELS,
     TRACE,
@@ -67,7 +68,15 @@ from .core.mixins import (
     OutputFormatMixin,
     RichHelpersMixin,
 )
-from .core.output import CliTable, CliTableColumn, ExceptionTable, OperationResult, Response
+from .core.output import (
+    BaseRenderer,
+    CliTable,
+    CliTableColumn,
+    ExceptionTable,
+    OperationResult,
+    Response,
+    ResponseRenderer,
+)
 
 __all__ = [
     "__app_name__",
@@ -120,6 +129,9 @@ __all__ = [
     "BaseContext",
     "OperationResult",
     "Response",
+    "BaseInterface",
+    "BaseRenderer",
+    "ResponseRenderer",
     "CliTable",
     "CliTableColumn",
     "ExceptionTable",

@@ -1,11 +1,16 @@
 """Response and OperationResult classes."""
 
-import dataclasses
-from collections.abc import Callable
-from operator import attrgetter
-from typing import Any
+from __future__ import annotations
 
-NON_SERIALIZABLE_FIELDS = ["callback_table_output", "callback_rich_output"]
+import dataclasses
+from collections.abc import Callable, Iterator
+from operator import attrgetter
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .renderer import BaseRenderer
+
+NON_SERIALIZABLE_FIELDS = ["callback_table_output", "callback_rich_output", "renderer"]
 
 
 @dataclasses.dataclass
@@ -31,7 +36,7 @@ class OperationResult:
     error_code: int = 0
 
     @classmethod
-    def ok(cls, item: str, message: str = "", data: Any = None) -> "OperationResult":
+    def ok(cls, item: str, message: str = "", data: Any = None) -> OperationResult:
         """Create a successful result.
 
         Args:
@@ -45,7 +50,7 @@ class OperationResult:
         return cls(success=True, item=item, message=message, data=data)
 
     @classmethod
-    def error(cls, item: str, message: str, error_code: int = 1) -> "OperationResult":
+    def error(cls, item: str, message: str, error_code: int = 1) -> OperationResult:
         """Create a failed result.
 
         Args:
@@ -78,6 +83,7 @@ class Response:
     error_code: int | None = None
     callback_table_output: Callable | None = None
     callback_rich_output: Callable | None = None
+    renderer: BaseRenderer | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Return a dictionary representation of the object.
@@ -138,12 +144,13 @@ class Response:
     @classmethod
     def from_results(
         cls,
-        results: list["OperationResult"],
+        results: list[OperationResult],
         message: str = "",
         success_message: str = "",
         failure_message: str = "",
         table: type | None = None,
-    ) -> "Response":
+        renderer: BaseRenderer | None = None,
+    ) -> Response:
         """Build a Response from a list of OperationResult.
 
         Aggregates a batch of interface results into a single Response.
@@ -157,8 +164,8 @@ class Response:
                 summary is generated from the result counts.
             success_message: Message used when all results succeeded.
             failure_message: Message used when at least one result failed.
-            table: Table callback class for rendering (passed as
-                callback_table_output).
+            table: Deprecated. Table callback class (kept for backward compatibility).
+            renderer: Renderer instance controlling all output formats.
 
         Returns:
             An aggregated Response reflecting the overall outcome.
@@ -179,6 +186,39 @@ class Response:
             data={"results": results},
             error_code=error_code if not success else None,
             callback_table_output=table,
+            renderer=renderer,
+        )
+
+    @classmethod
+    def from_stream(
+        cls,
+        stream: Iterator[OperationResult],
+        renderer: BaseRenderer,
+    ) -> Response:
+        """Build a Response from a generator of OperationResult.
+
+        The generator is stored without being consumed. The framework
+        materialises it at dispatch time: for rich output the Live context
+        drives iteration via renderer hooks; for all other formats
+        OutputFormatMixin calls _materialise_stream() before dispatch.
+
+        success, message, and error_code are left blank — they are
+        re-evaluated by the framework after the stream is consumed, using
+        renderer.get_success_message() / get_failure_message().
+
+        Args:
+            stream: Generator yielding OperationResult items one by one.
+            renderer: Renderer instance — required, a stream with no renderer
+                has no output contract.
+
+        Returns:
+            An incomplete Response carrying the stream and renderer.
+        """
+        return cls(
+            success=True,
+            message="",
+            data={"stream": stream},
+            renderer=renderer,
         )
 
     def _serialize_data(self):

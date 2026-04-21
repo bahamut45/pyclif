@@ -17,7 +17,7 @@ def project(tmp_path, monkeypatch):
     """A freshly initialised project in tmp_path."""
     monkeypatch.chdir(tmp_path)
     iface = ScaffoldingInterface(ctx=None)
-    iface.init_project("my-app")
+    list(iface.init_project("my-app"))
     return ScaffoldingInterface(ctx=None, root=tmp_path / "my-app")
 
 
@@ -47,7 +47,7 @@ class TestInitProject:
         """All project skeleton files are written."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        results = iface.init_project("my-app")
+        results = list(iface.init_project("my-app"))
         paths = {r.item for r in results}
 
         assert any("pyproject.toml" in p for p in paths)
@@ -59,7 +59,7 @@ class TestInitProject:
         """init_project returns only successful results for a fresh project."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        results = iface.init_project("my-app")
+        results = list(iface.init_project("my-app"))
         assert all(r.success for r in results)
         assert all(isinstance(r, OperationResult) for r in results)
 
@@ -67,15 +67,15 @@ class TestInitProject:
         """init_project only creates files — no modified entries."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        results = iface.init_project("my-app")
+        results = list(iface.init_project("my-app"))
         assert all(r.data.get("action") == "created" for r in results)
 
     def test_returns_error_if_directory_exists(self, tmp_path, monkeypatch) -> None:
         """Second init with the same name returns a single error result."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        iface.init_project("my-app")
-        results = iface.init_project("my-app")
+        list(iface.init_project("my-app"))
+        results = list(iface.init_project("my-app"))
         assert len(results) == 1
         assert not results[0].success
         assert "already exists" in results[0].message
@@ -84,7 +84,8 @@ class TestInitProject:
         """uv template includes hatchling build backend."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        iface.init_project("my-app", package_manager="uv")
+        # noinspection PyArgumentEqualDefault
+        list(iface.init_project("my-app", package_manager="uv"))
         content = (tmp_path / "my-app" / "pyproject.toml").read_text()
         assert "hatchling" in content
         assert "dependency-groups" in content
@@ -93,7 +94,7 @@ class TestInitProject:
         """poetry template includes poetry build backend."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        iface.init_project("my-app", package_manager="poetry")
+        list(iface.init_project("my-app", package_manager="poetry"))
         content = (tmp_path / "my-app" / "pyproject.toml").read_text()
         assert "poetry-core" in content
         assert "tool.poetry" in content
@@ -102,7 +103,7 @@ class TestInitProject:
         """Unsupported package manager returns a single error result."""
         monkeypatch.chdir(tmp_path)
         iface = ScaffoldingInterface(ctx=None)
-        results = iface.init_project("my-app", package_manager="pipenv")
+        results = list(iface.init_project("my-app", package_manager="pipenv"))
         assert len(results) == 1
         assert not results[0].success
         assert "Unsupported package manager" in results[0].message
@@ -113,7 +114,7 @@ class TestAddApp:
 
     def test_creates_app_files(self, project) -> None:
         """App skeleton files are written under apps/."""
-        results = project.add_app("repos")
+        results = list(project.add_app("repos"))
         paths = {r.item for r in results}
 
         assert any("repos/__init__.py" in p for p in paths)
@@ -124,22 +125,22 @@ class TestAddApp:
 
     def test_wires_app_in_apps_init(self, project, tmp_path) -> None:
         """apps/__init__.py is updated with the new group import."""
-        project.add_app("repos")
+        list(project.add_app("repos"))
         content = (tmp_path / "my-app" / "src" / "my_app" / "apps" / "__init__.py").read_text()
         assert "from .repos import repos" in content
         assert "groups.append(repos)" in content
 
     def test_modified_action_for_apps_init(self, project) -> None:
         """The apps/__init__.py entry is marked as modified."""
-        results = project.add_app("repos")
+        results = list(project.add_app("repos"))
         modified = [r for r in results if r.success and r.data.get("action") == "modified"]
         assert len(modified) == 1
         assert "__init__.py" in modified[0].item
 
     def test_returns_error_if_app_exists(self, project) -> None:
         """Second add_app with same name returns a single error result."""
-        project.add_app("repos")
-        results = project.add_app("repos")
+        list(project.add_app("repos"))
+        results = list(project.add_app("repos"))
         assert len(results) == 1
         assert not results[0].success
         assert "already exists" in results[0].message
@@ -150,14 +151,14 @@ class TestAddCommand:
 
     def test_creates_command_file(self, project) -> None:
         """Command file is written inside the app's commands/ directory."""
-        project.add_app("repos")
-        results = project.add_command("list", "repos")
+        list(project.add_app("repos"))
+        results = list(project.add_command("list", "repos"))
         assert any("commands/list.py" in r.item for r in results)
 
     def test_wires_command_in_commands_init(self, project, tmp_path) -> None:
         """commands/__init__.py is updated with the new command import."""
-        project.add_app("repos")
-        project.add_command("list", "repos")
+        list(project.add_app("repos"))
+        list(project.add_command("list", "repos"))
         path = (
             tmp_path / "my-app" / "src" / "my_app" / "apps" / "repos" / "commands" / "__init__.py"
         )
@@ -167,16 +168,16 @@ class TestAddCommand:
 
     def test_returns_error_if_app_not_found(self, project) -> None:
         """add_command returns an error result when the app does not exist."""
-        results = project.add_command("list", "unknown")
+        results = list(project.add_command("list", "unknown"))
         assert len(results) == 1
         assert not results[0].success
         assert "App 'unknown' not found" in results[0].message
 
     def test_returns_error_if_command_exists(self, project) -> None:
         """Second add_command with the same name returns an error result."""
-        project.add_app("repos")
-        project.add_command("list", "repos")
-        results = project.add_command("list", "repos")
+        list(project.add_app("repos"))
+        list(project.add_command("list", "repos"))
+        results = list(project.add_command("list", "repos"))
         assert len(results) == 1
         assert not results[0].success
         assert "already exists" in results[0].message
@@ -187,12 +188,12 @@ class TestAddIntegration:
 
     def test_creates_simple_integration(self, project) -> None:
         """Simple integration writes a single .py file."""
-        results = project.add_integration("github")
+        results = list(project.add_integration("github"))
         assert any("integrations/github.py" in r.item for r in results)
 
     def test_creates_package_integration(self, project) -> None:
         """Package integration writes client, helpers, models and __init__."""
-        results = project.add_integration("ssh", package=True)
+        results = list(project.add_integration("ssh", package=True))
         paths = {r.item for r in results}
         assert any("ssh/__init__.py" in p for p in paths)
         assert any("ssh/client.py" in p for p in paths)
@@ -201,15 +202,15 @@ class TestAddIntegration:
 
     def test_wires_integration_in_context(self, project, tmp_path) -> None:
         """core/context.py receives import and property stub."""
-        project.add_integration("github")
+        list(project.add_integration("github"))
         content = (tmp_path / "my-app" / "src" / "my_app" / "core" / "context.py").read_text()
         assert "from .integrations.github import GithubIntegration" in content
         assert "self.github = GithubIntegration()" in content
 
     def test_returns_error_if_integration_exists(self, project) -> None:
         """Second add_integration with the same name returns an error result."""
-        project.add_integration("github")
-        results = project.add_integration("github")
+        list(project.add_integration("github"))
+        results = list(project.add_integration("github"))
         assert len(results) == 1
         assert not results[0].success
         assert "already exists" in results[0].message
