@@ -2,8 +2,6 @@
 
 from unittest.mock import MagicMock
 
-import pytest
-
 from pyclif.core.mixins.output import OutputFormatMixin
 from pyclif.core.output.renderer import BaseRenderer
 from pyclif.core.output.responses import OperationResult, Response
@@ -115,14 +113,6 @@ class TestResponseFromResults:
         response = Response.from_results(results)
         assert "1/2" in response.message
 
-    def test_table_callback_is_set(self) -> None:
-        """from_results forwards the table callback to callback_table_output."""
-        mock_table = MagicMock()
-        results = [OperationResult.ok("a.py")]
-        with pytest.warns(DeprecationWarning, match="'table' parameter"):
-            response = Response.from_results(results, table=mock_table)
-        assert response.callback_table_output is mock_table
-
 
 class MockDataModel:
     """Mock model with a to_dict method for serialization testing."""
@@ -147,8 +137,7 @@ class TestResponse:
         assert response.message == "Operation successful"
         assert response.data == {}
         assert response.error_code is None
-        assert response.callback_table_output is None
-        assert response.callback_rich_output is None
+        assert response.renderer is None
 
     def test_to_dict_excludes_defaults(self) -> None:
         """Test that to_dict returns only fields that differ from their default values."""
@@ -161,16 +150,14 @@ class TestResponse:
         assert "error_code" not in result
 
     def test_to_json_removes_non_serializable_fields(self) -> None:
-        """Test that to_json excludes callback fields and returns serializable data."""
-        mock_table_callback = MagicMock()
-        mock_rich_callback = MagicMock()
+        """Test that to_json excludes the renderer and returns serializable data."""
+        from pyclif.core.output.renderer import BaseRenderer
 
         response = Response(
             success=False,
             message="An error occurred",
             error_code=404,
-            callback_table_output=mock_table_callback,
-            callback_rich_output=mock_rich_callback,
+            renderer=BaseRenderer(),
         )
 
         result = response.to_json()
@@ -178,8 +165,7 @@ class TestResponse:
         assert result["success"] is False
         assert result["message"] == "An error occurred"
         assert result["error_code"] == 404
-        assert "callback_table_output" not in result
-        assert "callback_rich_output" not in result
+        assert "renderer" not in result
 
     def test_serialize_data_with_nested_objects(self) -> None:
         """Test that objects with a to_dict method are properly serialized inside data."""
@@ -195,44 +181,6 @@ class TestResponse:
         assert "data" in result
         assert result["data"]["status"] == "active"
         assert result["data"]["user"] == {"mock_key": "mock_value"}
-
-    def test_to_table_with_callback(self) -> None:
-        """Test that to_table executes the callback_table_output if provided."""
-        mock_callback = MagicMock(return_value="Table Output")
-        response = Response(success=True, message="Table test", callback_table_output=mock_callback)
-
-        with pytest.warns(DeprecationWarning, match="callback_table_output"):
-            assert response.to_table() == "Table Output"
-        mock_callback.assert_called_once_with(response)
-
-    def test_to_table_without_callback_raises_error(self) -> None:
-        """Test that to_table raises a RuntimeError when no callback is provided."""
-        response = Response(success=True, message="No callback test")
-
-        with (
-            pytest.warns(DeprecationWarning, match="callback_table_output"),
-            pytest.raises(RuntimeError, match="No Callback to generate table output"),
-        ):
-            response.to_table()
-
-    def test_to_rich_with_callback(self) -> None:
-        """Test that to_rich executes the callback_rich_output if provided."""
-        mock_callback = MagicMock(return_value="Rich Output")
-        response = Response(success=True, message="Rich test", callback_rich_output=mock_callback)
-
-        with pytest.warns(DeprecationWarning, match="callback_rich_output"):
-            assert response.to_rich() == "Rich Output"
-        mock_callback.assert_called_once_with(response)
-
-    def test_to_rich_without_callback_raises_error(self) -> None:
-        """Test that to_rich raises a RuntimeError when no callback is provided."""
-        response = Response(success=True, message="No callback test")
-
-        with (
-            pytest.warns(DeprecationWarning, match="callback_rich_output"),
-            pytest.raises(RuntimeError, match="No Callback to generate rich output available"),
-        ):
-            response.to_rich()
 
     def test_renderer_field_present(self) -> None:
         """renderer field is present on Response and defaults to None."""

@@ -228,7 +228,7 @@ class ScaffoldingInterface(BaseInterface):
             content: Text to append.
 
         Yields:
-            OperationResult indicating success or a missing-file error.
+            OperationResult indicating the success or a missing-file error.
         """
         if not path.exists():
             yield OperationResult.error(str(path), f"File '{path}' not found.")
@@ -327,7 +327,7 @@ class ScaffoldingInterface(BaseInterface):
         """Detect the Python package name from the src/ directory.
 
         Returns:
-            The package directory name found under src/.
+            The package directory name is found under src/.
 
         Raises:
             RuntimeError: If src/ does not exist or contains no package.

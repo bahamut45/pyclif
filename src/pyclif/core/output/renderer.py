@@ -37,7 +37,7 @@ class ResponseRenderer(Protocol):
         ...
 
     def rich(self, response: Response, console: Console) -> None:
-        """Print a static Rich display (panels, markdown, tables) to console."""
+        """Print a static Rich display (panels, markdown, tables) to the console."""
         ...
 
     def rich_setup(self) -> Any:
@@ -65,7 +65,7 @@ class BaseRenderer:
     """Declarative base class for pyclif output renderers.
 
     Subclass and declare class attributes to control every output format.
-    Override individual hooks for custom behaviour. Override the full method
+    Override individual hooks for custom behavior. Override the full method
     only as a last resort.
 
     Class attributes:
@@ -78,7 +78,7 @@ class BaseRenderer:
 
     Implementation note — class-level lists: fields and columns are ClassVar.
     Subclasses override them as plain class attributes (never mutated at runtime).
-    get_fields() and get_columns() always return a copy so callers cannot
+    get_fields() and get_columns() always return a copy, so callers cannot
     accidentally mutate the class-level list.
     """
 
@@ -120,7 +120,7 @@ class BaseRenderer:
     def serialize(self, response: Response) -> dict:
         """Return a JSON-serializable dict filtered to self.fields.
 
-        When fields is empty, delegates to response.to_json() for full
+        When fields are empty, delegates to response.to_json() for full
         serialization with standard exclusions.
 
         Args:
@@ -154,10 +154,10 @@ class BaseRenderer:
         """Build a CliTable from response.data["results"] using self.columns.
 
         Args:
-            response: The command response carrying the results list.
+            response: The command response carrying the result list.
 
         Returns:
-            A CliTable instance ready for console.print().
+            A CliTable instance is ready for console.print().
         """
         # Lazy import — renderer.py and tables.py are in the same package;
         # importing at module level would create a circular dependency via
@@ -233,7 +233,7 @@ class BaseRenderer:
 
         Args:
             result: The latest OperationResult.
-            all_so_far: All results received so far, including result.
+            all_so_far: All results received so far, including a result.
         """
 
     def rich_summary(self, response: Response, console: Console) -> None:
@@ -242,7 +242,7 @@ class BaseRenderer:
         Defaults to the static rich() display. Override for a custom summary.
 
         Args:
-            response: The fully materialised response with all results.
+            response: The fully materialized response with all results.
             console: The Rich console to print to.
         """
         self.rich(response, console)

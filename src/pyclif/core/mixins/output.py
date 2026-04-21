@@ -92,7 +92,7 @@ class OutputFormatMixin:
         """Consume a streaming Response generator and re-evaluate its fields.
 
         Replaces data["stream"] with data["results"], then re-computes
-        success, error_code, and message from the materialised list using
+        success, error_code, and message from the materialized list using
         the renderer's message methods.
 
         Args:
@@ -114,11 +114,11 @@ class OutputFormatMixin:
         """Print a Response using its renderer.
 
         Streaming responses (data["stream"] present) are handled via the Live
-        context for rich output, or materialised first for all other formats.
+        context for rich output, or materialized first for all other formats.
 
         Args:
             result: The Response to print. Must have a renderer attached.
-            options: Optional dict with filter_value key for --output-filter support.
+            options: Optional dict with the filter_value key for --output-filter support.
 
         Raises:
             RuntimeError: When result.renderer is None — a programming error.
@@ -165,7 +165,7 @@ class OutputFormatMixin:
             "raw": lambda: self._print_raw_dict(renderer.raw(result), filter_key),
             "text": lambda: self.console.print(renderer.text(result)),  # type: ignore[attr-defined]
         }
-        dispatch.get(output_format or "text", dispatch["text"])()
+        dispatch.get(output_format or "table", dispatch["table"])()
 
     def _print_raw_dict(self, data: dict, filter_key: str | None) -> None:
         """Print a serialized dict as compact JSON, or extract and print a single key.

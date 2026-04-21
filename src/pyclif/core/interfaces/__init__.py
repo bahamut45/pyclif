@@ -1,4 +1,4 @@
-"""Interface base classes for pyclif service layer."""
+"""Interface base classes for the pyclif service layer."""
 
 from .base import BaseInterface
 

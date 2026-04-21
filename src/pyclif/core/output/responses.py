@@ -3,15 +3,14 @@
 from __future__ import annotations
 
 import dataclasses
-import warnings
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from operator import attrgetter
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from .renderer import BaseRenderer
 
-NON_SERIALIZABLE_FIELDS = ["callback_table_output", "callback_rich_output", "renderer"]
+NON_SERIALIZABLE_FIELDS = ["renderer"]
 
 
 @dataclasses.dataclass
@@ -74,16 +73,13 @@ class Response:
         message: The message associated with the response.
         data: Additional data associated with the response.
         error_code: The error code associated with the response.
-        callback_table_output: Callback function for generating table output.
-        callback_rich_output: Callback function for generating rich output.
+        renderer: Renderer controlling all output formats for this response.
     """
 
     success: bool
     message: str
     data: Any = dataclasses.field(default_factory=dict)
     error_code: int | None = None
-    callback_table_output: Callable | None = None
-    callback_rich_output: Callable | None = None
     renderer: BaseRenderer | None = None
 
     def to_dict(self) -> dict[str, Any]:
@@ -114,45 +110,6 @@ class Response:
             data.pop(field, None)
         return data
 
-    def to_table(self) -> str:
-        """Convert the response to a table format using the registered callback.
-
-        Returns:
-            The table representation of the response.
-
-        Raises:
-            RuntimeError: If no table output callback is registered.
-        """
-        warnings.warn(
-            "callback_table_output / to_table() is deprecated. "
-            "Use a BaseRenderer subclass instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        if self.callback_table_output is not None:
-            return self.callback_table_output(self)
-        else:
-            raise RuntimeError("No Callback to generate table output available")
-
-    def to_rich(self) -> str:
-        """Convert the response to a rich format using the registered callback.
-
-        Returns:
-            The rich representation of the response.
-
-        Raises:
-            RuntimeError: If no rich output callback is registered.
-        """
-        warnings.warn(
-            "callback_rich_output / to_rich() is deprecated. Use a BaseRenderer subclass instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        if self.callback_rich_output is not None:
-            return self.callback_rich_output(self)
-        else:
-            raise RuntimeError("No Callback to generate rich output available")
-
     @classmethod
     def from_results(
         cls,
@@ -160,7 +117,6 @@ class Response:
         message: str = "",
         success_message: str = "",
         failure_message: str = "",
-        table: type | None = None,
         renderer: BaseRenderer | None = None,
     ) -> Response:
         """Build a Response from a list of OperationResult.
@@ -176,20 +132,11 @@ class Response:
                 summary is generated from the result counts.
             success_message: Message used when all results succeeded.
             failure_message: Message used when at least one result failed.
-            table: Deprecated. Table callback class (kept for backward compatibility).
             renderer: Renderer instance controlling all output formats.
 
         Returns:
             An aggregated Response reflecting the overall outcome.
         """
-        if table is not None:
-            warnings.warn(
-                "The 'table' parameter of from_results() is deprecated. "
-                "Pass a BaseRenderer instance via 'renderer' instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
         failed = [r for r in results if not r.success]
         success = not failed
         error_code = failed[0].error_code if failed else 0
@@ -205,7 +152,6 @@ class Response:
             message=message,
             data={"results": results},
             error_code=error_code if not success else None,
-            callback_table_output=table,
             renderer=renderer,
         )
 
@@ -218,7 +164,7 @@ class Response:
         """Build a Response from a generator of OperationResult.
 
         The generator is stored without being consumed. The framework
-        materialises it at dispatch time: for rich output the Live context
+        materializes it at dispatch time: for rich output the Live context
         drives iteration via renderer hooks; for all other formats
         OutputFormatMixin calls _materialise_stream() before dispatch.
 

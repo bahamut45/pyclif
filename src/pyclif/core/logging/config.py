@@ -115,6 +115,7 @@ def configure_rich_logging(
     if use_rich and rich_tracebacks:
         from rich.traceback import install as install_rich_traceback
 
+        # noinspection PyArgumentEqualDefault
         install_rich_traceback(show_locals=False)
 
     if use_rich:

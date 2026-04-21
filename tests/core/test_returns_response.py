@@ -12,11 +12,7 @@ from pyclif.core.output import Response
 
 
 def _make_app(handle_response_at_group=False, output_format_default="raw"):
-    """Build a minimal CLI for testing.
-
-    Uses output_format_default='raw' so tests that don't provide a
-    callback_table_output don't hit RuntimeError.
-    """
+    """Build a minimal CLI for testing."""
 
     @app_group(
         handle_response=handle_response_at_group,

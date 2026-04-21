@@ -52,10 +52,10 @@ available for direct use in error handlers.
 | `table` | Rich table                                      | no         |
 | `rich`  | Live / panels / markdown                        | no         |
 | `raw`   | Flat JSON, no highlighting — machine-readable   | yes        |
-| `text`  | Plain text: `response.message` only (default)   | no         |
+| `text`  | Plain text: `response.message` only             | no         |
 
-`text` is the default format for interactive use. `raw` is the machine-readable
-format for scripting — use it with `--output-filter` or pipe to `jq`.
+`table` is the default format. `raw` is the machine-readable format for scripting
+— use it with `--output-filter` or pipe to `jq`.
 
 `--output-filter` extracts a single key from the serialized dict. It works with
 `raw`, `json`, and `yaml`. When a filter is active on `json` or `yaml`, the

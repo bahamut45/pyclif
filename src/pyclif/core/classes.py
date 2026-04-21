@@ -123,7 +123,7 @@ class CustomConfigOption(StoreInMetaMixin, ConfigOption):
                 on Linux, or user path on other platforms).
 
         Raises:
-            RuntimeError: If no click context is available to determine CLI name.
+            RuntimeError: If no click, context is available to determine CLI name.
         """
         # Get all possible configuration patterns
         all_patterns = self._get_all_config_patterns()
@@ -206,7 +206,7 @@ class CustomConfigOption(StoreInMetaMixin, ConfigOption):
             priority (system-wide first, then user-specific).
 
         Raises:
-            RuntimeError: If no click context is available to determine CLI name.
+            RuntimeError: If no click, context is available to determine CLI name.
         """
         patterns = []
 

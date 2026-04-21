@@ -12,7 +12,7 @@ from pyclif.core.output.responses import OperationResult
 class DummyOutputContext(OutputFormatMixin):
     """Minimal context for testing OutputFormatMixin."""
 
-    def __init__(self, output_format: str | None = "text") -> None:
+    def __init__(self, output_format: str | None = "table") -> None:
         """Initialize with a mocked console and specific format.
 
         Args:
@@ -81,12 +81,12 @@ class TestPrintResultFallbackRenderer:
 
     def test_bare_response_uses_base_renderer(self) -> None:
         ctx = DummyOutputContext(output_format="text")
-        response = Response(success=True, message="bare response")
+        response = Response(success=True, message="bare response", renderer=BaseRenderer())
         ctx.print_result_based_on_format(response)
         ctx.console.print.assert_called_once_with("bare response")
 
     def test_renderer_is_attached_to_response(self) -> None:
-        ctx = DummyOutputContext(output_format="text")
+        ctx = DummyOutputContext(output_format="table")
         response = Response(success=True, message="ok")
         assert response.renderer is None
         ctx.print_result_based_on_format(response)
@@ -197,12 +197,14 @@ class TestRendererPathBatchDispatch:
         ctx.print_result_based_on_format(response)
         ctx.console.print.assert_called_once_with("hello")
 
-    def test_default_format_uses_text(self) -> None:
+    def test_default_format_uses_table(self) -> None:
         ctx = self._ctx(None)
-        response = _response_with_renderer()
-        response.message = "default text"
+        renderer = MagicMock(spec=BaseRenderer)
+        renderer.table.return_value = "table output"
+        response = Response.from_results([_ok()], renderer=renderer)
         ctx.print_result_based_on_format(response)
-        ctx.console.print.assert_called_once_with("default text")
+        renderer.table.assert_called_once_with(response)
+        ctx.console.print.assert_called_once_with("table output")
 
     def test_raw_format_prints_compact_json(self) -> None:
         ctx = self._ctx("raw")

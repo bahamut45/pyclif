@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Confirm, Prompt
 from rich.rule import Rule
@@ -14,6 +15,8 @@ class RichHelpersMixin:
     This mixin expects the inheriting class to have a 'console' attribute
     instantiated with a rich.console.Console object.
     """
+
+    console: Console
 
     def rich_panel(
         self,
@@ -38,9 +41,10 @@ class RichHelpersMixin:
             The rendered rich panel object.
         """
         panel_class = Panel.fit if fit else Panel
-        renderer = panel_class(
-            renderable=text, title=title, padding=padding, border_style=border_style
-        )
+        panel_kwargs: dict[str, Any] = {"renderable": text, "title": title, "padding": padding}
+        if border_style is not None:
+            panel_kwargs["border_style"] = border_style
+        renderer = panel_class(**panel_kwargs)
         if console_print:
             self.console.print(renderer)  # type: ignore
         return renderer

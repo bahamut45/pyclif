@@ -21,7 +21,7 @@ class BaseInterface:
     Class attributes:
         renderers: Maps method names to renderer classes. Missing keys fall
             back to renderer_class.
-        renderer_class: Default renderer used when a method has no entry in
+        renderer_class: Default renderer is used when a method has no entry in
             renderers.
 
     Example:

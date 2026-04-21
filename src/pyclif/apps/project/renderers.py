@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 class ScaffoldingRenderer(BaseRenderer):
     """Renderer for scaffolding commands (init, add app, add command, add integration).
 
-    Table and JSON output show file path and action (created/modified/error).
+    Table and JSON output show the file path and action (created/modified/error).
     Rich output shows a live spinner per file during execution, then a summary panel.
     """
 
@@ -72,7 +72,7 @@ class ScaffoldingRenderer(BaseRenderer):
         return f"{failed}/{len(results)} file(s) failed."
 
     def _result_to_row(self, result: OperationResult, columns: list[str]) -> dict:
-        """Map an OperationResult to a table row with formatted action label.
+        """Map an OperationResult to a table row with a formatted action label.
 
         Args:
             result: The operation result to map.
@@ -114,7 +114,7 @@ class ScaffoldingRenderer(BaseRenderer):
         """Print a summary panel after all files are processed.
 
         Args:
-            response: The fully materialised response.
+            response: The fully materialized response.
             console: The Rich console to print to.
         """
         icon = "[green]✓[/]" if response.success else "[red]✗[/]"

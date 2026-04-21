@@ -3,13 +3,12 @@
 import functools
 from collections.abc import Callable
 from dataclasses import fields
-from typing import Any
+from typing import Any, TypeVar, cast
 
 import click_extra
 from rich_click import rich_config
 from rich_click.decorators import command as rich_command_decorator
 from rich_click.decorators import group as rich_group_decorator
-from rich_click.rich_command import RichCommand
 
 from .callbacks import get_meta_storing_callback
 from .classes import (
@@ -22,6 +21,8 @@ from .classes import (
     StoreInMetaMixin,
 )
 from .logging.config import PyclifVerbosityOption, create_log_file_callback
+
+_F = TypeVar("_F", bound=Callable[..., Any])
 
 
 class GroupDecorator:
@@ -323,8 +324,8 @@ def returns_response(f: Callable) -> Callable:
             ctx = click_extra.get_current_context(silent=True)
             root = ctx
             if root is not None:
-                while root.parent is not None:
-                    root = root.parent
+                while (parent := root.parent) is not None:
+                    root = parent
             meta = root.meta if root is not None else {}
             log_level = meta.get("pyclif.unhandled_exception_log_level", "error")
             _log.log(
@@ -346,19 +347,19 @@ def returns_response(f: Callable) -> Callable:
             # Walk up the context chain to find the root where the user's
             # explicit value (or the app-level default) is stored.
             ctx = click_extra.get_current_context(silent=True)
-            root: click_extra.Context = ctx  # type: ignore[assignment]
+            root = ctx
             if root is not None:
-                while root.parent is not None:
-                    root = root.parent
+                while (parent := root.parent) is not None:
+                    root = parent
 
             # Use the actual context object (ctx.obj) if it is a BaseContext
-            # subclass so that custom overrides (e.g. print_result_based_on_format)
+            # subclass so that custom overrides (e.g., print_result_based_on_format)
             # are respected.  Fall back to a fresh BaseContext when ctx.obj is
             # absent or of an unrelated type.
             obj = ctx.obj if ctx is not None else None
             output_ctx = obj if isinstance(obj, BaseContext) else BaseContext()
             meta = root.meta if root is not None else {}
-            output_format = meta.get("pyclif.output_format", "text")
+            output_format = meta.get("pyclif.output_format", "table")
 
             # Inject execution time into structured output when timer is active.
             start_time = meta.get("click_extra.start_time")
@@ -405,7 +406,7 @@ def command(
     name: str | None = None,
     handle_response: bool = False,
     **kwargs: Any,
-) -> Callable[[Callable[..., Any]], click_extra.Command | RichCommand]:
+) -> Callable[[_F], click_extra.Command]:
     """Create a Click command with optional automatic response handling.
 
     When handle_response=True, any Response returned by the command function
@@ -424,16 +425,15 @@ def command(
     command_decorator = rich_command_decorator
 
     if not handle_response:
-        if name:
-            return command_decorator(name=name, **kwargs)
-        return command_decorator(**kwargs)
+        decorate = command_decorator(name=name, **kwargs) if name else command_decorator(**kwargs)
+        return cast(Callable[[_F], click_extra.Command], decorate)
 
-    def decorator(f: Callable) -> click_extra.Command | RichCommand:
+    def decorator(f: _F) -> click_extra.Command:
         """Decorator for Click commands with automatic response handling"""
-        f = returns_response(f)
-        if name:
-            return command_decorator(name=name, **kwargs)(f)
-        return command_decorator(**kwargs)(f)
+        wrapped = returns_response(f)
+        deco = command_decorator(name=name, **kwargs) if name else command_decorator(**kwargs)
+        cmd = deco(wrapped)
+        return cast(click_extra.Command, cmd)
 
     return decorator
 
@@ -580,14 +580,14 @@ def output_filter_option(
 ) -> Callable[[Callable], Callable]:
     """Add an output filter option to a command.
 
-    When combined with --output-format raw (or output_format_default="raw"),
-    this option lets users extract a single key from the Response data without
-    writing any filtering logic in the command itself.
+    When combined with --output-format raw, json, or yaml, this option lets
+    users extract a single key from the Response data without writing any
+    filtering logic in the command itself.
 
     The selected key is stored in ctx.meta['pyclif.output_filter'] and is
     automatically picked up by returns_response.
 
-    Example::
+    Example:
 
         @app.command()
         @output_filter_option()
@@ -615,7 +615,7 @@ def output_filter_option(
     if not param_decls:
         param_decls = ("--output-filter", "-f")
 
-    kwargs.setdefault("help", "Extract a single key from the response data.")
+    kwargs.setdefault("help", "Extract a single key from the response data (raw, json, yaml).")
     # noinspection PyArgumentEqualDefault
     kwargs.setdefault("default", None)
     kwargs.setdefault("store_in_meta", True)
