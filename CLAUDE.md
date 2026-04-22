@@ -90,7 +90,7 @@ from pyclif import BaseContext, Response, get_logger
 | `core/mixins/rich.py`      | `RichHelpersMixin` — Rich console helpers: panels, rules, status spinners, prompts        |
 | `core/output/responses.py` | `Response` dataclass: `(success, message, data, error_code)` + table/rich callbacks       |
 | `core/output/tables.py`    | `CliTable`, `CliTableColumn`, `ExceptionTable`                                            |
-| `core/logging/`            | Rich-enhanced logging, custom `TRACE` level (5), `SecretsMasker`, `get_logger()` factory  |
+| `core/log/`            | Rich-enhanced logging, custom `TRACE` level (5), `SecretsMasker`, `get_logger()` factory  |
 | `apps/project/`            | Scaffolding CLI — `pyclif project init / add app / add command / add integration`         |
 
 ### Internal structure
@@ -112,7 +112,7 @@ src/pyclif/
 │   ├── output/
 │   │   ├── responses.py
 │   │   └── tables.py
-│   └── logging/
+│   └── log/
 └── apps/
     └── project/            # scaffolding app
         ├── __init__.py

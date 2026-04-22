@@ -17,7 +17,7 @@ from .levels import PYCLIF_LOG_LEVELS, SupportsTraceLogger, add_trace_method
 class PyclifVerbosityOption(BaseVerbosityOption):
     """Extended VerbosityOption with TRACE level support."""
 
-    def set_level(self, ctx, param, value):
+    def set_level(self, ctx: click.Context, param: click.Parameter, value: str) -> None:
         """Set the level of all loggers configured on the option.
 
         Override the parent method to use PYCLIF_LOG_LEVELS instead of LOG_LEVELS
@@ -43,7 +43,7 @@ class PyclifVerbosityOption(BaseVerbosityOption):
         file_level_int = PYCLIF_LOG_LEVELS.get(file_level_name, logging.DEBUG)
         has_file = ctx.meta.get("pyclif_log_file_path") is not None
 
-        min_level = min(verb_level_int, file_level_int) if has_file else verb_level_int
+        min_level: int = min(verb_level_int, file_level_int) if has_file else verb_level_int
 
         for logger in self.all_loggers:
             logger.setLevel(min_level)
@@ -196,7 +196,7 @@ def setup_file_logging(
     abs_log_file = str(Path(log_file).resolve())
 
     level_name = level.upper() if isinstance(level, str) else "DEBUG"
-    file_level_int = PYCLIF_LOG_LEVELS.get(level_name, logging.DEBUG)
+    file_level_int: int = PYCLIF_LOG_LEVELS.get(level_name, logging.DEBUG)
 
     # Get current console verbosity to restrict stream handlers
     ctx = click.get_current_context(silent=True)
@@ -223,6 +223,7 @@ def setup_file_logging(
 
     # Lower the root logger level if necessary so messages reach the file handler
     for logger in [root_logger, click_extra_logger]:
+        # noinspection PyTypeChecker
         if logger.level == logging.NOTSET or logger.level > file_level_int:
             logger.setLevel(file_level_int)
 

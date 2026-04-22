@@ -50,7 +50,7 @@ from .core.decorators import (
     returns_response,
 )
 from .core.interfaces import BaseInterface
-from .core.logging import (
+from .core.log import (
     PYCLIF_LOG_LEVELS,
     TRACE,
     RichExtraFormatter,

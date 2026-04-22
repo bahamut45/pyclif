@@ -16,7 +16,7 @@ The Rich logging integration provides:
 
 ## Architecture
 
-The logging system lives in `src/pyclif/core/logging/`:
+The logging system lives in `src/pyclif/core/log/`:
 
 1. **`levels.py`** — Custom logging levels and utilities
     - `TRACE` level (value 5)

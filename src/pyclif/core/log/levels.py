@@ -24,7 +24,7 @@ TRACE = 5
 logging.addLevelName(TRACE, "TRACE")
 
 # Extend click-extra levels with TRACE
-PYCLIF_LOG_LEVELS = {**LOG_LEVELS, "TRACE": TRACE}
+PYCLIF_LOG_LEVELS: dict[str, int] = {**LOG_LEVELS, "TRACE": TRACE}
 
 
 class SupportsTraceLogger(Protocol):

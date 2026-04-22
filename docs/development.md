@@ -61,7 +61,7 @@ The project uses pytest with comprehensive test coverage.
 uv run python -m pytest tests/ -v
 
 # Specific test file
-uv run python -m pytest tests/core/logging/test_verbosity_default.py -v
+uv run python -m pytest tests/core/log/test_verbosity_default.py -v
 
 # With coverage
 uv run python -m pytest tests/ --cov=pyclif --cov-report=html

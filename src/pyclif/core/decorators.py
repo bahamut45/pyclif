@@ -20,7 +20,7 @@ from .classes import (
     PyclifTimerOption,
     StoreInMetaMixin,
 )
-from .logging.config import PyclifVerbosityOption, create_log_file_callback
+from .log.config import PyclifVerbosityOption, create_log_file_callback
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 
@@ -53,7 +53,7 @@ class GroupDecorator:
     def _setup_logging(self):
         """Configure the logging system based on the group config."""
         if self.config.use_rich_logging:
-            from .logging.config import configure_rich_logging
+            from .log.config import configure_rich_logging
 
             # noinspection PyArgumentEqualDefault
             configure_rich_logging(
@@ -174,7 +174,7 @@ class GroupDecorator:
             ctx = original_make_context(info_name, args, parent=parent, **extra)
 
             if parent is None and level_name:
-                from .logging.config import PYCLIF_LOG_LEVELS
+                from .log.config import PYCLIF_LOG_LEVELS
 
                 if level_name in PYCLIF_LOG_LEVELS:
                     for param in ctx.command.params:
@@ -330,7 +330,7 @@ def returns_response(f: Callable) -> Callable:
             meta = root.meta if root is not None else {}
             log_level = meta.get("pyclif.unhandled_exception_log_level", "error")
             _log.log(
-                logging.getLevelName(log_level.upper()),
+                getattr(logging, log_level.upper(), logging.ERROR),
                 "Unhandled exception in command '%s'",
                 f.__name__,
                 exc_info=True,

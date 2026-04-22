@@ -176,7 +176,7 @@ Code must go in the file that matches its kind — never mix concerns across mod
 | `Response`, `OperationResult`, output helpers | `core/output/`          |
 | `BaseRenderer`, `ResponseRenderer` Protocol   | `core/output/renderer.py` |
 | `BaseInterface` and `respond()` machinery     | `core/interfaces/base.py` |
-| Logging helpers, `get_logger`                 | `core/logging/`         |
+| Logging helpers, `get_logger`                 | `core/log/`         |
 
 When adding a new class or function, pick the file whose existing contents are the closest
 match. If none fits, create a new module rather than placing it in a nearby but wrong one.

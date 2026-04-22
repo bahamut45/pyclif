@@ -7,7 +7,7 @@ import pytest
 from click.testing import CliRunner
 
 from pyclif.core.decorators import app_group
-from pyclif.core.logging.config import setup_file_logging
+from pyclif.core.log.config import setup_file_logging
 
 
 @pytest.fixture(autouse=True)
