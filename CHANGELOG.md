@@ -2,7 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [{new_version}] - 2026-04-22
+
+### Documentation
+
+- **scaffolding**: Add comprehensive scaffolding usage and examples
+
+### Features
+
+- **scaffolding**: Enhance template generation and method wiring
+
+### Miscellaneous
+
+- **pre-commit**: Update `git-cliff` pre-commit hook for version tagging
+
+## [0.0.9] - 2026-04-22
 
 ### Miscellaneous
 
