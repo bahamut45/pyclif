@@ -1,6 +1,5 @@
 """Custom Click classes for pyclif."""
 
-from collections.abc import Generator
 from dataclasses import dataclass
 from pathlib import Path
 from time import perf_counter
@@ -118,51 +117,21 @@ class CustomConfigOption(StoreInMetaMixin, ConfigOption):
         directories when running on Linux platforms. Falls back to standard
         user configuration directories on other platforms.
 
+        Patterns are joined with "|" so that wcmatch's SPLIT flag (active on
+        click-extra's ConfigOption) treats each path as a separate glob target.
+
         Returns:
-            str: The primary configuration search pattern (typically the system path
-                on Linux, or user path on other platforms).
+            The pipe-separated glob pattern covering all config locations.
 
         Raises:
             RuntimeError: If no click, context is available to determine CLI name.
         """
-        # Get all possible configuration patterns
         all_patterns = self._get_all_config_patterns()
 
         if not all_patterns:
             return self._get_fallback_pattern()
 
-        # Return the first pattern as the primary default
-        # On Linux: /etc/<cli_name>/*.{extensions}
-        # On other OS: ~/.config/<cli_name>/*.{extensions}
-        return ", ".join(all_patterns)
-
-    # noinspection PyUnresolvedReferences
-    def search_and_read_conf(self, pattern: str) -> Generator[tuple[Any, Any], None, None]:
-        """Search and read configuration files from multiple locations.
-
-        Overrides the parent method to search in multiple configuration
-        directories in order of priority:
-        1. System-wide configuration (/etc/<cli_name>/ on Linux)
-        2. User configuration (~/.config/<cli_name>/)
-        3. Any explicitly provided pattern
-
-        Args:
-            pattern: The configuration file search pattern.
-
-        Yields:
-            Tuple containing configuration location and content for each
-            matching configuration file found.
-        """
-        # Get all possible configuration patterns
-        all_patterns = self._get_all_config_patterns()
-
-        # Search in each pattern location
-        for search_pattern in all_patterns:
-            yield from super().search_and_read_conf(search_pattern)
-
-        # Also search the explicitly provided pattern if it's not in our list
-        if pattern not in all_patterns:
-            yield from super().search_and_read_conf(pattern)
+        return "|".join(all_patterns)
 
     def _get_extension_pattern(self) -> str:
         """Build a file extension pattern from supported formats.

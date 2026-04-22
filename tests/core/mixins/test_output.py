@@ -3,6 +3,10 @@
 import json
 from unittest.mock import MagicMock, patch
 
+import pytest
+from rich.panel import Panel
+
+# noinspection PyProtectedMember
 from pyclif.core.mixins.output import OutputFormatMixin, _ExceptionRenderer
 from pyclif.core.output import Response
 from pyclif.core.output.renderer import BaseRenderer
@@ -31,6 +35,7 @@ def _ok(item: str = "a", **data_kwargs) -> OperationResult:
     return OperationResult.ok(item, data=data_kwargs if data_kwargs else None)
 
 
+# noinspection PyTypeChecker
 def _response_with_renderer(
     results: list[OperationResult] | None = None,
     renderer: BaseRenderer | None = None,
@@ -45,6 +50,7 @@ def _response_with_renderer(
 # ---------------------------------------------------------------------------
 
 
+# noinspection PyArgumentEqualDefault
 class TestPrintErrorBasedOnFormat:
     """Tests for print_error_based_on_format."""
 
@@ -70,12 +76,22 @@ class TestPrintErrorBasedOnFormat:
         ctx.print_error_based_on_format(ValueError("oops"))
         ctx.console.print.assert_called_once()
 
+    def test_rich_format_prints_error_panel(self) -> None:
+        """_ExceptionRenderer.rich prints a red panel."""
+        ctx = DummyOutputContext(output_format="rich")
+        ctx.print_error_based_on_format(RuntimeError("rich error"))
+        ctx.console.print.assert_called_once()
+        panel = ctx.console.print.call_args[0][0]
+        assert isinstance(panel, Panel)
+        assert "rich error" in str(panel.renderable)
+
 
 # ---------------------------------------------------------------------------
 # TestPrintResultFallbackRenderer
 # ---------------------------------------------------------------------------
 
 
+# noinspection PyArgumentEqualDefault
 class TestPrintResultFallbackRenderer:
     """print_result_based_on_format uses BaseRenderer when renderer is None."""
 
@@ -94,7 +110,7 @@ class TestPrintResultFallbackRenderer:
 
 
 # ---------------------------------------------------------------------------
-# TestPrintRawDict
+# TestExtractFilterValue
 # ---------------------------------------------------------------------------
 
 
@@ -122,6 +138,10 @@ class TestExtractFilterValue:
     def test_null_value_is_returned_not_skipped(self) -> None:
         data = {"data": {"key": None}}
         assert OutputFormatMixin._extract_filter_value(data, "key") is None
+
+    def test_data_sub_not_a_dict_falls_back_to_top_level(self) -> None:
+        data = {"data": ["list", "not", "dict"], "message": "found"}
+        assert OutputFormatMixin._extract_filter_value(data, "message") == "found"
 
     # --- dotted path ---
 
@@ -152,6 +172,15 @@ class TestExtractFilterValue:
     def test_dotted_path_missing_intermediate_key_returns_none(self) -> None:
         data = {"data": {"results": [{"id": 1}]}}
         assert OutputFormatMixin._extract_filter_value(data, "results.0.missing") is None
+
+    def test_traverse_scalar_with_remaining_segments_returns_none(self) -> None:
+        data = {"data": {"leaf": "scalar"}}
+        assert OutputFormatMixin._extract_filter_value(data, "leaf.nested") is None
+
+
+# ---------------------------------------------------------------------------
+# TestPrintRawDict
+# ---------------------------------------------------------------------------
 
 
 class TestPrintRawDict:
@@ -212,6 +241,18 @@ class TestPrintJson:
         parsed = json.loads(args[0])
         assert isinstance(parsed["x"], str)
 
+    def test_to_dict_method_used_by_fallback_encoder(self) -> None:
+        """_FallbackEncoder calls to_dict() when available."""
+        from pyclif.core.mixins.output import _FallbackEncoder
+
+        # noinspection PyMethodMayBeStatic,PyMissingOrEmptyDocstring
+        class _WithToDict:
+            def to_dict(self):
+                return {"serialized": True}
+
+        result = json.loads(json.dumps({"obj": _WithToDict()}, cls=_FallbackEncoder))
+        assert result["obj"] == {"serialized": True}
+
 
 # ---------------------------------------------------------------------------
 # TestPrintYaml
@@ -234,6 +275,7 @@ class TestPrintYaml:
 # ---------------------------------------------------------------------------
 
 
+# noinspection PyMethodMayBeStatic
 class TestRendererPathBatchDispatch:
     """Dispatch tests for the renderer path in print_result_based_on_format."""
 
@@ -247,8 +289,9 @@ class TestRendererPathBatchDispatch:
         ctx.print_result_based_on_format(response)
         ctx.console.print.assert_called_once_with("hello")
 
-    def test_default_format_uses_table(self) -> None:
-        ctx = self._ctx(None)
+    @pytest.mark.parametrize("fmt", [None, "table"])
+    def test_table_formats_call_renderer_table(self, fmt: str | None) -> None:
+        ctx = self._ctx(fmt)
         renderer = MagicMock(spec=BaseRenderer)
         renderer.table.return_value = "table output"
         response = Response.from_results([_ok()], renderer=renderer)
@@ -271,15 +314,6 @@ class TestRendererPathBatchDispatch:
         ctx.print_result_based_on_format(response, options={"filter_value": "message"})
         ctx.console.print.assert_called_once_with("filtered")
 
-    def test_table_format_calls_renderer_table(self) -> None:
-        ctx = self._ctx("table")
-        renderer = MagicMock(spec=BaseRenderer)
-        renderer.table.return_value = "table output"
-        response = Response.from_results([_ok()], renderer=renderer)
-        ctx.print_result_based_on_format(response)
-        renderer.table.assert_called_once_with(response)
-        ctx.console.print.assert_called_once_with("table output")
-
     def test_rich_format_calls_renderer_rich(self) -> None:
         ctx = self._ctx("rich")
         renderer = MagicMock(spec=BaseRenderer)
@@ -287,38 +321,25 @@ class TestRendererPathBatchDispatch:
         ctx.print_result_based_on_format(response)
         renderer.rich.assert_called_once_with(response, ctx.console)
 
-    def test_json_format_calls_print_json(self) -> None:
-        ctx = self._ctx("json")
-        ctx._print_json = MagicMock()  # type: ignore[method-assign]
+    @pytest.mark.parametrize("fmt,method", [("json", "_print_json"), ("yaml", "_print_yaml")])
+    def test_serialized_format_calls_print_method(self, fmt: str, method: str) -> None:
+        ctx = self._ctx(fmt)
+        mock = MagicMock()
+        setattr(ctx, method, mock)
         response = _response_with_renderer()
         ctx.print_result_based_on_format(response)
-        ctx._print_json.assert_called_once()
+        mock.assert_called_once()
 
-    def test_yaml_format_calls_print_yaml(self) -> None:
-        ctx = self._ctx("yaml")
-        ctx._print_yaml = MagicMock()  # type: ignore[method-assign]
-        response = _response_with_renderer()
-        ctx.print_result_based_on_format(response)
-        ctx._print_yaml.assert_called_once()
-
-    def test_json_with_filter_re_serializes_as_json(self) -> None:
-        ctx = self._ctx("json")
-        ctx._print_json = MagicMock()  # type: ignore[method-assign]
+    @pytest.mark.parametrize("fmt,method", [("json", "_print_json"), ("yaml", "_print_yaml")])
+    def test_serialized_format_with_filter_re_serializes(self, fmt: str, method: str) -> None:
+        ctx = self._ctx(fmt)
+        mock_print = MagicMock()
+        setattr(ctx, method, mock_print)
         ctx._print_raw_dict = MagicMock()  # type: ignore[method-assign]
         response = _response_with_renderer()
         response.message = "done"
         ctx.print_result_based_on_format(response, options={"filter_value": "message"})
-        ctx._print_json.assert_called_once_with("done")
-        ctx._print_raw_dict.assert_not_called()
-
-    def test_yaml_with_filter_re_serializes_as_yaml(self) -> None:
-        ctx = self._ctx("yaml")
-        ctx._print_yaml = MagicMock()  # type: ignore[method-assign]
-        ctx._print_raw_dict = MagicMock()  # type: ignore[method-assign]
-        response = _response_with_renderer()
-        response.message = "done"
-        ctx.print_result_based_on_format(response, options={"filter_value": "message"})
-        ctx._print_yaml.assert_called_once_with("done")
+        mock_print.assert_called_once_with("done")
         ctx._print_raw_dict.assert_not_called()
 
 
@@ -327,6 +348,7 @@ class TestRendererPathBatchDispatch:
 # ---------------------------------------------------------------------------
 
 
+# noinspection PyArgumentEqualDefault
 class TestRendererPathStreamDispatch:
     """Streaming dispatch tests for print_result_based_on_format."""
 

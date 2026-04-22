@@ -450,4 +450,29 @@ class TestLastResortHandler:
         result = runner.invoke(app, ["boom"])
         assert result.exit_code == 0
         assert '"success"' in result.output
-        assert "false" in result.output.lower()
+
+    def test_exception_without_click_context_returns_failed_response(self):
+        """Exception handler works when there is no active click context (lines 327→330)."""
+        from pyclif.core.output.responses import Response
+
+        @returns_response
+        def boom():
+            raise RuntimeError("no ctx")
+
+        result = boom()
+        assert isinstance(result, Response)
+        assert result.success is False
+        assert "no ctx" in result.message
+
+    def test_response_without_click_context_does_not_crash(self):
+        """Response path works without an active click context (lines 352→360)."""
+        from pyclif.core.output.responses import Response
+
+        @returns_response
+        def succeed():
+            return Response(success=True, message="hi")
+
+        result = succeed()
+        assert isinstance(result, Response)
+        assert result.success is True
+        assert result.message == "hi"

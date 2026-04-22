@@ -164,7 +164,9 @@ class TestCustomConfigOption:
 
             assert "/etc/test-cli" in pattern
             assert "/home/user/.config/test-cli" in pattern
-            assert ", " in pattern
+            # Patterns must be pipe-separated so wcmatch SPLIT handles them correctly.
+            assert "|" in pattern
+            assert ", " not in pattern
 
     @patch("pyclif.core.classes.get_current_context")
     def test_default_pattern_fallback(self, mock_get_context):
@@ -177,21 +179,19 @@ class TestCustomConfigOption:
         pattern = option.default_pattern()
         assert pattern == "*.ini"
 
-    @patch.object(CustomConfigOption, "search_and_read_conf")
-    def test_search_and_read_conf_calls_super_for_all_patterns(self, mock_super_search):
-        """Test search_and_read_conf calls the parent method for each pattern."""
+    def test_get_default_callable_raises_falls_through(self):
+        """get_default with call=False, and a raising callable returns the callable."""
+        from click_extra.config import ConfigOption
+
         option = CustomConfigOption()
+        failing = Mock(side_effect=ValueError("boom"))
 
-        with patch.object(
-            option,
-            "_get_all_config_patterns",
-            return_value=["/etc/test/*.toml", "/home/user/.config/test/*.toml"],
-        ):
-            mock_super_search.return_value = iter([("test", "content")])
+        with patch.object(ConfigOption, "get_default", return_value=failing):
+            mock_ctx = Mock()
+            result = option.get_default(mock_ctx, call=False)
 
-            list(option.search_and_read_conf("/custom/path/*.toml"))
-
-            assert mock_super_search.called
+        # Exception is swallowed; the original callable is returned unchanged.
+        assert result is failing
 
 
 class TestCustomConfigOptionIntegration:
@@ -215,13 +215,100 @@ class TestCustomConfigOptionIntegration:
         option = CustomConfigOption()
 
         assert hasattr(option, "default_pattern")
-        assert hasattr(option, "search_and_read_conf")
         assert hasattr(option, "_get_extension_pattern")
         assert hasattr(option, "_get_all_config_patterns")
         assert hasattr(option, "_get_fallback_pattern")
 
         assert callable(option.default_pattern)
-        assert callable(option.search_and_read_conf)
+
+
+class TestCustomConfigOptionMultiPathSearch:
+    """Guarantee that /etc/<app>/ and ~/.config/<app>/ are both searched.
+
+    These tests use real temporary directories and real TOML config files so
+    that they exercise the full click-extra glob pipeline — not just our
+    default_pattern() output.
+    """
+
+    # noinspection PyMethodMayBeStatic
+    def _make_option_with_patterns(self, *patterns: str) -> CustomConfigOption:
+        """Return a CustomConfigOption whose _get_all_config_patterns is fixed."""
+        option = CustomConfigOption()
+        option._get_all_config_patterns = lambda: list(patterns)
+        return option
+
+    def test_default_pattern_uses_pipe_separator(self):
+        """default_pattern joins multiple locations with | for wcmatch SPLIT."""
+        option = self._make_option_with_patterns(
+            "/etc/myapp/*.toml", "/home/u/.config/myapp/*.toml"
+        )
+        pattern = option.default_pattern()
+        assert "|" in pattern
+        assert "," not in pattern
+        parts = pattern.split("|")
+        assert len(parts) == 2
+
+    def test_etc_config_file_is_found(self, tmp_path):
+        """A TOML file in the /etc/<app>/ equivalent is discovered and parsed."""
+        etc_dir = tmp_path / "etc" / "myapp"
+        etc_dir.mkdir(parents=True)
+        (etc_dir / "myapp.toml").write_text("[myapp]\nverbosity = 'DEBUG'\n")
+
+        user_dir = tmp_path / "home" / ".config" / "myapp"
+        user_dir.mkdir(parents=True)
+
+        option = self._make_option_with_patterns(
+            str(etc_dir / "*.toml"),
+            str(user_dir / "*.toml"),
+        )
+        pattern = option.default_pattern()
+
+        location, content = option.read_and_parse_conf(pattern)
+
+        assert location is not None
+        assert location.name == "myapp.toml"
+
+    def test_user_config_file_is_found_when_no_etc(self, tmp_path):
+        """A TOML file in the user config dir is found when /etc/ has no file."""
+        etc_dir = tmp_path / "etc" / "myapp"
+        etc_dir.mkdir(parents=True)  # empty — no config file
+
+        user_dir = tmp_path / "home" / ".config" / "myapp"
+        user_dir.mkdir(parents=True)
+        (user_dir / "myapp.toml").write_text("[myapp]\nverbosity = 'INFO'\n")
+
+        option = self._make_option_with_patterns(
+            str(etc_dir / "*.toml"),
+            str(user_dir / "*.toml"),
+        )
+        pattern = option.default_pattern()
+
+        location, content = option.read_and_parse_conf(pattern)
+
+        assert location is not None
+        assert location.name == "myapp.toml"
+
+    def test_etc_takes_priority_over_user_config(self, tmp_path):
+        """When both locations have a config, the /etc/ one is returned first."""
+        etc_dir = tmp_path / "etc" / "myapp"
+        etc_dir.mkdir(parents=True)
+        (etc_dir / "myapp.toml").write_text("[myapp]\nsource = 'system'\n")
+
+        user_dir = tmp_path / "home" / ".config" / "myapp"
+        user_dir.mkdir(parents=True)
+        (user_dir / "myapp.toml").write_text("[myapp]\nsource = 'user'\n")
+
+        option = self._make_option_with_patterns(
+            str(etc_dir / "*.toml"),
+            str(user_dir / "*.toml"),
+        )
+        pattern = option.default_pattern()
+
+        location, content = option.read_and_parse_conf(pattern)
+
+        assert content is not None
+        # The system config is returned first (pattern ordering is preserved).
+        assert content.get("myapp", {}).get("source") == "system"
 
 
 @pytest.mark.tox

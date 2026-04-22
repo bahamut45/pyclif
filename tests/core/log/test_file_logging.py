@@ -3,6 +3,7 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
+import click
 import pytest
 from click.testing import CliRunner
 
@@ -119,3 +120,52 @@ def test_cli_log_file_level_decorator(tmp_path):
     assert "Warning message" in content
     assert "Info message" in content
     assert "Debug message" not in content
+
+
+def test_setup_file_logging_no_secrets_filter(tmp_path):
+    """setup_file_logging with enable_secrets_filter=False skips SecretsMasker."""
+    log_file = tmp_path / "no_filter.log"
+    setup_file_logging(str(log_file), enable_secrets_filter=False)
+
+    root_logger = logging.getLogger()
+    file_handlers = [h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)]
+    assert len(file_handlers) >= 1
+    last_handler = file_handlers[-1]
+
+    from pyclif.core.log.filters import SecretsMasker
+
+    assert not any(isinstance(f, SecretsMasker) for f in last_handler.filters)
+
+
+def test_setup_file_logging_click_extra_propagate_true_skips_handler(tmp_path):
+    """When click_extra_logger.propagate=True, a handler is NOT added to it."""
+    log_file = tmp_path / "propagate.log"
+    click_extra_logger = logging.getLogger("click_extra")
+    click_extra_logger.propagate = True
+    try:
+        setup_file_logging(str(log_file))
+        file_handlers = [
+            h for h in click_extra_logger.handlers if isinstance(h, TimedRotatingFileHandler)
+        ]
+        assert len(file_handlers) == 0
+    finally:
+        click_extra_logger.propagate = False
+
+
+def test_setup_file_logging_no_verbosity_param_in_ctx(tmp_path):
+    """Loop over ctx.command.params exits without a break when no verbosity param."""
+    log_file = tmp_path / "no_verbosity.log"
+
+    # noinspection PyUnusedLocal
+    @click.command()
+    @click.pass_context
+    def cmd(ctx):
+        """Command with no verbosity option."""
+        setup_file_logging(str(log_file))
+
+    runner = CliRunner()
+    result = runner.invoke(cmd, [])
+    assert result.exit_code == 0
+    root_logger = logging.getLogger()
+    file_handlers = [h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)]
+    assert len(file_handlers) >= 1

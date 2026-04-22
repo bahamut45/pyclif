@@ -99,6 +99,12 @@ class TestCliTable:
 
         assert cli_table.__rich__() == "[i]No dataset available.[/i]"
 
+    def test_update_rows_with_none_is_noop(self, sample_fields: dict) -> None:
+        """update_rows with rows=None skips row addition (127→exit)."""
+        cli_table = CliTable(fields=sample_fields, rows=[])
+        cli_table.update_rows(sample_fields, None)
+        assert cli_table.table.row_count == 0
+
     def test_update_rows_with_single_dict(self, sample_fields: dict) -> None:
         """Test that update_rows correctly processes a single dictionary."""
         cli_table = CliTable(fields=sample_fields, rows=[])

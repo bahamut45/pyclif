@@ -33,6 +33,24 @@ class TestRichHelpersMixin:
 
         context.console.print.assert_called_once_with(panel)
 
+    def test_rich_panel_no_print(self) -> None:
+        """Test that rich_panel does not print when console_print=False (branch 48→50)."""
+        context = DummyRichContext()
+
+        panel = context.rich_panel(text="Silent panel", console_print=False)
+
+        assert isinstance(panel, Panel)
+        context.console.print.assert_not_called()
+
+    def test_rich_panel_with_border_style(self) -> None:
+        """Test that border_style is forwarded to the Panel when provided (line 46)."""
+        context = DummyRichContext()
+
+        panel = context.rich_panel(text="Styled", border_style="red")
+
+        assert isinstance(panel, Panel)
+        assert panel.border_style == "red"
+
     @patch("pyclif.core.mixins.rich.Rule")
     def test_display_rule(self, mock_rule_class: MagicMock) -> None:
         """Test that display_rule creates a Rule and prints it to the console."""

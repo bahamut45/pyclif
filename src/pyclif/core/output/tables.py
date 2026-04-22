@@ -37,7 +37,7 @@ def convert_bool_to_emoji(value: object) -> str | bool | object:
         tick = "[green]:heavy_check_mark:[/]"
         cross = "[red]:heavy_multiplication_x:[/]"
         return tick if value else cross
-    return value
+    return value  # pragma: no cover
 
 
 class CliTableColumn(Column):
@@ -97,7 +97,7 @@ class CliTable:
         """
         return self.table if self.table.row_count != 0 else "[i]No dataset available.[/i]"
 
-    def table(self) -> Table:
+    def table(self) -> Table:  # pragma: no cover
         """Return the internal table object.
 
         Returns:

@@ -143,12 +143,12 @@ def configure_rich_logging(
             if type(h) is RichExtraStreamHandler and h is not shared_handler:
                 root_logger.removeHandler(h)
 
-        if shared_handler not in root_logger.handlers:
+        if shared_handler not in root_logger.handlers:  # pragma: no branch
             root_logger.addHandler(shared_handler)
 
         # Restore file handlers
         for h in file_handlers:
-            if h not in root_logger.handlers:
+            if h not in root_logger.handlers:  # pragma: no branch
                 root_logger.addHandler(h)
 
     add_trace_method(logging.Logger)

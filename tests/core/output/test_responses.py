@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from pyclif.core.mixins.output import OutputFormatMixin
 from pyclif.core.output.renderer import BaseRenderer
-from pyclif.core.output.responses import OperationResult, Response
+from pyclif.core.output.responses import NON_SERIALIZABLE_FIELDS, OperationResult, Response
 
 
 class TestOperationResult:
@@ -21,6 +21,11 @@ class TestOperationResult:
         """OperationResult.ok stores the data payload."""
         result = OperationResult.ok("file.py", data={"action": "created"})
         assert result.data == {"action": "created"}
+
+    def test_ok_carries_message(self) -> None:
+        """OperationResult.ok stores the message parameter."""
+        result = OperationResult.ok("file.py", message="done")
+        assert result.message == "done"
 
     def test_error_sets_success_false(self) -> None:
         """OperationResult.error produces a failed result."""
@@ -194,6 +199,16 @@ class TestResponse:
         result = response.to_json()
         assert "renderer" not in result
 
+    def test_non_serializable_fields_contains_renderer(self) -> None:
+        """NON_SERIALIZABLE_FIELDS constant includes 'renderer'."""
+        assert "renderer" in NON_SERIALIZABLE_FIELDS
+
+    def test_serialize_data_with_non_dict_data_is_noop(self) -> None:
+        """_serialize_data skips serialization when data is not a dict (192→exit)."""
+        response = Response(success=True, message="ok", data=["a", "b"])
+        response._serialize_data()
+        assert response.data == ["a", "b"]
+
 
 class TestResponseFromStream:
     """Test suite for Response.from_stream."""
@@ -223,6 +238,23 @@ class TestResponseFromStream:
         gen = iter([OperationResult.ok("a")])
         response = Response.from_stream(gen, renderer=renderer)
         assert response.renderer is renderer
+
+    def test_message_blank_at_construction(self) -> None:
+        """from_stream leaves message empty until the stream is consumed."""
+        response = Response.from_stream(iter([OperationResult.ok("a")]), renderer=BaseRenderer())
+        assert response.message == ""
+
+    def test_results_not_in_data_at_construction(self) -> None:
+        """from_stream does not pre-populate data['results']."""
+        response = Response.from_stream(iter([OperationResult.ok("a")]), renderer=BaseRenderer())
+        assert "results" not in response.data
+
+    def test_renderer_excluded_from_stream_to_json(self) -> None:
+        """renderer is excluded from to_json() on a stream-based Response."""
+        response = Response.from_stream(iter([OperationResult.ok("a")]), renderer=BaseRenderer())
+        list(response.data.pop("stream"))
+        response.data["results"] = []
+        assert "renderer" not in response.to_json()
 
 
 class TestMaterialiseStream:

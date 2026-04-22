@@ -56,6 +56,14 @@ class TestRichHelpConfiguration:
         assert config.style_command == "yellow"
         assert config.show_arguments is True
 
+    def test_get_rich_config_with_instance_returns_it_unchanged(self):
+        """Test get_rich_config passes a RichHelpConfiguration instance through (line 119)."""
+        from rich_click import RichHelpConfiguration
+
+        instance = RichHelpConfiguration(style_option="magenta")
+        result = get_rich_config(instance)
+        assert result is instance
+
     def test_pyclif_configs_availability(self):
         """Test that PYCLIF_CONFIGS contains expected configurations."""
         expected_configs = ["default", "minimal", "verbose"]

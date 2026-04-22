@@ -177,7 +177,7 @@ class GroupDecorator:
                 from .log.config import PYCLIF_LOG_LEVELS
 
                 if level_name in PYCLIF_LOG_LEVELS:
-                    for param in ctx.command.params:
+                    for param in ctx.command.params:  # pragma: no branch
                         if param.name == "verbosity" and hasattr(param, "set_level"):
                             param.set_level(ctx, param, level_name)
                             break

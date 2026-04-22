@@ -82,6 +82,83 @@ class TestLoggingConfiguration:
             configure_rich_logging(force_reconfigure=True)
             mock_extra_config.assert_called_once()
 
+    # noinspection PyUnusedLocal
+    @patch("pyclif.core.log.config.extraBasicConfig")
+    def test_configure_rich_logging_no_tracebacks(self, mock_extra_config):
+        """use_rich=True but rich_tracebacks=False skips traceback install."""
+        with (
+            patch("pyclif.core.log.config._preconfigure_click_extra_logger"),
+            patch("pyclif.core.log.config.logging.getLogger") as mock_get_logger,
+        ):
+            mock_root_logger = Mock()
+            mock_root_logger.handlers = []
+            mock_get_logger.return_value = mock_root_logger
+
+            with patch("rich.traceback.install") as mock_install:
+                # noinspection PyArgumentEqualDefault
+                configure_rich_logging(use_rich=True, rich_tracebacks=False, force_reconfigure=True)
+                mock_install.assert_not_called()
+
+    @patch("pyclif.core.log.config.extraBasicConfig")
+    def test_configure_rich_logging_use_rich_false(self, mock_extra_config):
+        """use_rich=False skips all Rich handler setup."""
+        configure_rich_logging(use_rich=False, force_reconfigure=True)
+        mock_extra_config.assert_not_called()
+
+    def test_configure_rich_logging_shared_handler_already_present(self):
+        """If shared_handler is already in root_logger, addHandler is skipped."""
+        configure_rich_logging(force_reconfigure=True)
+        root_logger = logging.getLogger()
+        handler_count_before = len(root_logger.handlers)
+
+        # Force reconfigure again — shared_handler is already there.
+        configure_rich_logging(force_reconfigure=True)
+        handler_count_after = len(root_logger.handlers)
+
+        # Handler count should not grow on the second call.
+        assert handler_count_after == handler_count_before
+
+    def test_configure_rich_logging_preserves_file_handler_already_present(self):
+        """File handler already in root_logger after extraBasicConfig is not re-added."""
+        import tempfile
+        from logging.handlers import TimedRotatingFileHandler
+
+        root_logger = logging.getLogger()
+        with tempfile.NamedTemporaryFile(suffix=".log", delete=False) as f:
+            log_path = f.name
+
+        file_handler = TimedRotatingFileHandler(log_path)
+        root_logger.addHandler(file_handler)
+        try:
+            # extraBasicConfig (called internally) does not remove file handlers,
+            # so the restore loop finds the handler already present and skips addHandler.
+            configure_rich_logging(force_reconfigure=True)
+            file_handlers = [
+                h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)
+            ]
+            assert len(file_handlers) == 1
+        finally:
+            root_logger.removeHandler(file_handler)
+            file_handler.close()
+
+
+class TestPreconfigureClickExtraLogger:
+    """Tests for _preconfigure_click_extra_logger."""
+
+    def test_handler_already_present_returns_early(self):
+        """If the handler is already in click_extra_logger.handlers, the function returns early"""
+        from pyclif.core.log.config import _preconfigure_click_extra_logger
+
+        handler = logging.NullHandler()
+        click_extra_logger = logging.getLogger("click_extra")
+        click_extra_logger.addHandler(handler)
+        try:
+            original_handlers = list(click_extra_logger.handlers)
+            _preconfigure_click_extra_logger(handler)
+            assert list(click_extra_logger.handlers) == original_handlers
+        finally:
+            click_extra_logger.removeHandler(handler)
+
 
 class TestRichExtraStreamHandler:
     """Test RichExtraStreamHandler functionality."""
@@ -103,6 +180,7 @@ class TestRichExtraStreamHandler:
 
     def test_handler_initialization_custom_stream(self):
         """Test RichExtraStreamHandler initialization with sys.stderr."""
+        # noinspection PyTypeChecker
         handler = RichExtraStreamHandler(stream=sys.stderr)
 
         assert handler.stream is sys.stderr
@@ -114,6 +192,7 @@ class TestRichExtraStreamHandler:
         mock_rich_handler = Mock()
         mock_rich_handler_class.return_value = mock_rich_handler
 
+        # noinspection PyTypeChecker
         handler = RichExtraStreamHandler(stream=sys.stderr)
         record = logging.LogRecord(
             name="test",
@@ -135,6 +214,7 @@ class TestRichExtraStreamHandler:
         mock_rich_handler.emit.side_effect = ValueError("Test error")
         mock_rich_handler_class.return_value = mock_rich_handler
 
+        # noinspection PyTypeChecker
         handler = RichExtraStreamHandler(stream=sys.stderr)
         record = logging.LogRecord(
             name="test",
@@ -149,6 +229,28 @@ class TestRichExtraStreamHandler:
         with patch.object(handler.__class__.__bases__[0], "emit") as mock_parent_emit:
             handler.emit(record)
             mock_parent_emit.assert_called_once_with(record)
+
+    @patch("pyclif.core.log.handlers.RichHandler")
+    def test_emit_recursion_error_is_reraised(self, mock_rich_handler_class):
+        """RecursionError from emitting is re-raised, not swallowed."""
+        mock_rich_handler = Mock()
+        mock_rich_handler.emit.side_effect = RecursionError("infinite loop")
+        mock_rich_handler_class.return_value = mock_rich_handler
+
+        # noinspection PyTypeChecker
+        handler = RichExtraStreamHandler(stream=sys.stderr)
+        record = logging.LogRecord(
+            name="test",
+            level=logging.INFO,
+            pathname="",
+            lineno=0,
+            msg="boom",
+            args=(),
+            exc_info=None,
+        )
+
+        with pytest.raises(RecursionError, match="infinite loop"):
+            handler.emit(record)
 
 
 class TestRichExtraFormatter:
@@ -207,6 +309,50 @@ class TestRichExtraFormatter:
             assert isinstance(result, str)
             assert "info message" in result or record.message in result
 
+    def test_unknown_level_no_style_does_not_raise(self, formatter):
+        """Test that an unrecognized level name with no theme style is handled gracefully."""
+        record = logging.LogRecord(
+            name="test",
+            level=logging.WARNING,
+            pathname="",
+            lineno=0,
+            msg="custom message",
+            args=(),
+            exc_info=None,
+        )
+        record.levelname = "CUSTOMBAD"
+        record.message = "custom message"
+
+        with patch("pyclif.core.log.formatters.default_theme") as mock_theme:
+            # No attribute matching "custombad" → getattr returns None
+            del mock_theme.custombad
+            mock_theme.configure_mock(**{"custombad": None})
+
+            result = formatter.formatMessage(record)
+
+        assert result is not None
+        assert isinstance(result, str)
+
+    def test_rich_record_attribute_applies_markup(self, formatter):
+        """Test that a record with rich=True has its message processed as Rich markup."""
+        record = logging.LogRecord(
+            name="test",
+            level=logging.INFO,
+            pathname="",
+            lineno=0,
+            msg="[bold]hello[/bold]",
+            args=(),
+            exc_info=None,
+        )
+        record.levelname = "INFO"
+        record.message = "[bold]hello[/bold]"
+        record.rich = True
+
+        result = formatter.formatMessage(record)
+
+        assert result is not None
+        assert isinstance(result, str)
+
 
 class TestSecretsMasker:
     """Test SecretsMasker security filtering functionality."""
@@ -262,6 +408,7 @@ class TestSecretsMasker:
         assert redacted["config"]["database"]["host"] == "localhost"
         assert redacted["config"]["database"]["password"] == "*CENSORED*"
 
+    # noinspection PyTypeChecker
     def test_should_hide_value_for_key_non_string(self):
         """Test that non-string inputs are not flagged as sensitive."""
         from pyclif.core.log.filters import should_hide_value_for_key
@@ -295,7 +442,7 @@ class TestSecretsMasker:
         assert masker._redact_all(42, depth=0) == 42
 
     def test_redact_namedtuple(self, masker):
-        """Test _redact handles namedtuples and redacts sensitive fields."""
+        """Test _redact handles named-tuples and redacts sensitive fields."""
         from collections import namedtuple
 
         Creds = namedtuple("Creds", ["username", "password"])
@@ -341,7 +488,7 @@ class TestAddTraceMethod:
         mock_logger._log.assert_called_once_with(TRACE, "test trace message", ())
 
     def test_trace_method_skips_log_when_level_disabled(self):
-        """Test that trace() does not call _log when TRACE level is disabled."""
+        """Test that trace() does not call _log when the TRACE level is disabled."""
         mock_logger = Mock()
         mock_logger.isEnabledFor.return_value = False
 
@@ -470,7 +617,7 @@ class TestLoggingIntegration:
         mock_rich_handler = Mock()
         mock_rich_handler_class.return_value = mock_rich_handler
 
-        # noinspection PyArgumentEqualDefault
+        # noinspection PyArgumentEqualDefault,PyTypeChecker
         handler = RichExtraStreamHandler(stream=sys.stderr, enable_secrets_filter=True)
 
         logger = logging.getLogger("secrets_test")
