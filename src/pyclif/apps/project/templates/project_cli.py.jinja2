@@ -1,5 +1,4 @@
-import click
-from pyclif import app_group
+from pyclif import app_group, pass_context
 from .core.context import {{ name_pascal }}Context
 from .apps import groups
 
@@ -8,7 +7,7 @@ from .apps import groups
     handle_response=True,
     output_format_default="json",
 )
-@click.pass_context
+@pass_context
 def app(ctx):
     """{{ name_pascal }} CLI."""
     ctx.obj = {{ name_pascal }}Context()

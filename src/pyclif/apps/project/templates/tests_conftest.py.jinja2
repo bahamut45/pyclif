@@ -1,1 +1,18 @@
 import pytest
+from click.testing import CliRunner
+
+from {{ name_snake }}.cli import app
+
+
+@pytest.fixture
+def runner():
+    """Return a Click test runner."""
+    return CliRunner()
+
+
+@pytest.fixture
+def invoke(runner):
+    """Invoke the CLI and return the result."""
+    def _invoke(*args, **kwargs):
+        return runner.invoke(app, args, catch_exceptions=False, **kwargs)
+    return _invoke

@@ -7,4 +7,4 @@ from ..interfaces import {{ name_pascal }}Interface
 @pass_cli_context
 def {{ name_snake }}(ctx) -> Response:
     """{{ name_pascal }} description."""
-    return {{ name_pascal }}Interface(ctx).respond("list_items")
+    return {{ name_pascal }}Interface(ctx).respond("{{ name_snake }}")

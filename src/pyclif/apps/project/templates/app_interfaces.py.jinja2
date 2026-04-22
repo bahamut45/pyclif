@@ -1,4 +1,4 @@
-"""Business logic for the {{ name_pascal }} app."""
+"""Renderer and interface for the {{ name_pascal }} app."""
 
 from pyclif import BaseInterface, BaseRenderer, OperationResult
 
@@ -16,14 +16,7 @@ class {{ name_pascal }}Interface(BaseInterface):
     """Interface for {{ name_pascal }} business logic."""
 
     renderers = {
-        "list_items": {{ name_pascal }}Renderer,
+        # --- renderers --- (used by `pyclif project add command` — do not remove)
     }
 
-    def list_items(self) -> list[OperationResult]:
-        """Return a list of items.
-
-        Returns:
-            List of OperationResult objects.
-        """
-        # TODO: implement business logic here
-        return [OperationResult.ok("example-item", message="fetched", data={"action": "fetched"})]
+    # --- commands --- (used by `pyclif project add command` — do not remove)

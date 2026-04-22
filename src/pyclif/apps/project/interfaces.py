@@ -136,6 +136,7 @@ class ScaffoldingInterface(BaseInterface):
 
         yield self._write_rendered(cmd_file, "command.py.jinja2", ns)
         yield from self._wire_command(ns["name_snake"], app)
+        yield from self._wire_interface_method(ns["name_snake"], app)
 
     def add_integration(self, name: str, package: bool = False) -> Iterator[OperationResult]:
         """Create an integration module inside core/integrations/.
@@ -235,6 +236,61 @@ class ScaffoldingInterface(BaseInterface):
             return
         self._append_to_file(path, content)
         yield OperationResult.ok(str(path), message="modified", data={"action": "modified"})
+
+    def _wire_interface_method(self, name_snake: str, app: str) -> Iterator[OperationResult]:
+        """Inject a renderer entry and a method stub into an app's interfaces.py.
+
+        Args:
+            name_snake: Snake-case command name.
+            app: App name that owns the command.
+
+        Yields:
+            OperationResult for the modified file.
+        """
+        pkg = self._detect_package()
+        interfaces_file = self._root / "src" / pkg / "apps" / app / "interfaces.py"
+        if not interfaces_file.exists():
+            yield OperationResult.error(
+                str(interfaces_file), f"File '{interfaces_file}' not found."
+            )
+            return
+
+        app_pascal = "".join(w.capitalize() for w in app.split("_"))
+        renderer_cls = f"{app_pascal}Renderer"
+        content = interfaces_file.read_text()
+
+        if "# --- renderers ---" not in content or "# --- commands ---" not in content:
+            yield OperationResult.error(
+                str(interfaces_file),
+                "Sentinel comments not found in interfaces.py — skipping method injection.",
+            )
+            return
+
+        sentinel_renderers = (
+            "        # --- renderers --- (used by `pyclif project add command` — do not remove)\n"
+        )
+        sentinel_commands = (
+            "    # --- commands --- (used by `pyclif project add command` — do not remove)"
+        )
+        content = content.replace(
+            sentinel_renderers,
+            f'        "{name_snake}": {renderer_cls},\n{sentinel_renderers}',
+        )
+        method = (
+            f"\n    def {name_snake}(self) -> list[OperationResult]:\n"
+            f'        """{name_snake.replace("_", " ").title()}.\n\n'
+            f"        Returns:\n"
+            f"            List of OperationResult objects.\n"
+            f'        """\n'
+            f"        # TODO: implement\n"
+            f"        return []\n"
+            f"\n{sentinel_commands}"
+        )
+        content = content.replace(sentinel_commands, method)
+        interfaces_file.write_text(content)
+        yield OperationResult.ok(
+            str(interfaces_file), message="modified", data={"action": "modified"}
+        )
 
     def _wire_integration(self, name_snake: str, name_pascal: str) -> Iterator[OperationResult]:
         """Inject an integration import and property stub into core/context.py.
