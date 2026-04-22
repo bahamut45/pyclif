@@ -1605,7 +1605,7 @@ loggers that automatically benefit from Rich enhancements.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyclif.core.logging.levels.SupportsTraceLogger">SupportsTraceLogger</span></code>
+                  <code><span title="pyclif.core.log.levels.SupportsTraceLogger">SupportsTraceLogger</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1618,7 +1618,7 @@ loggers that automatically benefit from Rich enhancements.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/__init__.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/__init__.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-27">27</a></span>
 <span class="normal"><a href="#__codelineno-0-28">28</a></span>
 <span class="normal"><a href="#__codelineno-0-29">29</a></span>
@@ -1715,7 +1715,7 @@ inherits the global Rich configuration.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="pyclif.core.logging.levels.SupportsTraceLogger">SupportsTraceLogger</span></code>
+                  <code><span title="pyclif.core.log.levels.SupportsTraceLogger">SupportsTraceLogger</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1728,9 +1728,8 @@ inherits the global Rich configuration.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-293">293</a></span>
-<span class="normal"><a href="#__codelineno-0-294">294</a></span>
+              <summary>Source code in <code>src/pyclif/core/log/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-294">294</a></span>
 <span class="normal"><a href="#__codelineno-0-295">295</a></span>
 <span class="normal"><a href="#__codelineno-0-296">296</a></span>
 <span class="normal"><a href="#__codelineno-0-297">297</a></span>
@@ -1743,21 +1742,22 @@ inherits the global Rich configuration.</p>
 <span class="normal"><a href="#__codelineno-0-304">304</a></span>
 <span class="normal"><a href="#__codelineno-0-305">305</a></span>
 <span class="normal"><a href="#__codelineno-0-306">306</a></span>
-<span class="normal"><a href="#__codelineno-0-307">307</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_configured_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SupportsTraceLogger</span><span class="p">:</span>
-<a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a logger that automatically benefits from global Rich configuration.</span>
-<a id="__codelineno-0-295" name="__codelineno-0-295"></a>
-<a id="__codelineno-0-296" name="__codelineno-0-296"></a><span class="sd">    This function simply retrieves a standard logger that automatically</span>
-<a id="__codelineno-0-297" name="__codelineno-0-297"></a><span class="sd">    inherits the global Rich configuration.</span>
-<a id="__codelineno-0-298" name="__codelineno-0-298"></a>
-<a id="__codelineno-0-299" name="__codelineno-0-299"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-300" name="__codelineno-0-300"></a><span class="sd">        name: Logger name (optional).</span>
-<a id="__codelineno-0-301" name="__codelineno-0-301"></a>
-<a id="__codelineno-0-302" name="__codelineno-0-302"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">        Logger automatically configured with Rich capabilities.</span>
-<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-305" name="__codelineno-0-305"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">pyclif</span><span class="w"> </span><span class="kn">import</span> <span class="n">__app_name__</span>
-<a id="__codelineno-0-306" name="__codelineno-0-306"></a>
-<a id="__codelineno-0-307" name="__codelineno-0-307"></a>    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="n">__app_name__</span><span class="p">)</span>  <span class="c1"># type: ignore[return-value]</span>
+<span class="normal"><a href="#__codelineno-0-307">307</a></span>
+<span class="normal"><a href="#__codelineno-0-308">308</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_configured_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SupportsTraceLogger</span><span class="p">:</span>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a logger that automatically benefits from global Rich configuration.</span>
+<a id="__codelineno-0-296" name="__codelineno-0-296"></a>
+<a id="__codelineno-0-297" name="__codelineno-0-297"></a><span class="sd">    This function simply retrieves a standard logger that automatically</span>
+<a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="sd">    inherits the global Rich configuration.</span>
+<a id="__codelineno-0-299" name="__codelineno-0-299"></a>
+<a id="__codelineno-0-300" name="__codelineno-0-300"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-301" name="__codelineno-0-301"></a><span class="sd">        name: Logger name (optional).</span>
+<a id="__codelineno-0-302" name="__codelineno-0-302"></a>
+<a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">        Logger automatically configured with Rich capabilities.</span>
+<a id="__codelineno-0-305" name="__codelineno-0-305"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-306" name="__codelineno-0-306"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">pyclif</span><span class="w"> </span><span class="kn">import</span> <span class="n">__app_name__</span>
+<a id="__codelineno-0-307" name="__codelineno-0-307"></a>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a>    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="n">__app_name__</span><span class="p">)</span>  <span class="c1"># type: ignore[return-value]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1865,7 +1865,7 @@ inherits the global Rich configuration.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/config.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/config.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
 <span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
 <span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
@@ -2079,7 +2079,7 @@ inherits the global Rich configuration.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/levels.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/levels.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-49">49</a></span>
 <span class="normal"><a href="#__codelineno-0-50">50</a></span>
 <span class="normal"><a href="#__codelineno-0-51">51</a></span>
@@ -2163,7 +2163,7 @@ inherits the global Rich configuration.</p>
 
 
               <details class="mkdocstrings-source">
-                <summary>Source code in <code>src/pyclif/core/logging/filters.py</code></summary>
+                <summary>Source code in <code>src/pyclif/core/log/filters.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-47"> 47</a></span>
 <span class="normal"><a href="#__codelineno-0-48"> 48</a></span>
 <span class="normal"><a href="#__codelineno-0-49"> 49</a></span>
@@ -2426,7 +2426,7 @@ inherits the global Rich configuration.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/filters.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/filters.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-52">52</a></span>
 <span class="normal"><a href="#__codelineno-0-53">53</a></span>
 <span class="normal"><a href="#__codelineno-0-54">54</a></span>
@@ -2522,7 +2522,7 @@ containing sensitive data.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/filters.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/filters.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span>
@@ -2669,7 +2669,7 @@ during redaction to securely obfuscate sensitive fields.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/filters.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/filters.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-149">149</a></span>
 <span class="normal"><a href="#__codelineno-0-150">150</a></span>
 <span class="normal"><a href="#__codelineno-0-151">151</a></span>
@@ -2743,7 +2743,7 @@ while preserving a click-extra's colorization system.</p>
 
 
               <details class="mkdocstrings-source">
-                <summary>Source code in <code>src/pyclif/core/logging/formatters.py</code></summary>
+                <summary>Source code in <code>src/pyclif/core/log/formatters.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-13">13</a></span>
 <span class="normal"><a href="#__codelineno-0-14">14</a></span>
 <span class="normal"><a href="#__codelineno-0-15">15</a></span>
@@ -2902,7 +2902,7 @@ while preserving a click-extra's colorization system.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/formatters.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/formatters.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-20">20</a></span>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
 <span class="normal"><a href="#__codelineno-0-22">22</a></span>
@@ -3006,7 +3006,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 
 
               <details class="mkdocstrings-source">
-                <summary>Source code in <code>src/pyclif/core/logging/handlers.py</code></summary>
+                <summary>Source code in <code>src/pyclif/core/log/handlers.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-15">15</a></span>
 <span class="normal"><a href="#__codelineno-0-16">16</a></span>
 <span class="normal"><a href="#__codelineno-0-17">17</a></span>
@@ -3232,7 +3232,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/handlers.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/handlers.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-23">23</a></span>
 <span class="normal"><a href="#__codelineno-0-24">24</a></span>
 <span class="normal"><a href="#__codelineno-0-25">25</a></span>
@@ -3352,7 +3352,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/pyclif/core/logging/handlers.py</code></summary>
+              <summary>Source code in <code>src/pyclif/core/log/handlers.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span>
 <span class="normal"><a href="#__codelineno-0-60">60</a></span>
