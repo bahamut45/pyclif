@@ -2,7 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [{new_version}] - 2026-04-22
+## [0.0.11] - 2026-04-22
+
+### Features
+
+- **ci**: Add CI workflow with test coverage reporting
+
+### Miscellaneous
+
+- **pre-commit**: Refine `git-cliff` hook for version extraction
+
+### Style
+
+- **docs**: Improve branding with logo and favicon assets
+
+## [0.0.10] - 2026-04-22
 
 ### Documentation
 
