@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.12] - 2026-04-22
+
+### Tests
+
+- **core**: Add extensive test coverage for core helpers and decorators
+
+### Style
+
+- **tests**: Remove redundant comments and suppress specific inspections
+
 ## [0.0.11] - 2026-04-22
 
 ### Features
