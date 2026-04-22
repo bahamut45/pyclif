@@ -57,7 +57,7 @@ class TestRichHelpConfiguration:
         assert config.show_arguments is True
 
     def test_get_rich_config_with_instance_returns_it_unchanged(self):
-        """Test get_rich_config passes a RichHelpConfiguration instance through (line 119)."""
+        """Test get_rich_config passes a RichHelpConfiguration instance through."""
         from rich_click import RichHelpConfiguration
 
         instance = RichHelpConfiguration(style_option="magenta")

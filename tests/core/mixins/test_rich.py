@@ -18,6 +18,7 @@ class DummyRichContext(RichHelpersMixin):
         self.console = MagicMock()
 
 
+# noinspection PyUnresolvedReferences
 class TestRichHelpersMixin:
     """Test suite for the RichHelpersMixin class."""
 
@@ -37,13 +38,14 @@ class TestRichHelpersMixin:
         """Test that rich_panel does not print when console_print=False (branch 48→50)."""
         context = DummyRichContext()
 
+        # noinspection PyArgumentEqualDefault
         panel = context.rich_panel(text="Silent panel", console_print=False)
 
         assert isinstance(panel, Panel)
         context.console.print.assert_not_called()
 
     def test_rich_panel_with_border_style(self) -> None:
-        """Test that border_style is forwarded to the Panel when provided (line 46)."""
+        """Test that border_style is forwarded to the Panel when provided."""
         context = DummyRichContext()
 
         panel = context.rich_panel(text="Styled", border_style="red")

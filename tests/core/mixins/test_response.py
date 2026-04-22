@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import click
 
+# noinspection PyProtectedMember
 from pyclif.core.mixins.response import (
     _PYCLIF_RESPONSE_DECIDED,
     HandleResponseMixin,
@@ -26,7 +27,7 @@ class TestApplyHandleResponseToGroup:
     """Tests for _apply_handle_response_to_group."""
 
     def test_non_mixin_group_does_not_set_handle_response_by_default(self):
-        """Groups that are not HandleResponseMixin are left untouched (line 31→34 branch)."""
+        """Groups that are not HandleResponseMixin are left untouched."""
         group = _PlainGroup()
         # Should not raise and must not add the attribute.
         _apply_handle_response_to_group(group)
@@ -35,6 +36,7 @@ class TestApplyHandleResponseToGroup:
     def test_nested_group_leaf_is_wrapped_via_recursion(self):
         """Recursion into a nested group wraps its leaf commands (lines 38-39)."""
 
+        # noinspection PyMissingOrEmptyDocstring
         def leaf_callback():
             pass
 
@@ -54,7 +56,7 @@ class TestApplyHandleResponseToGroup:
         mock_wrap.assert_called_once_with(leaf_callback)
 
     def test_command_with_none_callback_is_skipped(self):
-        """Commands whose callback is None are skipped without error (line 42)."""
+        """Commands whose callback is None are skipped without error."""
         cmd = MagicMock()
         cmd.commands = None  # leaf
         cmd.callback = None
@@ -69,6 +71,7 @@ class TestApplyHandleResponseToGroup:
     def test_already_decided_callback_is_not_rewrapped(self):
         """Commands marked _PYCLIF_RESPONSE_DECIDED are skipped (lines 44-48)."""
 
+        # noinspection PyMissingOrEmptyDocstring
         def my_callback():
             pass
 
