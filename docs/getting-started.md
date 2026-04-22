@@ -13,9 +13,43 @@ pip install pyclif
 - Python 3.10 or higher
 - Dependencies are automatically installed
 
-## Quick Start
+## Quickstart with scaffolding
 
-Here's a minimal example:
+The fastest way to get a production-ready project is to let pyclif generate it for you:
+
+```bash
+# Create a new project
+pyclif project init my-project
+cd my-project
+
+# Install dependencies
+uv sync --dev
+
+# Run the generated CLI
+uv run my-project --help
+```
+
+From there, add feature areas and commands incrementally:
+
+```bash
+# Add a feature area (app)
+pyclif project add app users
+
+# Add commands to it
+pyclif project add command list   --app users
+pyclif project add command create --app users
+
+# Wrap an external service
+pyclif project add integration github --package
+```
+
+Everything gets wired automatically — no manual imports to update. See the
+[Scaffolding guide](scaffolding.md) for the full reference.
+
+## Manual setup
+
+If you prefer to understand each piece or are adding pyclif to an existing project,
+here's a minimal example to get you started:
 
 ```python
 from pyclif import app_group, command, option
@@ -46,7 +80,7 @@ python my_cli.py hello --name "World"
 python my_cli.py hello -n "Alice"
 ```
 
-## Your First CLI Application
+## Building your first CLI manually
 
 ### Step 1: Create the main group
 
@@ -155,6 +189,7 @@ python my_cli.py -vv hello --message "Debug mode"
 
 ## Next Steps
 
+- Generate a full project with [Scaffolding](scaffolding.md)
 - Learn about [Configuration Management](configuration.md)
 - Explore [Output Formatting](output-formatting.md)
 - Check out [Complete Examples](examples.md)
