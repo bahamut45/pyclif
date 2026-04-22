@@ -146,14 +146,14 @@ class OutputFormatMixin:
         def _json() -> None:
             serialized = renderer.serialize(result)
             if filter_key:
-                self._print_raw_dict(serialized, filter_key)
+                self._print_json(self._extract_filter_value(serialized, filter_key))
             else:
                 self._print_json(serialized)
 
         def _yaml() -> None:
             serialized = renderer.serialize(result)
             if filter_key:
-                self._print_raw_dict(serialized, filter_key)
+                self._print_yaml(self._extract_filter_value(serialized, filter_key))
             else:
                 self._print_yaml(serialized)
 
@@ -167,40 +167,89 @@ class OutputFormatMixin:
         }
         dispatch.get(output_format or "table", dispatch["table"])()
 
-    def _print_raw_dict(self, data: dict, filter_key: str | None) -> None:
-        """Print a serialized dict as compact JSON, or extract and print a single key.
+    @staticmethod
+    def _extract_filter_value(data: dict, filter_key: str) -> Any:
+        """Extract a dotted-path key from a serialized response dict.
 
-        When filter_key is set, checks data["data"] first (the structured payload),
-        then falls back to top-level response fields (success, message, error_code).
+        Traverses data["data"] first (the structured payload), then falls back
+        to the top-level response dict. Each segment of a dotted path is
+        resolved in order; numeric segments are treated as list indices.
+
+        Examples:
+            "status"         -> data["data"]["status"]
+            "results.0.id"   -> data["data"]["results"][0]["id"]
+            "message"        -> data["message"]  (fallback when not in data)
+
+        Args:
+            data: Serialized response dict.
+            filter_key: Dotted key path to extract (e.g. "results.0.id").
+
+        Returns:
+            The extracted value, or None when the path cannot be resolved.
+        """
+        _MISSING = object()
+        segments = filter_key.split(".")
+
+        def _traverse(obj: Any, segs: list[str]) -> Any:
+            for seg in segs:
+                if isinstance(obj, dict):
+                    if seg not in obj:
+                        return _MISSING
+                    obj = obj[seg]
+                elif isinstance(obj, list):
+                    try:
+                        obj = obj[int(seg)]
+                    except (ValueError, IndexError):
+                        return _MISSING
+                else:
+                    return _MISSING
+            return obj
+
+        sub = data.get("data")
+        if isinstance(sub, dict):
+            result = _traverse(sub, segments)
+            if result is not _MISSING:
+                return result
+
+        result = _traverse(data, segments)
+        return result if result is not _MISSING else None
+
+    def _print_raw_dict(self, data: dict, filter_key: str | None) -> None:
+        """Print a serialized dict as compact JSON, or extract and print a raw value.
+
+        When filter_key is set, the extracted value is printed as-is with no
+        re-serialization — suitable for shell scripting and piping.
         When filter_key is None, prints the full dict as compact JSON without
         syntax highlighting.
 
         Args:
-            data: Serialized response dict from renderer.raw() or renderer.serialize().
+            data: Serialized response dict from renderer.raw().
             filter_key: Key to extract, or None to print the full dict.
         """
         if filter_key:
-            sub = data.get("data")
-            if isinstance(sub, dict) and filter_key in sub:
-                self.console.print(sub[filter_key])  # type: ignore[attr-defined]
-            else:
-                self.console.print(data.get(filter_key))  # type: ignore[attr-defined]
+            self.console.print(self._extract_filter_value(data, filter_key))  # type: ignore[attr-defined]
         else:
             self.console.print(json.dumps(data, cls=_FallbackEncoder))  # type: ignore[attr-defined]
 
-    def _print_json(self, data: dict) -> None:
-        """Print a dict as syntax-highlighted JSON.
+    def _print_json(self, data: Any) -> None:
+        """Print a value as syntax-highlighted JSON.
+
+        Accepts any JSON-serializable value — dict, list, str, int, etc.
+        Used for both full-response output and filtered single-value output.
 
         Args:
-            data: Serialized response dict to display.
+            data: Value to serialize and display as JSON.
         """
         self.console.print_json(json.dumps(data, cls=_FallbackEncoder))  # type: ignore[attr-defined]
 
-    def _print_yaml(self, data: dict) -> None:
-        """Print a dict as syntax-highlighted YAML.
+    def _print_yaml(self, data: Any) -> None:
+        """Print a value as syntax-highlighted YAML.
+
+        Accepts any YAML-serializable value — dict, list, str, int, etc.
+        Used for both full-response output and filtered single-value output.
 
         Args:
-            data: Serialized response dict to display.
+            data: Value to serialize and display as YAML.
         """
         yaml_content = yaml.dump(data, allow_unicode=True, indent=2, sort_keys=False)
         self.console.print(  # type: ignore[attr-defined]

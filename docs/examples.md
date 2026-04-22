@@ -158,9 +158,19 @@ WEBCTL_PORT=9090 webctl service start
 
 ## Structured Output with Response
 
+Attach a `BaseRenderer` subclass to control the output for every format — table columns,
+JSON fields, and Rich display — from a single class.
+
 ```python
-from pyclif import app_group, returns_response, Response, CliTable, CliTableColumn
+from pyclif import app_group, BaseRenderer, OperationResult, Response
 import click
+
+
+class UserRenderer(BaseRenderer):
+    fields = ["id", "name", "active"]   # included in JSON / YAML / raw
+    columns = ["id", "name", "active"]  # shown in the table
+    rich_title = "Users"
+    success_message = "Users retrieved."
 
 
 @app_group(handle_response=True)
@@ -168,16 +178,6 @@ import click
 def cli(ctx):
     """API management CLI."""
     pass
-
-
-def _user_table_callback(resp):
-    """Build a CliTable from the response data."""
-    fields = {
-        "id": CliTableColumn(header="ID", justify="right"),
-        "name": CliTableColumn(header="Name"),
-        "active": CliTableColumn(header="Active"),
-    }
-    return CliTable(fields=fields, rows=resp.data)
 
 
 @cli.command()
@@ -188,18 +188,15 @@ def list_users(ctx):
         {"id": 1, "name": "Alice", "active": True},
         {"id": 2, "name": "Bob", "active": False},
     ]
-    return Response(
-        success=True,
-        message="Users retrieved",
-        data=users,
-        callback_table_output=_user_table_callback,
-    )
+    results = [OperationResult.ok(str(u["id"]), data=u) for u in users]
+    return Response.from_results(results, renderer=UserRenderer())
 ```
 
 ```bash
-myapp list-users                        # default format (table if configured)
+myapp list-users                        # table (default format)
 myapp --output-format json list-users   # JSON output
 myapp -o yaml list-users                # YAML output
+myapp -o text list-users                # plain message only
 ```
 
 ## Advanced Patterns

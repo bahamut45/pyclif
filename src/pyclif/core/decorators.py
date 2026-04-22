@@ -245,7 +245,8 @@ def app_group(**kwargs: Any) -> Callable[[Callable[..., Any]], click_extra.Group
     - `handle_response` (bool): intercept and print `Response` objects automatically.
     - `timer` (bool): inject `--time/--no-time`. Prints elapsed time in rich/table/raw;
       injects `execution_time` and `execution_time_str` into `Response.data` in json/yaml.
-    - `output_format_default` (str): default for `--output-format` (json, yaml, table, rich, raw).
+    - `output_format_default` (str): default for `--output-format`
+      (json, yaml, table, rich, raw, text).
 
     Args:
         **kwargs: GroupConfig fields or Click group arguments.
@@ -581,11 +582,13 @@ def output_filter_option(
     """Add an output filter option to a command.
 
     When combined with --output-format raw, json, or yaml, this option lets
-    users extract a single key from the Response data without writing any
-    filtering logic in the command itself.
+    users extract a value from the Response data using a dotted key path.
 
-    The selected key is stored in ctx.meta['pyclif.output_filter'] and is
+    The selected path is stored in ctx.meta['pyclif.output_filter'] and is
     automatically picked up by returns_response.
+
+    Numeric path segments are treated as list indices. Resolution order:
+    data["data"] first, then top-level response fields.
 
     Example:
 
@@ -593,16 +596,16 @@ def output_filter_option(
         @output_filter_option()
         @returns_response
         @click.pass_context
-        def hello(ctx):
+        def articles(ctx):
             return Response(
                 success=True,
-                message="Hello",
-                data={"message": "Hello", "status": "ok"},
+                message="2 articles",
+                data={"results": [{"id": 1, "title": "Hello"}, {"id": 2}]},
             )
 
-        # myapp hello                          -> raw dict
-        # myapp hello --output-filter message  -> Hello
-        # myapp hello -f status               -> ok
+        # myapp articles -o raw -f results.0.title  -> Hello
+        # myapp articles -o json -f results.0       -> {"id": 1, "title": "Hello"}
+        # myapp articles -o raw -f message          -> 2 articles
 
     Args:
         *param_decls: Parameter declarations (default: --output-filter, -f).
@@ -615,7 +618,7 @@ def output_filter_option(
     if not param_decls:
         param_decls = ("--output-filter", "-f")
 
-    kwargs.setdefault("help", "Extract a single key from the response data (raw, json, yaml).")
+    kwargs.setdefault("help", "Dotted path to extract from the response (raw, json, yaml).")
     # noinspection PyArgumentEqualDefault
     kwargs.setdefault("default", None)
     kwargs.setdefault("store_in_meta", True)
@@ -654,7 +657,7 @@ def output_format_option(
 
     kwargs.setdefault(
         "type",
-        click_extra.Choice(["json", "yaml", "table", "rich", "raw"], case_sensitive=False),
+        click_extra.Choice(["json", "yaml", "table", "rich", "raw", "text"], case_sensitive=False),
     )
     kwargs.setdefault("help", "Specify the output format for the command.")
 

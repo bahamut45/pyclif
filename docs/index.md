@@ -25,8 +25,10 @@ pyclif is built on top of `click-extra` and `rich-click` and exposes four main d
 - [**Configuration Management**](configuration.md) — Configuration files, environment variables, and the
   `CustomConfigOption` system
 - [**Rich Logging**](logging.md) — Colored logging with Rich formatting, TRACE level, and secrets filtering
-- [**Output Formatting**](output-formatting.md) — `BaseContext`, `Response`, and dynamic formatting (JSON, YAML,
-  Tables, Rich, Raw)
+- [**Output Formatting**](output-formatting.md) — `BaseContext`, `Response`, `BaseRenderer`, and dynamic
+  formatting (JSON, YAML, Tables, Rich, Text, Raw)
+- [**Error Handling**](error-handling.md) — `OperationResult`, `BaseInterface`, and the service/command
+  layer contract
 - [**Development and Testing**](development.md) — Development setup, testing, and contribution guidelines
 
 ## Quick Example
@@ -73,8 +75,10 @@ if __name__ == "__main__":
 
 ### Standardized Output
 
-- **Dynamic format**: JSON, YAML, Tables, Rich text, or raw values via `--output-format`
+- **Dynamic format**: JSON, YAML, Tables, Rich text, plain text, or raw values via `--output-format`
 - **Response model**: Standardize results and errors with the `Response` dataclass
+- **Renderer model**: `BaseRenderer` controls every output format from a single subclass
+- **Error handling**: `OperationResult` + `BaseInterface` keep commands free of try/except boilerplate
 - **Context helpers**: Rich-powered prompts, panels, status spinners via `BaseContext`
 
 ### Seamless Integration

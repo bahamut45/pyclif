@@ -45,21 +45,23 @@ available for direct use in error handlers.
 
 ## Output formats
 
-| Format  | Output                                          | Filterable |
-|---------|-------------------------------------------------|------------|
-| `json`  | Syntax-highlighted JSON                         | yes        |
-| `yaml`  | Syntax-highlighted YAML                         | yes        |
-| `table` | Rich table                                      | no         |
-| `rich`  | Live / panels / markdown                        | no         |
-| `raw`   | Flat JSON, no highlighting — machine-readable   | yes        |
-| `text`  | Plain text: `response.message` only             | no         |
+| Format  | Output                                              | Filterable |
+|---------|-----------------------------------------------------|------------|
+| `table` | Rich table — **default format**                     | no         |
+| `rich`  | Live / panels / markdown                            | no         |
+| `text`  | Plain text: `response.message` only                 | no         |
+| `json`  | Syntax-highlighted JSON — always valid JSON         | yes        |
+| `yaml`  | Syntax-highlighted YAML — always valid YAML         | yes        |
+| `raw`   | Compact JSON, no highlighting — machine-readable    | yes        |
 
-`table` is the default format. `raw` is the machine-readable format for scripting
-— use it with `--output-filter` or pipe to `jq`.
+`table` is the default format.
 
-`--output-filter` extracts a single key from the serialized dict. It works with
-`raw`, `json`, and `yaml`. When a filter is active on `json` or `yaml`, the
-extracted value is printed without syntax highlighting.
+`--output-filter` accepts a **dotted key path** (`results.0.id`, `article.title`, `message`).
+Numeric segments are treated as list indices. Resolution: `data["data"]` first, then top-level.
+
+- **`raw`** — prints the extracted value as-is. `running`, not `"running"`. Best for scripting.
+- **`json`** — re-serializes the extracted value as valid JSON. Always outputs valid JSON.
+- **`yaml`** — re-serializes the extracted value as valid YAML. Always outputs valid YAML.
 
 ---
 

@@ -5,10 +5,10 @@ pyclif enforces a strict separation between the service layer (interface) and th
 
 ## The contract
 
-| Layer | Responsibility |
-|-------|----------------|
-| **Interface** | Executes actions. Returns `OperationResult`. Never raises for expected business failures. |
-| **Command** | Thin view. Calls the interface, builds a `Response` from the results. No try/except. |
+| Layer | Tool | Responsibility |
+|-------|------|----------------|
+| **Interface** | `BaseInterface` subclass | Executes actions. Returns `list[OperationResult]` or `Iterator[OperationResult]`. Never raises for expected business failures. |
+| **Command** | `@command()` function | Thin view. Calls `interface.respond()`, returns a `Response`. No try/except. |
 
 Exceptions are reserved for programming errors: missing templates, corrupt state, broken
 invariants. The last resort handler catches anything that escapes and formats it as a clean
@@ -43,6 +43,110 @@ result = OperationResult.error(
 | `message` | `str` | Human-readable description of the outcome |
 | `error_code` | `int` | Non-zero on failure |
 
+## Writing an interface
+
+Interface methods return `list[OperationResult]` or `Iterator[OperationResult]` — they never
+raise for expected failures:
+
+```python
+from collections.abc import Iterator
+from pyclif import BaseInterface, OperationResult
+
+
+class MyInterface(BaseInterface):
+    def create_resource(self, name: str) -> list[OperationResult]:
+        if self._exists(name):
+            return [OperationResult.error(name, f"'{name}' already exists.", error_code=2)]
+        self._write(name)
+        return [OperationResult.ok(name, data={"action": "created"})]
+
+    def bulk_create(self, names: list[str]) -> list[OperationResult]:
+        return [self.create_resource(name)[0] for name in names]
+
+    def stream_files(self, paths: list[str]) -> Iterator[OperationResult]:
+        """Generator variant — results are yielded one by one for live output."""
+        for path in paths:
+            yield self._process_file(path)
+```
+
+The interface decides whether to stop on the first failure (return early) or continue
+collecting results across all items.
+
+## Writing a command
+
+### Using BaseInterface.respond() — recommended
+
+`BaseInterface.respond()` is the standard way to call an interface method from a command. It
+auto-detects whether the method returns a list or a generator, selects the renderer declared
+in `renderers`, and builds the `Response` automatically:
+
+```python
+from pyclif import command, argument, pass_context, Response
+
+from .interfaces import MyInterface
+
+
+@command()
+@argument("name")
+@pass_context
+def create(ctx, name: str) -> Response:
+    """Create a resource."""
+    return MyInterface(ctx).respond("create_resource", name)
+```
+
+The renderer is declared once on the interface class:
+
+```python
+from pyclif import BaseInterface, BaseRenderer, OperationResult
+
+
+class MyRenderer(BaseRenderer):
+    fields = ["item", "action", "success"]
+    columns = ["item", "action"]
+    rich_title = "Resources"
+    success_message = "Resource created."
+    failure_message = "Resource creation failed."
+
+
+class MyInterface(BaseInterface):
+    renderers = {
+        "create_resource": MyRenderer,
+        "bulk_create": MyRenderer,
+    }
+
+    def create_resource(self, name: str) -> list[OperationResult]:
+        if self._exists(name):
+            return [OperationResult.error(name, f"'{name}' already exists.", error_code=2)]
+        self._write(name)
+        return [OperationResult.ok(name, data={"action": "created"})]
+```
+
+### Using Response.from_results() directly
+
+For cases where you need full control over the message or renderer at call time, call
+`from_results()` manually:
+
+```python
+from pyclif import Response, argument, command, pass_context
+
+from .interfaces import MyInterface
+from .renderers import MyRenderer
+
+
+@command()
+@argument("name")
+@pass_context
+def create(ctx, name: str) -> Response:
+    """Create a resource."""
+    results = MyInterface(ctx).create_resource(name)
+    return Response.from_results(
+        results,
+        success_message=f"'{name}' created.",
+        failure_message=f"Failed to create '{name}'.",
+        renderer=MyRenderer(),
+    )
+```
+
 ## Response.from_results()
 
 Aggregates a list of `OperationResult` into a single `Response`:
@@ -55,63 +159,18 @@ response = Response.from_results(
     results,
     success_message="Operation completed.",
     failure_message="Operation failed.",
-    table=MyTable,
+    renderer=MyRenderer(),
 )
 ```
 
 - `success=True` only if **all** results succeeded
-- `error_code` is taken from the first failed result (0 if all passed)
+- `error_code` is taken from the first failed result (None if all passed)
 - `data["results"]` carries the full list for table rendering
 
 **Message selection** — in order of precedence:
 1. `message` — fixed, used regardless of outcome
 2. `success_message` / `failure_message` — selected based on outcome
 3. Auto-generated summary (`"N operation(s) completed."` / `"N/M operation(s) failed."`)
-
-## Writing an interface
-
-Interface methods return `OperationResult` — they never raise for expected failures:
-
-```python
-from pyclif import OperationResult
-
-class MyInterface:
-    def create_resource(self, name: str) -> OperationResult:
-        if self._exists(name):
-            return OperationResult.error(name, f"'{name}' already exists.", error_code=2)
-        self._write(name)
-        return OperationResult.ok(name, data={"action": "created"})
-
-    def bulk_create(self, names: list[str]) -> list[OperationResult]:
-        return [self.create_resource(name) for name in names]
-```
-
-The interface decides whether to stop on the first failure (return early) or continue
-collecting results across all items.
-
-## Writing a command
-
-Commands are thin views — they call the interface and build a `Response`:
-
-```python
-from pyclif import Response, argument, command, pass_context
-
-from .interfaces import MyInterface
-from .tables import MyTable
-
-
-@command()
-@argument("name")
-@pass_context
-def create(ctx, name: str) -> Response:
-    """Create a resource."""
-    return Response.from_results(
-        MyInterface(ctx).create_resource(name),
-        success_message=f"'{name}' created.",
-        failure_message=f"Failed to create '{name}'.",
-        table=MyTable,
-    )
-```
 
 ## Boundary rule
 

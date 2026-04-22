@@ -98,6 +98,62 @@ class TestPrintResultFallbackRenderer:
 # ---------------------------------------------------------------------------
 
 
+class TestExtractFilterValue:
+    """Tests for _extract_filter_value."""
+
+    # --- single key ---
+
+    def test_key_in_data_sub_dict(self) -> None:
+        data = {"success": True, "data": {"results": [{"id": 42}]}}
+        assert OutputFormatMixin._extract_filter_value(data, "results") == [{"id": 42}]
+
+    def test_key_at_top_level(self) -> None:
+        data = {"success": True, "message": "done", "data": {}}
+        assert OutputFormatMixin._extract_filter_value(data, "message") == "done"
+
+    def test_data_sub_dict_takes_priority_over_top_level(self) -> None:
+        data = {"message": "top", "data": {"message": "nested"}}
+        assert OutputFormatMixin._extract_filter_value(data, "message") == "nested"
+
+    def test_missing_key_returns_none(self) -> None:
+        data = {"success": True, "data": {}}
+        assert OutputFormatMixin._extract_filter_value(data, "nonexistent") is None
+
+    def test_null_value_is_returned_not_skipped(self) -> None:
+        data = {"data": {"key": None}}
+        assert OutputFormatMixin._extract_filter_value(data, "key") is None
+
+    # --- dotted path ---
+
+    def test_dotted_path_into_nested_dict(self) -> None:
+        data = {"data": {"article": {"id": 7, "title": "hello"}}}
+        assert OutputFormatMixin._extract_filter_value(data, "article.title") == "hello"
+
+    def test_dotted_path_with_list_index(self) -> None:
+        data = {"data": {"results": [{"id": 1}, {"id": 2}]}}
+        assert OutputFormatMixin._extract_filter_value(data, "results.0.id") == 1
+
+    def test_dotted_path_second_list_item(self) -> None:
+        data = {"data": {"results": [{"id": 1}, {"id": 2}]}}
+        assert OutputFormatMixin._extract_filter_value(data, "results.1.id") == 2
+
+    def test_dotted_path_out_of_bounds_returns_none(self) -> None:
+        data = {"data": {"results": [{"id": 1}]}}
+        assert OutputFormatMixin._extract_filter_value(data, "results.5.id") is None
+
+    def test_dotted_path_non_numeric_list_index_returns_none(self) -> None:
+        data = {"data": {"results": [{"id": 1}]}}
+        assert OutputFormatMixin._extract_filter_value(data, "results.x.id") is None
+
+    def test_dotted_path_falls_back_to_top_level(self) -> None:
+        data = {"message": "top", "data": {"other": 1}}
+        assert OutputFormatMixin._extract_filter_value(data, "message") == "top"
+
+    def test_dotted_path_missing_intermediate_key_returns_none(self) -> None:
+        data = {"data": {"results": [{"id": 1}]}}
+        assert OutputFormatMixin._extract_filter_value(data, "results.0.missing") is None
+
+
 class TestPrintRawDict:
     """Tests for _print_raw_dict."""
 
@@ -109,25 +165,19 @@ class TestPrintRawDict:
         parsed = json.loads(args[0])
         assert parsed["success"] is True
 
-    def test_filter_in_data_sub_dict(self) -> None:
+    def test_filter_prints_raw_value_without_re_serialization(self) -> None:
         ctx = DummyOutputContext()
-        data = {"success": True, "data": {"results": [{"id": 42}]}}
-        ctx._print_raw_dict(data, "results")
-        ctx.console.print.assert_called_once_with([{"id": 42}])
+        data = {"success": True, "data": {"status": "running"}}
+        ctx._print_raw_dict(data, "status")
+        ctx.console.print.assert_called_once_with("running")
 
-    def test_filter_at_top_level(self) -> None:
+    def test_filter_top_level_prints_raw_value(self) -> None:
         ctx = DummyOutputContext()
         data = {"success": True, "message": "done", "data": {}}
         ctx._print_raw_dict(data, "message")
         ctx.console.print.assert_called_once_with("done")
 
-    def test_filter_data_takes_priority_over_top_level(self) -> None:
-        ctx = DummyOutputContext()
-        data = {"message": "top", "data": {"message": "nested"}}
-        ctx._print_raw_dict(data, "message")
-        ctx.console.print.assert_called_once_with("nested")
-
-    def test_missing_filter_key_returns_none(self) -> None:
+    def test_filter_missing_key_prints_none(self) -> None:
         ctx = DummyOutputContext()
         data = {"success": True, "data": {}}
         ctx._print_raw_dict(data, "nonexistent")
@@ -251,23 +301,25 @@ class TestRendererPathBatchDispatch:
         ctx.print_result_based_on_format(response)
         ctx._print_yaml.assert_called_once()
 
-    def test_json_with_filter_bypasses_highlighting(self) -> None:
+    def test_json_with_filter_re_serializes_as_json(self) -> None:
         ctx = self._ctx("json")
         ctx._print_json = MagicMock()  # type: ignore[method-assign]
         ctx._print_raw_dict = MagicMock()  # type: ignore[method-assign]
         response = _response_with_renderer()
+        response.message = "done"
         ctx.print_result_based_on_format(response, options={"filter_value": "message"})
-        ctx._print_raw_dict.assert_called_once()
-        ctx._print_json.assert_not_called()
+        ctx._print_json.assert_called_once_with("done")
+        ctx._print_raw_dict.assert_not_called()
 
-    def test_yaml_with_filter_bypasses_highlighting(self) -> None:
+    def test_yaml_with_filter_re_serializes_as_yaml(self) -> None:
         ctx = self._ctx("yaml")
         ctx._print_yaml = MagicMock()  # type: ignore[method-assign]
         ctx._print_raw_dict = MagicMock()  # type: ignore[method-assign]
         response = _response_with_renderer()
+        response.message = "done"
         ctx.print_result_based_on_format(response, options={"filter_value": "message"})
-        ctx._print_raw_dict.assert_called_once()
-        ctx._print_yaml.assert_not_called()
+        ctx._print_yaml.assert_called_once_with("done")
+        ctx._print_raw_dict.assert_not_called()
 
 
 # ---------------------------------------------------------------------------
