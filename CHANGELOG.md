@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Documentation
+
+- **output**: Refine and expand documentation for output handling updates
+
+## [0.0.7] - 2026-04-21
+
 ### Features
 
 - **docs**: Enhance pre-commit and documentation workflows

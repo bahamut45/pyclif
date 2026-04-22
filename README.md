@@ -1,6 +1,6 @@
 # pyclif
 
-![version](https://img.shields.io/badge/version-0.0.7-green)
+![version](https://img.shields.io/badge/version-0.0.8-green)
 
 **PYthon Command Line Interface Framework** — a decorator-driven CLI framework built on
 [click-extra](https://github.com/kdeldycke/click-extra) and [rich-click](https://github.com/ewels/rich-click).
