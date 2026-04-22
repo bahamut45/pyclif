@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Miscellaneous
+
+- **pre-commit**: Update ruff hook to v0.15.11
+
+### Refactoring
+
+- **logging**: Migrate `logging` package to `log` for improved clarity
+
+## [0.0.8] - 2026-04-22
+
 ### Documentation
 
 - **output**: Refine and expand documentation for output handling updates
