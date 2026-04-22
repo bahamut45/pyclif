@@ -1302,8 +1302,10 @@ Rich-enhanced logging, and standardized output formatting.</p>
 <li><a href="configuration/"><strong>Configuration Management</strong></a> — Configuration files, environment variables, and the
   <code>CustomConfigOption</code> system</li>
 <li><a href="logging/"><strong>Rich Logging</strong></a> — Colored logging with Rich formatting, TRACE level, and secrets filtering</li>
-<li><a href="output-formatting/"><strong>Output Formatting</strong></a> — <code>BaseContext</code>, <code>Response</code>, and dynamic formatting (JSON, YAML,
-  Tables, Rich, Raw)</li>
+<li><a href="output-formatting/"><strong>Output Formatting</strong></a> — <code>BaseContext</code>, <code>Response</code>, <code>BaseRenderer</code>, and dynamic
+  formatting (JSON, YAML, Tables, Rich, Text, Raw)</li>
+<li><a href="error-handling/"><strong>Error Handling</strong></a> — <code>OperationResult</code>, <code>BaseInterface</code>, and the service/command
+  layer contract</li>
 <li><a href="development/"><strong>Development and Testing</strong></a> — Development setup, testing, and contribution guidelines</li>
 </ul>
 <h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
@@ -1346,8 +1348,10 @@ Rich-enhanced logging, and standardized output formatting.</p>
 </ul>
 <h3 id="standardized-output">Standardized Output<a class="headerlink" href="#standardized-output" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Dynamic format</strong>: JSON, YAML, Tables, Rich text, or raw values via <code>--output-format</code></li>
+<li><strong>Dynamic format</strong>: JSON, YAML, Tables, Rich text, plain text, or raw values via <code>--output-format</code></li>
 <li><strong>Response model</strong>: Standardize results and errors with the <code>Response</code> dataclass</li>
+<li><strong>Renderer model</strong>: <code>BaseRenderer</code> controls every output format from a single subclass</li>
+<li><strong>Error handling</strong>: <code>OperationResult</code> + <code>BaseInterface</code> keep commands free of try/except boilerplate</li>
 <li><strong>Context helpers</strong>: Rich-powered prompts, panels, status spinners via <code>BaseContext</code></li>
 </ul>
 <h3 id="seamless-integration">Seamless Integration<a class="headerlink" href="#seamless-integration" title="Permanent link">&para;</a></h3>

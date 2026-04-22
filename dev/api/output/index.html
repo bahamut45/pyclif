@@ -4860,18 +4860,8 @@ exception visualization.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>json</code></td>
-<td>Syntax-highlighted JSON</td>
-<td>yes</td>
-</tr>
-<tr>
-<td><code>yaml</code></td>
-<td>Syntax-highlighted YAML</td>
-<td>yes</td>
-</tr>
-<tr>
 <td><code>table</code></td>
-<td>Rich table</td>
+<td>Rich table — <strong>default format</strong></td>
 <td>no</td>
 </tr>
 <tr>
@@ -4880,22 +4870,35 @@ exception visualization.</p>
 <td>no</td>
 </tr>
 <tr>
-<td><code>raw</code></td>
-<td>Flat JSON, no highlighting — machine-readable</td>
-<td>yes</td>
-</tr>
-<tr>
 <td><code>text</code></td>
 <td>Plain text: <code>response.message</code> only</td>
 <td>no</td>
 </tr>
+<tr>
+<td><code>json</code></td>
+<td>Syntax-highlighted JSON — always valid JSON</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>yaml</code></td>
+<td>Syntax-highlighted YAML — always valid YAML</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>raw</code></td>
+<td>Compact JSON, no highlighting — machine-readable</td>
+<td>yes</td>
+</tr>
 </tbody>
 </table>
-<p><code>table</code> is the default format. <code>raw</code> is the machine-readable format for scripting
-— use it with <code>--output-filter</code> or pipe to <code>jq</code>.</p>
-<p><code>--output-filter</code> extracts a single key from the serialized dict. It works with
-<code>raw</code>, <code>json</code>, and <code>yaml</code>. When a filter is active on <code>json</code> or <code>yaml</code>, the
-extracted value is printed without syntax highlighting.</p>
+<p><code>table</code> is the default format.</p>
+<p><code>--output-filter</code> accepts a <strong>dotted key path</strong> (<code>results.0.id</code>, <code>article.title</code>, <code>message</code>).
+Numeric segments are treated as list indices. Resolution: <code>data["data"]</code> first, then top-level.</p>
+<ul>
+<li><strong><code>raw</code></strong> — prints the extracted value as-is. <code>running</code>, not <code>"running"</code>. Best for scripting.</li>
+<li><strong><code>json</code></strong> — re-serializes the extracted value as valid JSON. Always outputs valid JSON.</li>
+<li><strong><code>yaml</code></strong> — re-serializes the extracted value as valid YAML. Always outputs valid YAML.</li>
+</ul>
 <hr />
 <h2 id="baserenderer">BaseRenderer<a class="headerlink" href="#baserenderer" title="Permanent link">&para;</a></h2>
 <p>Declarative base class for all pyclif output renderers. Subclass and set class
