@@ -1,4 +1,8 @@
-# pyclif Documentation
+<p align="center">
+  <img src="assets/logo.png" alt="pyclif logo" width="200">
+</p>
+
+# Documentation
 
 Welcome to the comprehensive documentation for pyclif, a decorator-driven CLI framework that provides powerful
 decorators for building Python CLI applications with automatic configuration management, environment variable support,
