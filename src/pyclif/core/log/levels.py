@@ -3,22 +3,9 @@
 import logging
 from typing import Any, Protocol
 
-try:
-    # noinspection PyUnusedImports
-    from click_extra.logging import LogLevel
+from click_extra.logging import LogLevel
 
-    LOG_LEVELS = {level.name: level.value for level in LogLevel}
-except ImportError:
-    try:
-        from click_extra.logging import LOG_LEVELS
-    except ImportError:
-        LOG_LEVELS = {
-            "CRITICAL": logging.CRITICAL,
-            "ERROR": logging.ERROR,
-            "WARNING": logging.WARNING,
-            "INFO": logging.INFO,
-            "DEBUG": logging.DEBUG,
-        }
+LOG_LEVELS = {level.name: level.value for level in LogLevel}
 
 TRACE = 5
 logging.addLevelName(TRACE, "TRACE")

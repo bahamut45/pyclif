@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from .tables import CliTable, CliTableColumn
 
 
-class ResponseRenderer(Protocol):
+class ResponseRenderer(Protocol):  # pragma: no cover
     """Protocol for renderer implementations.
 
     Renderers are the single source of truth for all output formats of a command.

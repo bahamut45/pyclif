@@ -262,6 +262,58 @@ class TestSecretsMasker:
         assert redacted["config"]["database"]["host"] == "localhost"
         assert redacted["config"]["database"]["password"] == "*CENSORED*"
 
+    def test_should_hide_value_for_key_non_string(self):
+        """Test that non-string inputs are not flagged as sensitive."""
+        from pyclif.core.log.filters import should_hide_value_for_key
+
+        assert should_hide_value_for_key(42) is False
+        assert should_hide_value_for_key(None) is False
+
+    def test_filter_returns_false_when_replacer_is_none(self, masker):
+        """Test that filter() returns False when no replacer is configured."""
+        masker.replacer = None
+        record = logging.LogRecord("test", logging.INFO, "", 0, "msg", (), None)
+        assert masker.filter(record) is False
+
+    def test_redact_all_dict(self, masker):
+        """Test _redact_all censors all string values in a dict."""
+        result = masker._redact_all({"key": "value"}, depth=0)
+        assert result == {"key": "*CENSORED*"}
+
+    def test_redact_all_list(self, masker):
+        """Test _redact_all censors all string values in a list."""
+        result = masker._redact_all(["a", "b"], depth=0)
+        assert result == ["*CENSORED*", "*CENSORED*"]
+
+    def test_redact_all_tuple(self, masker):
+        """Test _redact_all censors all string values in a tuple and returns a tuple."""
+        result = masker._redact_all(("a", "b"), depth=0)
+        assert result == ("*CENSORED*", "*CENSORED*")
+
+    def test_redact_all_non_string_scalar(self, masker):
+        """Test _redact_all returns non-string scalars unchanged."""
+        assert masker._redact_all(42, depth=0) == 42
+
+    def test_redact_namedtuple(self, masker):
+        """Test _redact handles namedtuples and redacts sensitive fields."""
+        from collections import namedtuple
+
+        Creds = namedtuple("Creds", ["username", "password"])
+        result = masker.redact(Creds(username="user", password="secret"))
+        assert result.username == "user"
+        assert result.password == "*CENSORED*"
+
+    def test_redact_list_in_non_sensitive_context(self, masker):
+        """Test _redact traverses lists when the key is not sensitive."""
+        result = masker.redact({"items": ["a", "b"]})
+        assert result["items"] == ["a", "b"]
+
+    def test_redact_exception_returns_item_unchanged(self, masker):
+        """Test _redact returns the original item when an exception occurs during redaction."""
+        with patch.object(masker, "_redact_all", side_effect=ValueError("boom")):
+            result = masker.redact({"password": "secret"})
+        assert result == {"password": "secret"}
+
 
 class TestAddTraceMethod:
     """Test add_trace_method functionality."""
@@ -287,6 +339,18 @@ class TestAddTraceMethod:
 
         mock_logger.isEnabledFor.assert_called_once_with(TRACE)
         mock_logger._log.assert_called_once_with(TRACE, "test trace message", ())
+
+    def test_trace_method_skips_log_when_level_disabled(self):
+        """Test that trace() does not call _log when TRACE level is disabled."""
+        mock_logger = Mock()
+        mock_logger.isEnabledFor.return_value = False
+
+        add_trace_method(mock_logger.__class__)
+
+        mock_logger.trace("should not be logged")
+
+        mock_logger.isEnabledFor.assert_called_once_with(TRACE)
+        mock_logger._log.assert_not_called()
 
 
 class TestPyclifVerbosityOption:
