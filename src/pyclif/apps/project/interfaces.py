@@ -80,11 +80,13 @@ class ScaffoldingInterface(BaseInterface):
         for dest, tmpl in files:
             yield self._write_rendered(dest, tmpl, ns)
 
-    def add_app(self, name: str) -> Iterator[OperationResult]:
+    def add_app(self, name: str, flat: bool = False) -> Iterator[OperationResult]:
         """Create an app skeleton inside the current project's apps/ directory.
 
         Args:
             name: App name (snake_case).
+            flat: When True, skip the @group wrapper and expose commands directly
+                on the app_group. Defaults to False.
 
         Yields:
             OperationResult for each file created or modified.
@@ -97,8 +99,9 @@ class ScaffoldingInterface(BaseInterface):
             )
             return
 
+        init_tmpl = "app_init_flat.py.jinja2" if flat else "app_init.py.jinja2"
         files = [
-            (app_dir / "__init__.py", "app_init.py.jinja2"),
+            (app_dir / "__init__.py", init_tmpl),
             (app_dir / "interfaces.py", "app_interfaces.py.jinja2"),
             (app_dir / "models.py", "app_models.py.jinja2"),
             (app_dir / "tables.py", "app_tables.py.jinja2"),
@@ -106,7 +109,10 @@ class ScaffoldingInterface(BaseInterface):
         ]
         for dest, tmpl in files:
             yield self._write_rendered(dest, tmpl, ns)
-        yield from self._wire_app(ns["name_snake"])
+        if flat:
+            yield from self._wire_app_flat(ns["name_snake"])
+        else:
+            yield from self._wire_app_grouped(ns["name_snake"])
 
     def add_command(self, name: str, app: str) -> Iterator[OperationResult]:
         """Create a command file inside an app's commands/ directory.
@@ -188,8 +194,8 @@ class ScaffoldingInterface(BaseInterface):
 
         yield from self._wire_integration(ns["name_snake"], ns["name_pascal"])
 
-    def _wire_app(self, name_snake: str) -> Iterator[OperationResult]:
-        """Append import and groups.append call to apps/__init__.py.
+    def _wire_app_grouped(self, name_snake: str) -> Iterator[OperationResult]:
+        """Append import and exports.append call to apps/__init__.py for a grouped app.
 
         Args:
             name_snake: Snake-case app name.
@@ -201,7 +207,24 @@ class ScaffoldingInterface(BaseInterface):
         apps_init = self._root / "src" / pkg / "apps" / "__init__.py"
         yield from self._append_to_init(
             apps_init,
-            f"\nfrom .{name_snake} import {name_snake}\ngroups.append({name_snake})\n",
+            f"\nfrom .{name_snake} import {name_snake}\nexports.append({name_snake})\n",
+        )
+
+    def _wire_app_flat(self, name_snake: str) -> Iterator[OperationResult]:
+        """Append import and exports.extend call to apps/__init__.py for a flat app.
+
+        Args:
+            name_snake: Snake-case app name.
+
+        Yields:
+            OperationResult for the modified file.
+        """
+        pkg = self._detect_package()
+        apps_init = self._root / "src" / pkg / "apps" / "__init__.py"
+        yield from self._append_to_init(
+            apps_init,
+            f"\nfrom .{name_snake} import commands as {name_snake}_commands\n"
+            f"exports.extend({name_snake}_commands)\n",
         )
 
     def _wire_command(self, name_snake: str, app: str) -> Iterator[OperationResult]:

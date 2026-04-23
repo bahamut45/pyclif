@@ -41,7 +41,7 @@ my-project/
 ├── .gitignore
 ├── src/my_project/
 │   ├── __init__.py
-│   ├── cli.py                  # @app_group entry point, wires all app groups
+│   ├── cli.py                  # @app_group entry point, wires all app exports
 │   ├── core/
 │   │   ├── context.py          # MyProjectContext(BaseContext) + pass_cli_context
 │   │   ├── constants.py
@@ -49,34 +49,37 @@ my-project/
 │   │   └── integrations/
 │   │       └── __init__.py
 │   └── apps/
-│       └── __init__.py         # groups = [] — add_app appends here
+│       └── __init__.py         # exports = [] — add_app appends or extends here
 └── tests/
     ├── __init__.py
     └── conftest.py
 ```
 
-The generated `cli.py` wires groups dynamically so each new app you add is picked up
+The generated `cli.py` wires app exports dynamically so each new app you add is picked up
 automatically:
 
 ```python
-from pyclif import app_group
+from pyclif import app_group, pass_context
 from .core.context import MyProjectContext
-from .apps import groups
+from .apps import exports
 
 @app_group(handle_response=True, output_format_default="json")
-@click.pass_context
+@pass_context
 def app(ctx):
     """MyProject CLI."""
     ctx.obj = MyProjectContext()
 
-for group in groups:
-    app.add_command(group)
+for item in exports:
+    app.add_command(item)
 ```
 
 ## Adding an app
 
-An _app_ is a self-contained feature area — a Click group with its own commands, interfaces,
-models, and tables.
+An _app_ is a self-contained feature area with its own commands, interfaces, models, and tables.
+By default it creates a Click group, giving you `my-project app command`. Use `--no-group` when
+you want commands to appear directly on the root CLI instead.
+
+### Grouped app (default)
 
 ```bash
 # Run from the project root
@@ -101,13 +104,84 @@ src/my_project/apps/users/
 
 ```python
 from .users import users
-groups.append(users)
+exports.append(users)
+```
+
+Result: `my-project users list`, `my-project users create`, …
+
+### Flat app — commands without a group layer
+
+Use `--no-group` when you want commands to appear directly on the root CLI
+(`my-project status`, not `my-project health status`). The internal structure under
+`apps/health/` is identical — only the `__init__.py` and the wiring differ.
+
+```bash
+pyclif project add app health --no-group
+```
+
+**Options**
+
+| Option | Default | Description |
+|---|---|---|
+| `--no-group` | off | Skip the `@group` wrapper — expose commands directly on the root app |
+
+**What gets created**
+
+```
+src/my_project/apps/health/
+├── __init__.py         # imports commands — no @group decorator
+├── interfaces.py       # HealthInterface + HealthRenderer stubs
+├── models.py
+├── tables.py
+└── commands/
+    └── __init__.py     # commands = []
+```
+
+**What gets wired**
+
+`apps/__init__.py` uses `extend` instead of `append`:
+
+```python
+from .health import commands as health_commands
+exports.extend(health_commands)
+```
+
+Result: `my-project status`, `my-project ping`, … — no intermediate group level.
+
+**Adding commands to a flat app works exactly the same way:**
+
+```bash
+pyclif project add command status --app health
+pyclif project add command ping   --app health
+```
+
+### Mixing grouped and flat apps
+
+Both styles coexist freely. `cli.py` calls `add_command()` on every item in `exports`,
+whether it is a Click `Group` (grouped app) or a Click `Command` (flat app):
+
+```python
+# apps/__init__.py after adding both:
+exports = []
+
+from .users import users                              # grouped
+exports.append(users)
+
+from .health import commands as health_commands       # flat
+exports.extend(health_commands)
+```
+
+```
+my-project users list      # grouped app
+my-project users create
+my-project status          # flat app
+my-project ping
 ```
 
 ## Adding a command
 
-A _command_ belongs to an existing app. It gets its own file and is immediately reachable on
-the CLI.
+A _command_ belongs to an existing app (grouped or flat). It gets its own file and is
+immediately reachable on the CLI.
 
 ```bash
 pyclif project add command list --app users
@@ -134,7 +208,7 @@ from ..interfaces import UsersInterface
 @pass_cli_context
 def list(ctx) -> Response:
     """List description."""
-    return UsersInterface(ctx).respond("list_items")
+    return UsersInterface(ctx).respond("list")
 ```
 
 **What gets wired**
@@ -226,18 +300,20 @@ the other variants automatically:
 
 ## Typical workflow
 
+### Grouped app
+
 ```bash
 # 1. Bootstrap
 pyclif project init my-project
 cd my-project
-uv sync --dev
+uv sync --extra dev
 
 # 2. Add a feature area
 pyclif project add app users
 
 # 3. Add commands to it
-pyclif project add command list  --app users
-pyclif project add command get   --app users
+pyclif project add command list   --app users
+pyclif project add command get    --app users
 pyclif project add command create --app users
 
 # 4. Wrap an external service
@@ -246,4 +322,25 @@ pyclif project add integration github --package
 # 5. Run the CLI
 uv run my-project --help
 uv run my-project users list
+```
+
+### Flat app
+
+```bash
+# 1. Bootstrap
+pyclif project init deploy-tool
+cd deploy-tool
+uv sync --extra dev
+
+# 2. Add a flat app — commands appear directly on the root
+pyclif project add app deploy --no-group
+
+# 3. Add commands
+pyclif project add command up     --app deploy
+pyclif project add command down   --app deploy
+pyclif project add command status --app deploy
+
+# 4. Run the CLI — no group level
+uv run deploy-tool up
+uv run deploy-tool status
 ```

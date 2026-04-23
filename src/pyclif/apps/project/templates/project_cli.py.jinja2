@@ -1,6 +1,6 @@
 from pyclif import app_group, pass_context
 from .core.context import {{ name_pascal }}Context
-from .apps import groups
+from .apps import exports
 
 
 @app_group(
@@ -13,5 +13,5 @@ def app(ctx):
     ctx.obj = {{ name_pascal }}Context()
 
 
-for group in groups:
-    app.add_command(group)
+for item in exports:
+    app.add_command(item)

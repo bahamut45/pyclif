@@ -128,7 +128,7 @@ class TestAddApp:
         list(project.add_app("repos"))
         content = (tmp_path / "my-app" / "src" / "my_app" / "apps" / "__init__.py").read_text()
         assert "from .repos import repos" in content
-        assert "groups.append(repos)" in content
+        assert "exports.append(repos)" in content
 
     def test_modified_action_for_apps_init(self, project) -> None:
         """The apps/__init__.py entry is marked as modified."""
@@ -144,6 +144,71 @@ class TestAddApp:
         assert len(results) == 1
         assert not results[0].success
         assert "already exists" in results[0].message
+
+
+class TestAddFlatApp:
+    """Test suite for add_app with flat=True."""
+
+    def test_creates_app_files(self, project) -> None:
+        """Same app files are created for a flat app."""
+        results = list(project.add_app("status", flat=True))
+        paths = {r.item for r in results}
+
+        assert any("status/__init__.py" in p for p in paths)
+        assert any("status/interfaces.py" in p for p in paths)
+        assert any("status/models.py" in p for p in paths)
+        assert any("status/tables.py" in p for p in paths)
+        assert any("status/commands/__init__.py" in p for p in paths)
+
+    def test_init_has_no_group_decorator(self, project, tmp_path) -> None:
+        """Flat app __init__.py imports commands but defines no @group."""
+        list(project.add_app("status", flat=True))
+        content = (
+            tmp_path / "my-app" / "src" / "my_app" / "apps" / "status" / "__init__.py"
+        ).read_text()
+        assert "@group()" not in content
+        assert "from .commands import commands" in content
+
+    def test_wires_flat_app_with_extend(self, project, tmp_path) -> None:
+        """apps/__init__.py uses extend (not append) for a flat app."""
+        list(project.add_app("status", flat=True))
+        content = (tmp_path / "my-app" / "src" / "my_app" / "apps" / "__init__.py").read_text()
+        assert "from .status import commands as status_commands" in content
+        assert "exports.extend(status_commands)" in content
+
+    def test_flat_does_not_use_append(self, project, tmp_path) -> None:
+        """Flat app wiring never uses exports.append."""
+        list(project.add_app("status", flat=True))
+        content = (tmp_path / "my-app" / "src" / "my_app" / "apps" / "__init__.py").read_text()
+        assert "exports.append" not in content
+
+    def test_returns_error_if_app_exists(self, project) -> None:
+        """Second add_app with same name returns a single error result."""
+        list(project.add_app("status", flat=True))
+        results = list(project.add_app("status", flat=True))
+        assert len(results) == 1
+        assert not results[0].success
+        assert "already exists" in results[0].message
+
+    def test_add_command_works_on_flat_app(self, project, tmp_path) -> None:
+        """add_command works normally on a flat app."""
+        list(project.add_app("status", flat=True))
+        results = list(project.add_command("check", "status"))
+        assert any("commands/check.py" in r.item for r in results)
+        path = (
+            tmp_path / "my-app" / "src" / "my_app" / "apps" / "status" / "commands" / "__init__.py"
+        )
+        content = path.read_text()
+        assert "from .check import check" in content
+        assert "commands.append(check)" in content
+
+    def test_mixed_grouped_and_flat(self, project, tmp_path) -> None:
+        """Grouped and flat apps can coexist in apps/__init__.py."""
+        list(project.add_app("repos"))
+        list(project.add_app("status", flat=True))
+        content = (tmp_path / "my-app" / "src" / "my_app" / "apps" / "__init__.py").read_text()
+        assert "exports.append(repos)" in content
+        assert "exports.extend(status_commands)" in content
 
 
 class TestAddCommand:
