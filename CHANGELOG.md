@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.13] - 2026-04-23
+
+### Documentation
+
+- **claude**: Update contributing guidelines for code quality and file structure
+
+### Features
+
+- **scaffolding**: Add support for flat apps without @group wrapper
+
 ## [0.0.12] - 2026-04-22
 
 ### Tests
