@@ -119,9 +119,16 @@ def hello(message):
 ### Step 3: Add a command group
 
 ```python
-from pyclifer import group, option
+from pyclifer import app_group, group, option
 
 
+@app_group(name="myapp", auto_envvar_prefix="MYAPP")
+def cli():
+    """My Application."""
+    pass
+
+
+@cli.group()
 @group(name="database")
 def database():
     """Database management commands."""
