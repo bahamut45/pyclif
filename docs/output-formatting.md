@@ -285,6 +285,43 @@ class ArticleRenderer(BaseRenderer):
     failure_message = "Failed to retrieve articles."
 ```
 
+If your model is a dataclass or Pydantic model, set `model_class` instead of listing `fields`
+manually — the framework derives the field list from the model's field names:
+
+```python
+from pyclifer import BaseRenderer, BaseModel
+
+
+class Article(BaseModel):
+    id: str
+    title: str
+    author: str
+    published: str
+
+
+class ArticleRenderer(BaseRenderer):
+    model_class = Article  # fields derived automatically: ["id", "title", "author", "published"]
+    columns = ["id", "title", "author"]
+    rich_title = "Articles"
+```
+
+`model_class` is a shorthand — explicit `fields` always takes precedence if both are set.
+
+#### Date formatting in tables
+
+`table()` formats `datetime` and `date` values using:
+
+- `datetime_format = "%Y-%m-%d %H:%M"` (default)
+- `date_format = "%Y-%m-%d"` (default)
+
+Override per-renderer:
+
+```python
+class EventRenderer(BaseRenderer):
+    fields = ["id", "name", "starts_at"]
+    datetime_format = "%d/%m/%Y %H:%M"  # European style
+```
+
 `serialize()` builds a dict from the `fields` list. Every row always carries `item` (from
 `OperationResult.item`), and `success` + `error_code` by default (`include_row_meta=True`).
 For failed results, model fields are set to `null` so the consumer knows which resource failed.
