@@ -16,6 +16,12 @@ Key parameters:
 - `context_options_panel` — label for the help section that lists `context=True` options
   in subcommand `--help` output. Defaults to `"Context Options (anywhere-passable)"`.
   Set to any string to customise the heading.
+- `auto_envvar_prefix` — uppercase prefix for automatic environment variable binding.
+  With `auto_envvar_prefix="MYAPP"`, `--database-url` reads `MYAPP_DATABASE_URL`.
+- `rich_help_config` — `RichHelpConfiguration` instance (or dict) forwarded to rich-click.
+  Lets you customise colours, column widths, and panel styles in `--help` output.
+- `use_rich_help` — set to `False` to disable rich-click rendering and use plain Click help.
+  Defaults to `True`.
 
 ::: pyclifer.app_group
 
@@ -33,6 +39,12 @@ Creates a subgroup that inherits global options from its parent.
 
 Creates a CLI command. Use inside a group or app_group.
 
+Key parameter:
+
+- `handle_response=False` — when `True`, wraps the command with `returns_response` so any
+  `Response` returned by the function is printed automatically. Equivalent to stacking
+  `@returns_response` manually.
+
 ::: pyclifer.command
 
 ---
@@ -48,6 +60,9 @@ Extends Click options with environment variable binding and optional global/cont
 - `show_in_subcommand_help=True` — when `context=True`, controls whether the option is
   shown in subcommand help. Set to `False` to hide it from subcommand help while keeping
   the anywhere-passable behaviour intact.
+- `store_in_meta=False` — when `True`, stores the option value in `ctx.meta` automatically
+  (key: `"pyclifer.<option-name>"`). The option is not exposed as a function parameter.
+  Used internally by `pagination_options` for `--page` and `--limit`.
 
 ::: pyclifer.option
 
