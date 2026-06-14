@@ -165,7 +165,6 @@ def cli():
     pass
 
 
-@cli.group()
 @group(name="database")
 def database():
     """Database management commands."""
@@ -178,6 +177,9 @@ def database():
 def connect(url, timeout):
     """Connect to the database."""
     print(f"Connecting to {url} with timeout {timeout}s")
+
+
+cli.add_command(database)
 ```
 
 ### Step 4: Run your CLI

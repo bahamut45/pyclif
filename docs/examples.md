@@ -48,7 +48,6 @@ def cli():
     pass
 
 
-@cli.group()
 @group(name="database")
 def database():
     """Database management commands."""
@@ -83,6 +82,8 @@ def backup(backup_dir, compress, tables):
         print(f"Backing up entire database to {backup_dir} {compression}")
 
 
+cli.add_command(database)
+
 if __name__ == "__main__":
     cli()
 ```
@@ -106,7 +107,6 @@ def cli():
     pass
 
 
-@cli.group()
 @group(name="service")
 def service():
     """Service management commands."""
@@ -136,6 +136,9 @@ def stop(force):
 def status():
     """Show service status."""
     print("Service status: Running")
+
+
+cli.add_command(service)
 ```
 
 **Configuration file** (`~/.config/webctl/config.toml`):
