@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.5] - 2026-06-14
+
+### Bug Fixes
+
+- **decorators**: Suppress traceback in JSON/YAML output mode
+
+### Documentation
+
+- **specs**: Add issue-6 suppress-traceback-json-mode spec
+
+### Miscellaneous
+
+- **specs**: Archive issue-6 suppress-traceback-json-mode
+
 ## [0.7.4] - 2026-06-14
 
 ### Tests
