@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.4] - 2026-06-14
+
+### Tests
+
+- **decorators**: Fix CI-fragile MissingParameter assertion
+
 ## [0.7.3] - 2026-06-14
 
 ### Bug Fixes
