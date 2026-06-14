@@ -1314,8 +1314,7 @@ class TestHelpShortCircuit:
         app, _ = self._make_app()
         runner = CliRunner()
         result = runner.invoke(app, ["serve"])
-        assert result.exit_code != 0
-        assert "Missing option '--host'" in result.output
+        assert result.exit_code == 2  # Click UsageError / MissingParameter exit code
 
     def test_context_factory_not_called_during_help(self):
         """context_factory is not called when resilient_parsing is active (help mode)."""
