@@ -1745,6 +1745,12 @@ standardized response handling.</p>
 <li><code>context_options_panel</code> — label for the help section that lists <code>context=True</code> options
   in subcommand <code>--help</code> output. Defaults to <code>"Context Options (anywhere-passable)"</code>.
   Set to any string to customise the heading.</li>
+<li><code>auto_envvar_prefix</code> — uppercase prefix for automatic environment variable binding.
+  With <code>auto_envvar_prefix="MYAPP"</code>, <code>--database-url</code> reads <code>MYAPP_DATABASE_URL</code>.</li>
+<li><code>rich_help_config</code> — <code>RichHelpConfiguration</code> instance (or dict) forwarded to rich-click.
+  Lets you customise colours, column widths, and panel styles in <code>--help</code> output.</li>
+<li><code>use_rich_help</code> — set to <code>False</code> to disable rich-click rendering and use plain Click help.
+  Defaults to <code>True</code>.</li>
 </ul>
 
 
@@ -1952,6 +1958,12 @@ Notable options:</p>
 </div><hr />
 <h2 id="command">command<a class="headerlink" href="#command" title="Permanent link">&para;</a></h2>
 <p>Creates a CLI command. Use inside a group or app_group.</p>
+<p>Key parameter:</p>
+<ul>
+<li><code>handle_response=False</code> — when <code>True</code>, wraps the command with <code>returns_response</code> so any
+  <code>Response</code> returned by the function is printed automatically. Equivalent to stacking
+  <code>@returns_response</code> manually.</li>
+</ul>
 
 
 <div class="doc doc-object doc-function">
@@ -2142,6 +2154,9 @@ returns_response decorator.</p>
 <li><code>show_in_subcommand_help=True</code> — when <code>context=True</code>, controls whether the option is
   shown in subcommand help. Set to <code>False</code> to hide it from subcommand help while keeping
   the anywhere-passable behaviour intact.</li>
+<li><code>store_in_meta=False</code> — when <code>True</code>, stores the option value in <code>ctx.meta</code> automatically
+  (key: <code>"pyclifer.&lt;option-name&gt;"</code>). The option is not exposed as a function parameter.
+  Used internally by <code>pagination_options</code> for <code>--page</code> and <code>--limit</code>.</li>
 </ul>
 
 
