@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.3] - 2026-06-14
+
+### Bug Fixes
+
+- **docs**: Replace broken @cli.group()+@group() with @group()+add_command()
+
+### Documentation
+
+- **getting-started**: Fix standalone @group example missing parent wiring
+- **getting-started**: Add Response pattern example alongside print() minimal
+- **api/decorators**: Document store_in_meta, handle_response, and app_group kwargs
+- **logging**: List full DEFAULT_FIELDS, add PYCLIFER_LOG_LEVELS value, log handler example
+- **output-formatting**: Document model_class, datetime_format, date_format on BaseRenderer
+
+### Miscellaneous
+
+- **plans**: Archive demo-page and doc-review-fixes plans
+
 ## [0.7.2] - 2026-06-12
 
 ### Bug Fixes
