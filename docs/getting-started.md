@@ -80,6 +80,43 @@ python my_cli.py hello --name "World"
 python my_cli.py hello -n "Alice"
 ```
 
+### Using Response (recommended pattern)
+
+pyclifer commands ideally return a `Response` object instead of printing directly.
+`@app_group` enables `handle_response=True` by default, so the framework prints the response
+automatically in the right format (`--output-format json`, `--output-format table`, etc.):
+
+```python
+from pyclifer import app_group, option, Response
+
+
+@app_group()
+def main():
+    """My CLI application."""
+    pass
+
+
+@main.command()
+@option("--name", "-n", help="Your name")
+def hello(name):
+    """Say hello."""
+    return Response(success=True, message=f"Hello {name or 'World'}!")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+Try it with different formats:
+
+```bash
+python my_cli.py hello --name "Alice"
+python my_cli.py hello --name "Alice" -o json
+python my_cli.py hello --name "Alice" -o table
+```
+
+See [Output Formatting](output-formatting.md) for the full output system.
+
 ## Building your first CLI manually
 
 ### Step 1: Create the main group
