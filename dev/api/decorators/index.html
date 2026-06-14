@@ -2072,16 +2072,7 @@ returns_response decorator.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/pyclifer/core/decorators.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-608">608</a></span>
-<span class="normal"><a href="#__codelineno-0-609">609</a></span>
-<span class="normal"><a href="#__codelineno-0-610">610</a></span>
-<span class="normal"><a href="#__codelineno-0-611">611</a></span>
-<span class="normal"><a href="#__codelineno-0-612">612</a></span>
-<span class="normal"><a href="#__codelineno-0-613">613</a></span>
-<span class="normal"><a href="#__codelineno-0-614">614</a></span>
-<span class="normal"><a href="#__codelineno-0-615">615</a></span>
-<span class="normal"><a href="#__codelineno-0-616">616</a></span>
-<span class="normal"><a href="#__codelineno-0-617">617</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-617">617</a></span>
 <span class="normal"><a href="#__codelineno-0-618">618</a></span>
 <span class="normal"><a href="#__codelineno-0-619">619</a></span>
 <span class="normal"><a href="#__codelineno-0-620">620</a></span>
@@ -2105,40 +2096,49 @@ returns_response decorator.</p>
 <span class="normal"><a href="#__codelineno-0-638">638</a></span>
 <span class="normal"><a href="#__codelineno-0-639">639</a></span>
 <span class="normal"><a href="#__codelineno-0-640">640</a></span>
-<span class="normal"><a href="#__codelineno-0-641">641</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-608" name="__codelineno-0-608"></a><span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span>
-<a id="__codelineno-0-609" name="__codelineno-0-609"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-610" name="__codelineno-0-610"></a>    <span class="n">handle_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-611" name="__codelineno-0-611"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">]:</span>
-<a id="__codelineno-0-613" name="__codelineno-0-613"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Click command with optional automatic response handling.</span>
-<a id="__codelineno-0-614" name="__codelineno-0-614"></a>
-<a id="__codelineno-0-615" name="__codelineno-0-615"></a><span class="sd">    When handle_response=True, any Response returned by the command function</span>
-<a id="__codelineno-0-616" name="__codelineno-0-616"></a><span class="sd">    is automatically printed using the output format resolved from ctx.meta</span>
-<a id="__codelineno-0-617" name="__codelineno-0-617"></a><span class="sd">    (--output-format option). This is equivalent to manually applying the</span>
-<a id="__codelineno-0-618" name="__codelineno-0-618"></a><span class="sd">    returns_response decorator.</span>
-<a id="__codelineno-0-619" name="__codelineno-0-619"></a>
-<a id="__codelineno-0-620" name="__codelineno-0-620"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-621" name="__codelineno-0-621"></a><span class="sd">        name: Name of the command.</span>
-<a id="__codelineno-0-622" name="__codelineno-0-622"></a><span class="sd">        handle_response: If True, wrap the function with returns_response.</span>
-<a id="__codelineno-0-623" name="__codelineno-0-623"></a><span class="sd">        **kwargs: Additional arguments passed to click_extra.command().</span>
-<a id="__codelineno-0-624" name="__codelineno-0-624"></a>
-<a id="__codelineno-0-625" name="__codelineno-0-625"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-626" name="__codelineno-0-626"></a><span class="sd">        Decorated function as a Click command.</span>
-<a id="__codelineno-0-627" name="__codelineno-0-627"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-628" name="__codelineno-0-628"></a>    <span class="n">command_decorator</span> <span class="o">=</span> <span class="n">rich_command_decorator</span>
-<a id="__codelineno-0-629" name="__codelineno-0-629"></a>
-<a id="__codelineno-0-630" name="__codelineno-0-630"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">handle_response</span><span class="p">:</span>
-<a id="__codelineno-0-631" name="__codelineno-0-631"></a>        <span class="n">decorate</span> <span class="o">=</span> <span class="n">command_decorator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">command_decorator</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-0-632" name="__codelineno-0-632"></a>        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">],</span> <span class="n">decorate</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-641">641</a></span>
+<span class="normal"><a href="#__codelineno-0-642">642</a></span>
+<span class="normal"><a href="#__codelineno-0-643">643</a></span>
+<span class="normal"><a href="#__codelineno-0-644">644</a></span>
+<span class="normal"><a href="#__codelineno-0-645">645</a></span>
+<span class="normal"><a href="#__codelineno-0-646">646</a></span>
+<span class="normal"><a href="#__codelineno-0-647">647</a></span>
+<span class="normal"><a href="#__codelineno-0-648">648</a></span>
+<span class="normal"><a href="#__codelineno-0-649">649</a></span>
+<span class="normal"><a href="#__codelineno-0-650">650</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-617" name="__codelineno-0-617"></a><span class="k">def</span><span class="w"> </span><span class="nf">command</span><span class="p">(</span>
+<a id="__codelineno-0-618" name="__codelineno-0-618"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-619" name="__codelineno-0-619"></a>    <span class="n">handle_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-620" name="__codelineno-0-620"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-0-621" name="__codelineno-0-621"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">]:</span>
+<a id="__codelineno-0-622" name="__codelineno-0-622"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Click command with optional automatic response handling.</span>
+<a id="__codelineno-0-623" name="__codelineno-0-623"></a>
+<a id="__codelineno-0-624" name="__codelineno-0-624"></a><span class="sd">    When handle_response=True, any Response returned by the command function</span>
+<a id="__codelineno-0-625" name="__codelineno-0-625"></a><span class="sd">    is automatically printed using the output format resolved from ctx.meta</span>
+<a id="__codelineno-0-626" name="__codelineno-0-626"></a><span class="sd">    (--output-format option). This is equivalent to manually applying the</span>
+<a id="__codelineno-0-627" name="__codelineno-0-627"></a><span class="sd">    returns_response decorator.</span>
+<a id="__codelineno-0-628" name="__codelineno-0-628"></a>
+<a id="__codelineno-0-629" name="__codelineno-0-629"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-630" name="__codelineno-0-630"></a><span class="sd">        name: Name of the command.</span>
+<a id="__codelineno-0-631" name="__codelineno-0-631"></a><span class="sd">        handle_response: If True, wrap the function with returns_response.</span>
+<a id="__codelineno-0-632" name="__codelineno-0-632"></a><span class="sd">        **kwargs: Additional arguments passed to click_extra.command().</span>
 <a id="__codelineno-0-633" name="__codelineno-0-633"></a>
-<a id="__codelineno-0-634" name="__codelineno-0-634"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">:</span>
-<a id="__codelineno-0-635" name="__codelineno-0-635"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Decorator for Click commands with automatic response handling&quot;&quot;&quot;</span>
-<a id="__codelineno-0-636" name="__codelineno-0-636"></a>        <span class="n">wrapped</span> <span class="o">=</span> <span class="n">returns_response</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<a id="__codelineno-0-637" name="__codelineno-0-637"></a>        <span class="n">deco</span> <span class="o">=</span> <span class="n">command_decorator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">command_decorator</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-0-638" name="__codelineno-0-638"></a>        <span class="n">cmd</span> <span class="o">=</span> <span class="n">deco</span><span class="p">(</span><span class="n">wrapped</span><span class="p">)</span>
-<a id="__codelineno-0-639" name="__codelineno-0-639"></a>        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
-<a id="__codelineno-0-640" name="__codelineno-0-640"></a>
-<a id="__codelineno-0-641" name="__codelineno-0-641"></a>    <span class="k">return</span> <span class="n">decorator</span>
+<a id="__codelineno-0-634" name="__codelineno-0-634"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-635" name="__codelineno-0-635"></a><span class="sd">        Decorated function as a Click command.</span>
+<a id="__codelineno-0-636" name="__codelineno-0-636"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-637" name="__codelineno-0-637"></a>    <span class="n">command_decorator</span> <span class="o">=</span> <span class="n">rich_command_decorator</span>
+<a id="__codelineno-0-638" name="__codelineno-0-638"></a>
+<a id="__codelineno-0-639" name="__codelineno-0-639"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">handle_response</span><span class="p">:</span>
+<a id="__codelineno-0-640" name="__codelineno-0-640"></a>        <span class="n">decorate</span> <span class="o">=</span> <span class="n">command_decorator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">command_decorator</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-641" name="__codelineno-0-641"></a>        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">],</span> <span class="n">decorate</span><span class="p">)</span>
+<a id="__codelineno-0-642" name="__codelineno-0-642"></a>
+<a id="__codelineno-0-643" name="__codelineno-0-643"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">:</span>
+<a id="__codelineno-0-644" name="__codelineno-0-644"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Decorator for Click commands with automatic response handling&quot;&quot;&quot;</span>
+<a id="__codelineno-0-645" name="__codelineno-0-645"></a>        <span class="n">wrapped</span> <span class="o">=</span> <span class="n">returns_response</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a id="__codelineno-0-646" name="__codelineno-0-646"></a>        <span class="n">deco</span> <span class="o">=</span> <span class="n">command_decorator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="k">else</span> <span class="n">command_decorator</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-647" name="__codelineno-0-647"></a>        <span class="n">cmd</span> <span class="o">=</span> <span class="n">deco</span><span class="p">(</span><span class="n">wrapped</span><span class="p">)</span>
+<a id="__codelineno-0-648" name="__codelineno-0-648"></a>        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">click_extra</span><span class="o">.</span><span class="n">Command</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+<a id="__codelineno-0-649" name="__codelineno-0-649"></a>
+<a id="__codelineno-0-650" name="__codelineno-0-650"></a>    <span class="k">return</span> <span class="n">decorator</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2330,16 +2330,7 @@ in subcommand help when context=True.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/pyclifer/core/decorators.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-644">644</a></span>
-<span class="normal"><a href="#__codelineno-0-645">645</a></span>
-<span class="normal"><a href="#__codelineno-0-646">646</a></span>
-<span class="normal"><a href="#__codelineno-0-647">647</a></span>
-<span class="normal"><a href="#__codelineno-0-648">648</a></span>
-<span class="normal"><a href="#__codelineno-0-649">649</a></span>
-<span class="normal"><a href="#__codelineno-0-650">650</a></span>
-<span class="normal"><a href="#__codelineno-0-651">651</a></span>
-<span class="normal"><a href="#__codelineno-0-652">652</a></span>
-<span class="normal"><a href="#__codelineno-0-653">653</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-653">653</a></span>
 <span class="normal"><a href="#__codelineno-0-654">654</a></span>
 <span class="normal"><a href="#__codelineno-0-655">655</a></span>
 <span class="normal"><a href="#__codelineno-0-656">656</a></span>
@@ -2377,54 +2368,63 @@ in subcommand help when context=True.</p>
 <span class="normal"><a href="#__codelineno-0-688">688</a></span>
 <span class="normal"><a href="#__codelineno-0-689">689</a></span>
 <span class="normal"><a href="#__codelineno-0-690">690</a></span>
-<span class="normal"><a href="#__codelineno-0-691">691</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-644" name="__codelineno-0-644"></a><span class="k">def</span><span class="w"> </span><span class="nf">option</span><span class="p">(</span>
-<a id="__codelineno-0-645" name="__codelineno-0-645"></a>    <span class="o">*</span><span class="n">param_decls</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-646" name="__codelineno-0-646"></a>    <span class="n">is_global</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-647" name="__codelineno-0-647"></a>    <span class="n">context</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-648" name="__codelineno-0-648"></a>    <span class="n">show_envvar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-649" name="__codelineno-0-649"></a>    <span class="n">store_in_meta</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-650" name="__codelineno-0-650"></a>    <span class="n">show_in_subcommand_help</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-651" name="__codelineno-0-651"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<a id="__codelineno-0-652" name="__codelineno-0-652"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-<a id="__codelineno-0-653" name="__codelineno-0-653"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Click option with global propagation support.</span>
-<a id="__codelineno-0-654" name="__codelineno-0-654"></a>
-<a id="__codelineno-0-655" name="__codelineno-0-655"></a><span class="sd">    Ensures a consistent environment variable display and allows options</span>
-<a id="__codelineno-0-656" name="__codelineno-0-656"></a><span class="sd">    to be marked as global to be available on all subcommands.</span>
-<a id="__codelineno-0-657" name="__codelineno-0-657"></a>
-<a id="__codelineno-0-658" name="__codelineno-0-658"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-659" name="__codelineno-0-659"></a><span class="sd">        *param_decls: Parameter declarations for the option.</span>
-<a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="sd">        is_global: If True, the option is propagated to all subcommands.</span>
-<a id="__codelineno-0-661" name="__codelineno-0-661"></a><span class="sd">        context: If True, the option feeds ctx.obj construction and is accepted</span>
-<a id="__codelineno-0-662" name="__codelineno-0-662"></a><span class="sd">            at any position in the command chain.</span>
-<a id="__codelineno-0-663" name="__codelineno-0-663"></a><span class="sd">        show_envvar: Show environment variables in the help output.</span>
-<a id="__codelineno-0-664" name="__codelineno-0-664"></a><span class="sd">        store_in_meta: If True, stores the option value in ctx.meta automatically.</span>
-<a id="__codelineno-0-665" name="__codelineno-0-665"></a><span class="sd">        show_in_subcommand_help: If True, display-only copy of the option appears</span>
-<a id="__codelineno-0-666" name="__codelineno-0-666"></a><span class="sd">            in subcommand help when context=True.</span>
-<a id="__codelineno-0-667" name="__codelineno-0-667"></a><span class="sd">        **kwargs: Additional arguments passed to click_extra.option().</span>
-<a id="__codelineno-0-668" name="__codelineno-0-668"></a>
-<a id="__codelineno-0-669" name="__codelineno-0-669"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="sd">        Option decorator function.</span>
-<a id="__codelineno-0-671" name="__codelineno-0-671"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-672" name="__codelineno-0-672"></a>    <span class="bp">cls</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cls&quot;</span><span class="p">,</span> <span class="n">PycliferOption</span><span class="p">)</span>
-<a id="__codelineno-0-673" name="__codelineno-0-673"></a>    <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
-<a id="__codelineno-0-674" name="__codelineno-0-674"></a>    <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;is_global&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_global</span>
-<a id="__codelineno-0-675" name="__codelineno-0-675"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;show_envvar&quot;</span><span class="p">,</span> <span class="n">show_envvar</span><span class="p">)</span>
-<a id="__codelineno-0-676" name="__codelineno-0-676"></a>
-<a id="__codelineno-0-677" name="__codelineno-0-677"></a>    <span class="c1"># Only forward context to classes that declare the attribute (PycliferOption subclasses).</span>
-<a id="__codelineno-0-678" name="__codelineno-0-678"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">PycliferOption</span><span class="p">):</span>
-<a id="__codelineno-0-679" name="__codelineno-0-679"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
-<a id="__codelineno-0-680" name="__codelineno-0-680"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;show_in_subcommand_help&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">show_in_subcommand_help</span>
-<a id="__codelineno-0-681" name="__codelineno-0-681"></a>
-<a id="__codelineno-0-682" name="__codelineno-0-682"></a>    <span class="c1"># Delegate to the Mixin if the class supports it</span>
-<a id="__codelineno-0-683" name="__codelineno-0-683"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">StoreInMetaMixin</span><span class="p">):</span>
-<a id="__codelineno-0-684" name="__codelineno-0-684"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;store_in_meta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store_in_meta</span>
-<a id="__codelineno-0-685" name="__codelineno-0-685"></a>    <span class="k">elif</span> <span class="n">store_in_meta</span><span class="p">:</span>
-<a id="__codelineno-0-686" name="__codelineno-0-686"></a>        <span class="c1"># Fallback for external classes (like PycliferVerbosityOption) that don&#39;t use</span>
-<a id="__codelineno-0-687" name="__codelineno-0-687"></a>        <span class="c1"># StoreInMetaMixin</span>
-<a id="__codelineno-0-688" name="__codelineno-0-688"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;callback&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_meta_storing_callback</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;callback&quot;</span><span class="p">))</span>
-<a id="__codelineno-0-689" name="__codelineno-0-689"></a>        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;expose_value&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-691">691</a></span>
+<span class="normal"><a href="#__codelineno-0-692">692</a></span>
+<span class="normal"><a href="#__codelineno-0-693">693</a></span>
+<span class="normal"><a href="#__codelineno-0-694">694</a></span>
+<span class="normal"><a href="#__codelineno-0-695">695</a></span>
+<span class="normal"><a href="#__codelineno-0-696">696</a></span>
+<span class="normal"><a href="#__codelineno-0-697">697</a></span>
+<span class="normal"><a href="#__codelineno-0-698">698</a></span>
+<span class="normal"><a href="#__codelineno-0-699">699</a></span>
+<span class="normal"><a href="#__codelineno-0-700">700</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-653" name="__codelineno-0-653"></a><span class="k">def</span><span class="w"> </span><span class="nf">option</span><span class="p">(</span>
+<a id="__codelineno-0-654" name="__codelineno-0-654"></a>    <span class="o">*</span><span class="n">param_decls</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-655" name="__codelineno-0-655"></a>    <span class="n">is_global</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-656" name="__codelineno-0-656"></a>    <span class="n">context</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-657" name="__codelineno-0-657"></a>    <span class="n">show_envvar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-658" name="__codelineno-0-658"></a>    <span class="n">store_in_meta</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-659" name="__codelineno-0-659"></a>    <span class="n">show_in_subcommand_help</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-660" name="__codelineno-0-660"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-0-661" name="__codelineno-0-661"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+<a id="__codelineno-0-662" name="__codelineno-0-662"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Click option with global propagation support.</span>
+<a id="__codelineno-0-663" name="__codelineno-0-663"></a>
+<a id="__codelineno-0-664" name="__codelineno-0-664"></a><span class="sd">    Ensures a consistent environment variable display and allows options</span>
+<a id="__codelineno-0-665" name="__codelineno-0-665"></a><span class="sd">    to be marked as global to be available on all subcommands.</span>
+<a id="__codelineno-0-666" name="__codelineno-0-666"></a>
+<a id="__codelineno-0-667" name="__codelineno-0-667"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-668" name="__codelineno-0-668"></a><span class="sd">        *param_decls: Parameter declarations for the option.</span>
+<a id="__codelineno-0-669" name="__codelineno-0-669"></a><span class="sd">        is_global: If True, the option is propagated to all subcommands.</span>
+<a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="sd">        context: If True, the option feeds ctx.obj construction and is accepted</span>
+<a id="__codelineno-0-671" name="__codelineno-0-671"></a><span class="sd">            at any position in the command chain.</span>
+<a id="__codelineno-0-672" name="__codelineno-0-672"></a><span class="sd">        show_envvar: Show environment variables in the help output.</span>
+<a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">        store_in_meta: If True, stores the option value in ctx.meta automatically.</span>
+<a id="__codelineno-0-674" name="__codelineno-0-674"></a><span class="sd">        show_in_subcommand_help: If True, display-only copy of the option appears</span>
+<a id="__codelineno-0-675" name="__codelineno-0-675"></a><span class="sd">            in subcommand help when context=True.</span>
+<a id="__codelineno-0-676" name="__codelineno-0-676"></a><span class="sd">        **kwargs: Additional arguments passed to click_extra.option().</span>
+<a id="__codelineno-0-677" name="__codelineno-0-677"></a>
+<a id="__codelineno-0-678" name="__codelineno-0-678"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-679" name="__codelineno-0-679"></a><span class="sd">        Option decorator function.</span>
+<a id="__codelineno-0-680" name="__codelineno-0-680"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-681" name="__codelineno-0-681"></a>    <span class="bp">cls</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cls&quot;</span><span class="p">,</span> <span class="n">PycliferOption</span><span class="p">)</span>
+<a id="__codelineno-0-682" name="__codelineno-0-682"></a>    <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;cls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
+<a id="__codelineno-0-683" name="__codelineno-0-683"></a>    <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;is_global&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_global</span>
+<a id="__codelineno-0-684" name="__codelineno-0-684"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;show_envvar&quot;</span><span class="p">,</span> <span class="n">show_envvar</span><span class="p">)</span>
+<a id="__codelineno-0-685" name="__codelineno-0-685"></a>
+<a id="__codelineno-0-686" name="__codelineno-0-686"></a>    <span class="c1"># Only forward context to classes that declare the attribute (PycliferOption subclasses).</span>
+<a id="__codelineno-0-687" name="__codelineno-0-687"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">PycliferOption</span><span class="p">):</span>
+<a id="__codelineno-0-688" name="__codelineno-0-688"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
+<a id="__codelineno-0-689" name="__codelineno-0-689"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;show_in_subcommand_help&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">show_in_subcommand_help</span>
 <a id="__codelineno-0-690" name="__codelineno-0-690"></a>
-<a id="__codelineno-0-691" name="__codelineno-0-691"></a>    <span class="k">return</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="o">*</span><span class="n">param_decls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-691" name="__codelineno-0-691"></a>    <span class="c1"># Delegate to the Mixin if the class supports it</span>
+<a id="__codelineno-0-692" name="__codelineno-0-692"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">StoreInMetaMixin</span><span class="p">):</span>
+<a id="__codelineno-0-693" name="__codelineno-0-693"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;store_in_meta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">store_in_meta</span>
+<a id="__codelineno-0-694" name="__codelineno-0-694"></a>    <span class="k">elif</span> <span class="n">store_in_meta</span><span class="p">:</span>
+<a id="__codelineno-0-695" name="__codelineno-0-695"></a>        <span class="c1"># Fallback for external classes (like PycliferVerbosityOption) that don&#39;t use</span>
+<a id="__codelineno-0-696" name="__codelineno-0-696"></a>        <span class="c1"># StoreInMetaMixin</span>
+<a id="__codelineno-0-697" name="__codelineno-0-697"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;callback&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_meta_storing_callback</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;callback&quot;</span><span class="p">))</span>
+<a id="__codelineno-0-698" name="__codelineno-0-698"></a>        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;expose_value&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-0-699" name="__codelineno-0-699"></a>
+<a id="__codelineno-0-700" name="__codelineno-0-700"></a>    <span class="k">return</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="o">*</span><span class="n">param_decls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2558,16 +2558,7 @@ def articles(ctx):
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/pyclifer/core/decorators.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-795">795</a></span>
-<span class="normal"><a href="#__codelineno-0-796">796</a></span>
-<span class="normal"><a href="#__codelineno-0-797">797</a></span>
-<span class="normal"><a href="#__codelineno-0-798">798</a></span>
-<span class="normal"><a href="#__codelineno-0-799">799</a></span>
-<span class="normal"><a href="#__codelineno-0-800">800</a></span>
-<span class="normal"><a href="#__codelineno-0-801">801</a></span>
-<span class="normal"><a href="#__codelineno-0-802">802</a></span>
-<span class="normal"><a href="#__codelineno-0-803">803</a></span>
-<span class="normal"><a href="#__codelineno-0-804">804</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-804">804</a></span>
 <span class="normal"><a href="#__codelineno-0-805">805</a></span>
 <span class="normal"><a href="#__codelineno-0-806">806</a></span>
 <span class="normal"><a href="#__codelineno-0-807">807</a></span>
@@ -2607,56 +2598,65 @@ def articles(ctx):
 <span class="normal"><a href="#__codelineno-0-841">841</a></span>
 <span class="normal"><a href="#__codelineno-0-842">842</a></span>
 <span class="normal"><a href="#__codelineno-0-843">843</a></span>
-<span class="normal"><a href="#__codelineno-0-844">844</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-795" name="__codelineno-0-795"></a><span class="k">def</span><span class="w"> </span><span class="nf">output_filter_option</span><span class="p">(</span>
-<a id="__codelineno-0-796" name="__codelineno-0-796"></a>    <span class="o">*</span><span class="n">param_decls</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-797" name="__codelineno-0-797"></a>    <span class="n">show_envvar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-798" name="__codelineno-0-798"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<a id="__codelineno-0-799" name="__codelineno-0-799"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
-<a id="__codelineno-0-800" name="__codelineno-0-800"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an output filter option to a command.</span>
-<a id="__codelineno-0-801" name="__codelineno-0-801"></a>
-<a id="__codelineno-0-802" name="__codelineno-0-802"></a><span class="sd">    When combined with --output-format raw, json, or yaml, this option lets</span>
-<a id="__codelineno-0-803" name="__codelineno-0-803"></a><span class="sd">    users extract a value from the Response data using a dotted key path.</span>
-<a id="__codelineno-0-804" name="__codelineno-0-804"></a>
-<a id="__codelineno-0-805" name="__codelineno-0-805"></a><span class="sd">    The selected path is stored in ctx.meta[&#39;pyclifer.output_filter&#39;] and is</span>
-<a id="__codelineno-0-806" name="__codelineno-0-806"></a><span class="sd">    automatically picked up by returns_response.</span>
-<a id="__codelineno-0-807" name="__codelineno-0-807"></a>
-<a id="__codelineno-0-808" name="__codelineno-0-808"></a><span class="sd">    Numeric path segments are treated as list indices. Resolution order:</span>
-<a id="__codelineno-0-809" name="__codelineno-0-809"></a><span class="sd">    data[&quot;data&quot;] first, then top-level response fields.</span>
+<span class="normal"><a href="#__codelineno-0-844">844</a></span>
+<span class="normal"><a href="#__codelineno-0-845">845</a></span>
+<span class="normal"><a href="#__codelineno-0-846">846</a></span>
+<span class="normal"><a href="#__codelineno-0-847">847</a></span>
+<span class="normal"><a href="#__codelineno-0-848">848</a></span>
+<span class="normal"><a href="#__codelineno-0-849">849</a></span>
+<span class="normal"><a href="#__codelineno-0-850">850</a></span>
+<span class="normal"><a href="#__codelineno-0-851">851</a></span>
+<span class="normal"><a href="#__codelineno-0-852">852</a></span>
+<span class="normal"><a href="#__codelineno-0-853">853</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-804" name="__codelineno-0-804"></a><span class="k">def</span><span class="w"> </span><span class="nf">output_filter_option</span><span class="p">(</span>
+<a id="__codelineno-0-805" name="__codelineno-0-805"></a>    <span class="o">*</span><span class="n">param_decls</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-806" name="__codelineno-0-806"></a>    <span class="n">show_envvar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-807" name="__codelineno-0-807"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-0-808" name="__codelineno-0-808"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+<a id="__codelineno-0-809" name="__codelineno-0-809"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an output filter option to a command.</span>
 <a id="__codelineno-0-810" name="__codelineno-0-810"></a>
-<a id="__codelineno-0-811" name="__codelineno-0-811"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-812" name="__codelineno-0-812"></a>
-<a id="__codelineno-0-813" name="__codelineno-0-813"></a><span class="sd">        @app.command()</span>
-<a id="__codelineno-0-814" name="__codelineno-0-814"></a><span class="sd">        @output_filter_option()</span>
-<a id="__codelineno-0-815" name="__codelineno-0-815"></a><span class="sd">        @returns_response</span>
-<a id="__codelineno-0-816" name="__codelineno-0-816"></a><span class="sd">        @click.pass_context</span>
-<a id="__codelineno-0-817" name="__codelineno-0-817"></a><span class="sd">        def articles(ctx):</span>
-<a id="__codelineno-0-818" name="__codelineno-0-818"></a><span class="sd">            return Response(</span>
-<a id="__codelineno-0-819" name="__codelineno-0-819"></a><span class="sd">                success=True,</span>
-<a id="__codelineno-0-820" name="__codelineno-0-820"></a><span class="sd">                message=&quot;2 articles&quot;,</span>
-<a id="__codelineno-0-821" name="__codelineno-0-821"></a><span class="sd">                data={&quot;results&quot;: [{&quot;id&quot;: 1, &quot;title&quot;: &quot;Hello&quot;}, {&quot;id&quot;: 2}]},</span>
-<a id="__codelineno-0-822" name="__codelineno-0-822"></a><span class="sd">            )</span>
-<a id="__codelineno-0-823" name="__codelineno-0-823"></a>
-<a id="__codelineno-0-824" name="__codelineno-0-824"></a><span class="sd">        # myapp articles -o raw -f results.0.title  -&gt; Hello</span>
-<a id="__codelineno-0-825" name="__codelineno-0-825"></a><span class="sd">        # myapp articles -o json -f results.0       -&gt; {&quot;id&quot;: 1, &quot;title&quot;: &quot;Hello&quot;}</span>
-<a id="__codelineno-0-826" name="__codelineno-0-826"></a><span class="sd">        # myapp articles -o raw -f message          -&gt; 2 articles</span>
-<a id="__codelineno-0-827" name="__codelineno-0-827"></a>
-<a id="__codelineno-0-828" name="__codelineno-0-828"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-829" name="__codelineno-0-829"></a><span class="sd">        *param_decls: Parameter declarations (default: --output-filter, -f).</span>
-<a id="__codelineno-0-830" name="__codelineno-0-830"></a><span class="sd">        show_envvar: Show environment variables in the help output.</span>
-<a id="__codelineno-0-831" name="__codelineno-0-831"></a><span class="sd">        **kwargs: Additional arguments passed to the option decorator.</span>
+<a id="__codelineno-0-811" name="__codelineno-0-811"></a><span class="sd">    When combined with --output-format raw, json, or yaml, this option lets</span>
+<a id="__codelineno-0-812" name="__codelineno-0-812"></a><span class="sd">    users extract a value from the Response data using a dotted key path.</span>
+<a id="__codelineno-0-813" name="__codelineno-0-813"></a>
+<a id="__codelineno-0-814" name="__codelineno-0-814"></a><span class="sd">    The selected path is stored in ctx.meta[&#39;pyclifer.output_filter&#39;] and is</span>
+<a id="__codelineno-0-815" name="__codelineno-0-815"></a><span class="sd">    automatically picked up by returns_response.</span>
+<a id="__codelineno-0-816" name="__codelineno-0-816"></a>
+<a id="__codelineno-0-817" name="__codelineno-0-817"></a><span class="sd">    Numeric path segments are treated as list indices. Resolution order:</span>
+<a id="__codelineno-0-818" name="__codelineno-0-818"></a><span class="sd">    data[&quot;data&quot;] first, then top-level response fields.</span>
+<a id="__codelineno-0-819" name="__codelineno-0-819"></a>
+<a id="__codelineno-0-820" name="__codelineno-0-820"></a><span class="sd">    Example:</span>
+<a id="__codelineno-0-821" name="__codelineno-0-821"></a>
+<a id="__codelineno-0-822" name="__codelineno-0-822"></a><span class="sd">        @app.command()</span>
+<a id="__codelineno-0-823" name="__codelineno-0-823"></a><span class="sd">        @output_filter_option()</span>
+<a id="__codelineno-0-824" name="__codelineno-0-824"></a><span class="sd">        @returns_response</span>
+<a id="__codelineno-0-825" name="__codelineno-0-825"></a><span class="sd">        @click.pass_context</span>
+<a id="__codelineno-0-826" name="__codelineno-0-826"></a><span class="sd">        def articles(ctx):</span>
+<a id="__codelineno-0-827" name="__codelineno-0-827"></a><span class="sd">            return Response(</span>
+<a id="__codelineno-0-828" name="__codelineno-0-828"></a><span class="sd">                success=True,</span>
+<a id="__codelineno-0-829" name="__codelineno-0-829"></a><span class="sd">                message=&quot;2 articles&quot;,</span>
+<a id="__codelineno-0-830" name="__codelineno-0-830"></a><span class="sd">                data={&quot;results&quot;: [{&quot;id&quot;: 1, &quot;title&quot;: &quot;Hello&quot;}, {&quot;id&quot;: 2}]},</span>
+<a id="__codelineno-0-831" name="__codelineno-0-831"></a><span class="sd">            )</span>
 <a id="__codelineno-0-832" name="__codelineno-0-832"></a>
-<a id="__codelineno-0-833" name="__codelineno-0-833"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-834" name="__codelineno-0-834"></a><span class="sd">        The decorated function.</span>
-<a id="__codelineno-0-835" name="__codelineno-0-835"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-836" name="__codelineno-0-836"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">param_decls</span><span class="p">:</span>
-<a id="__codelineno-0-837" name="__codelineno-0-837"></a>        <span class="n">param_decls</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;--output-filter&quot;</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-838" name="__codelineno-0-838"></a>
-<a id="__codelineno-0-839" name="__codelineno-0-839"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">,</span> <span class="s2">&quot;Dotted path to extract from the response (raw, json, yaml).&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-840" name="__codelineno-0-840"></a>    <span class="c1"># noinspection PyArgumentEqualDefault</span>
-<a id="__codelineno-0-841" name="__codelineno-0-841"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-842" name="__codelineno-0-842"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;store_in_meta&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-843" name="__codelineno-0-843"></a>
-<a id="__codelineno-0-844" name="__codelineno-0-844"></a>    <span class="k">return</span> <span class="n">option</span><span class="p">(</span><span class="o">*</span><span class="n">param_decls</span><span class="p">,</span> <span class="n">show_envvar</span><span class="o">=</span><span class="n">show_envvar</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-833" name="__codelineno-0-833"></a><span class="sd">        # myapp articles -o raw -f results.0.title  -&gt; Hello</span>
+<a id="__codelineno-0-834" name="__codelineno-0-834"></a><span class="sd">        # myapp articles -o json -f results.0       -&gt; {&quot;id&quot;: 1, &quot;title&quot;: &quot;Hello&quot;}</span>
+<a id="__codelineno-0-835" name="__codelineno-0-835"></a><span class="sd">        # myapp articles -o raw -f message          -&gt; 2 articles</span>
+<a id="__codelineno-0-836" name="__codelineno-0-836"></a>
+<a id="__codelineno-0-837" name="__codelineno-0-837"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-838" name="__codelineno-0-838"></a><span class="sd">        *param_decls: Parameter declarations (default: --output-filter, -f).</span>
+<a id="__codelineno-0-839" name="__codelineno-0-839"></a><span class="sd">        show_envvar: Show environment variables in the help output.</span>
+<a id="__codelineno-0-840" name="__codelineno-0-840"></a><span class="sd">        **kwargs: Additional arguments passed to the option decorator.</span>
+<a id="__codelineno-0-841" name="__codelineno-0-841"></a>
+<a id="__codelineno-0-842" name="__codelineno-0-842"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-843" name="__codelineno-0-843"></a><span class="sd">        The decorated function.</span>
+<a id="__codelineno-0-844" name="__codelineno-0-844"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-845" name="__codelineno-0-845"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">param_decls</span><span class="p">:</span>
+<a id="__codelineno-0-846" name="__codelineno-0-846"></a>        <span class="n">param_decls</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;--output-filter&quot;</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-847" name="__codelineno-0-847"></a>
+<a id="__codelineno-0-848" name="__codelineno-0-848"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">,</span> <span class="s2">&quot;Dotted path to extract from the response (raw, json, yaml).&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-849" name="__codelineno-0-849"></a>    <span class="c1"># noinspection PyArgumentEqualDefault</span>
+<a id="__codelineno-0-850" name="__codelineno-0-850"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-851" name="__codelineno-0-851"></a>    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;store_in_meta&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-852" name="__codelineno-0-852"></a>
+<a id="__codelineno-0-853" name="__codelineno-0-853"></a>    <span class="k">return</span> <span class="n">option</span><span class="p">(</span><span class="o">*</span><span class="n">param_decls</span><span class="p">,</span> <span class="n">show_envvar</span><span class="o">=</span><span class="n">show_envvar</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2842,7 +2842,16 @@ def hello(ctx, name):
 <span class="normal"><a href="#__codelineno-0-602">602</a></span>
 <span class="normal"><a href="#__codelineno-0-603">603</a></span>
 <span class="normal"><a href="#__codelineno-0-604">604</a></span>
-<span class="normal"><a href="#__codelineno-0-605">605</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="k">def</span><span class="w"> </span><span class="nf">returns_response</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-605">605</a></span>
+<span class="normal"><a href="#__codelineno-0-606">606</a></span>
+<span class="normal"><a href="#__codelineno-0-607">607</a></span>
+<span class="normal"><a href="#__codelineno-0-608">608</a></span>
+<span class="normal"><a href="#__codelineno-0-609">609</a></span>
+<span class="normal"><a href="#__codelineno-0-610">610</a></span>
+<span class="normal"><a href="#__codelineno-0-611">611</a></span>
+<span class="normal"><a href="#__codelineno-0-612">612</a></span>
+<span class="normal"><a href="#__codelineno-0-613">613</a></span>
+<span class="normal"><a href="#__codelineno-0-614">614</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="k">def</span><span class="w"> </span><span class="nf">returns_response</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <a id="__codelineno-0-513" name="__codelineno-0-513"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator that intercepts a Response return value and prints it automatically.</span>
 <a id="__codelineno-0-514" name="__codelineno-0-514"></a>
 <a id="__codelineno-0-515" name="__codelineno-0-515"></a><span class="sd">    When the decorated command function returns a Response instance, this decorator</span>
@@ -2879,63 +2888,72 @@ def hello(ctx, name):
 <a id="__codelineno-0-546" name="__codelineno-0-546"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <a id="__codelineno-0-547" name="__codelineno-0-547"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-548" name="__codelineno-0-548"></a>            <span class="n">log_level</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pyclifer.unhandled_exception_log_level&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-549" name="__codelineno-0-549"></a>            <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
-<a id="__codelineno-0-550" name="__codelineno-0-550"></a>                <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">log_level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">),</span>
-<a id="__codelineno-0-551" name="__codelineno-0-551"></a>                <span class="s2">&quot;Unhandled exception in command &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-552" name="__codelineno-0-552"></a>                <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<a id="__codelineno-0-553" name="__codelineno-0-553"></a>                <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-554" name="__codelineno-0-554"></a>            <span class="p">)</span>
-<a id="__codelineno-0-555" name="__codelineno-0-555"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">_Response</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">error_code</span><span class="o">=</span><span class="n">ExitCode</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
-<a id="__codelineno-0-556" name="__codelineno-0-556"></a>        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-557" name="__codelineno-0-557"></a>            <span class="s2">&quot;returns_response: command &#39;</span><span class="si">%s</span><span class="s2">&#39; returned </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-558" name="__codelineno-0-558"></a>            <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<a id="__codelineno-0-559" name="__codelineno-0-559"></a>            <span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<a id="__codelineno-0-560" name="__codelineno-0-560"></a>        <span class="p">)</span>
-<a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">_Response</span><span class="p">):</span>
-<a id="__codelineno-0-562" name="__codelineno-0-562"></a>            <span class="kn">from</span><span class="w"> </span><span class="nn">pyclifer.core.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseContext</span>
-<a id="__codelineno-0-563" name="__codelineno-0-563"></a>
-<a id="__codelineno-0-564" name="__codelineno-0-564"></a>            <span class="n">ctx</span> <span class="o">=</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">get_current_context</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-565" name="__codelineno-0-565"></a>
-<a id="__codelineno-0-566" name="__codelineno-0-566"></a>            <span class="c1"># Use the actual context object (ctx.obj) if it is a BaseContext</span>
-<a id="__codelineno-0-567" name="__codelineno-0-567"></a>            <span class="c1"># subclass so that custom overrides (e.g., print_result_based_on_format)</span>
-<a id="__codelineno-0-568" name="__codelineno-0-568"></a>            <span class="c1"># are respected.  Fall back to a fresh BaseContext when ctx.obj is</span>
-<a id="__codelineno-0-569" name="__codelineno-0-569"></a>            <span class="c1"># absent or of an unrelated type.</span>
-<a id="__codelineno-0-570" name="__codelineno-0-570"></a>            <span class="n">obj</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-<a id="__codelineno-0-571" name="__codelineno-0-571"></a>            <span class="n">output_ctx</span> <span class="o">=</span> <span class="n">obj</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">BaseContext</span><span class="p">)</span> <span class="k">else</span> <span class="n">BaseContext</span><span class="p">()</span>
-<a id="__codelineno-0-572" name="__codelineno-0-572"></a>            <span class="n">output_format</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pyclifer.output_format&quot;</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-573" name="__codelineno-0-573"></a>
-<a id="__codelineno-0-574" name="__codelineno-0-574"></a>            <span class="c1"># Inject execution time into structured output when timer is active.</span>
-<a id="__codelineno-0-575" name="__codelineno-0-575"></a>            <span class="n">start_time</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;click_extra.start_time&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-576" name="__codelineno-0-576"></a>            <span class="k">if</span> <span class="p">(</span>
-<a id="__codelineno-0-577" name="__codelineno-0-577"></a>                <span class="n">start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<a id="__codelineno-0-578" name="__codelineno-0-578"></a>                <span class="ow">and</span> <span class="n">output_format</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="s2">&quot;yaml&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-579" name="__codelineno-0-579"></a>                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
-<a id="__codelineno-0-580" name="__codelineno-0-580"></a>            <span class="p">):</span>
-<a id="__codelineno-0-581" name="__codelineno-0-581"></a>                <span class="c1"># noinspection PyTypeChecker</span>
-<a id="__codelineno-0-582" name="__codelineno-0-582"></a>                <span class="n">elapsed</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-<a id="__codelineno-0-583" name="__codelineno-0-583"></a>                <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<a id="__codelineno-0-584" name="__codelineno-0-584"></a>                <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;execution_time_str&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elapsed</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span>
-<a id="__codelineno-0-585" name="__codelineno-0-585"></a>            <span class="n">output_ctx</span><span class="o">.</span><span class="n">output_format</span> <span class="o">=</span> <span class="n">output_format</span>
-<a id="__codelineno-0-586" name="__codelineno-0-586"></a>            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-587" name="__codelineno-0-587"></a>                <span class="s2">&quot;returns_response: ctx.obj type=</span><span class="si">%s</span><span class="s2">, using output_ctx type=</span><span class="si">%s</span><span class="s2">, &quot;</span>
-<a id="__codelineno-0-588" name="__codelineno-0-588"></a>                <span class="s2">&quot;output_format=</span><span class="si">%r</span><span class="s2">, meta keys=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-589" name="__codelineno-0-589"></a>                <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<a id="__codelineno-0-590" name="__codelineno-0-590"></a>                <span class="nb">type</span><span class="p">(</span><span class="n">output_ctx</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<a id="__codelineno-0-591" name="__codelineno-0-591"></a>                <span class="n">output_format</span><span class="p">,</span>
-<a id="__codelineno-0-592" name="__codelineno-0-592"></a>                <span class="nb">list</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
-<a id="__codelineno-0-593" name="__codelineno-0-593"></a>            <span class="p">)</span>
-<a id="__codelineno-0-594" name="__codelineno-0-594"></a>            <span class="n">output_filter</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pyclifer.output_filter&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-595" name="__codelineno-0-595"></a>            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;filter_value&quot;</span><span class="p">:</span> <span class="n">output_filter</span><span class="p">}</span> <span class="k">if</span> <span class="n">output_filter</span> <span class="k">else</span> <span class="p">{}</span>
-<a id="__codelineno-0-596" name="__codelineno-0-596"></a>            <span class="n">output_ctx</span><span class="o">.</span><span class="n">print_result_based_on_format</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
-<a id="__codelineno-0-597" name="__codelineno-0-597"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">error_code</span> <span class="ow">and</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-598" name="__codelineno-0-598"></a>                <span class="n">ctx</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error_code</span><span class="p">)</span>
-<a id="__codelineno-0-599" name="__codelineno-0-599"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-600" name="__codelineno-0-600"></a>            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-601" name="__codelineno-0-601"></a>                <span class="s2">&quot;returns_response: result is not a Response instance — skipping output dispatch&quot;</span>
+<a id="__codelineno-0-549" name="__codelineno-0-549"></a>            <span class="n">output_format</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pyclifer.output_format&quot;</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-550" name="__codelineno-0-550"></a>            <span class="n">structured</span> <span class="o">=</span> <span class="n">output_format</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="s2">&quot;yaml&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-551" name="__codelineno-0-551"></a>            <span class="n">use_exc_info</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">structured</span> <span class="ow">or</span> <span class="n">_log</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<a id="__codelineno-0-552" name="__codelineno-0-552"></a>            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+<a id="__codelineno-0-553" name="__codelineno-0-553"></a>                <span class="s2">&quot;Unhandled exception in command &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+<a id="__codelineno-0-554" name="__codelineno-0-554"></a>                <span class="k">if</span> <span class="n">use_exc_info</span>
+<a id="__codelineno-0-555" name="__codelineno-0-555"></a>                <span class="k">else</span> <span class="s2">&quot;Unhandled exception in command &#39;</span><span class="si">%s</span><span class="s2">&#39;: </span><span class="si">%s</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-556" name="__codelineno-0-556"></a>            <span class="p">)</span>
+<a id="__codelineno-0-557" name="__codelineno-0-557"></a>            <span class="n">_log</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+<a id="__codelineno-0-558" name="__codelineno-0-558"></a>                <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">log_level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">),</span>
+<a id="__codelineno-0-559" name="__codelineno-0-559"></a>                <span class="n">msg</span><span class="p">,</span>
+<a id="__codelineno-0-560" name="__codelineno-0-560"></a>                <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<a id="__codelineno-0-561" name="__codelineno-0-561"></a>                <span class="o">*</span><span class="p">(()</span> <span class="k">if</span> <span class="n">use_exc_info</span> <span class="k">else</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),)),</span>
+<a id="__codelineno-0-562" name="__codelineno-0-562"></a>                <span class="n">exc_info</span><span class="o">=</span><span class="n">use_exc_info</span><span class="p">,</span>
+<a id="__codelineno-0-563" name="__codelineno-0-563"></a>            <span class="p">)</span>
+<a id="__codelineno-0-564" name="__codelineno-0-564"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">_Response</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">error_code</span><span class="o">=</span><span class="n">ExitCode</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<a id="__codelineno-0-565" name="__codelineno-0-565"></a>        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+<a id="__codelineno-0-566" name="__codelineno-0-566"></a>            <span class="s2">&quot;returns_response: command &#39;</span><span class="si">%s</span><span class="s2">&#39; returned </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-567" name="__codelineno-0-567"></a>            <span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<a id="__codelineno-0-568" name="__codelineno-0-568"></a>            <span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<a id="__codelineno-0-569" name="__codelineno-0-569"></a>        <span class="p">)</span>
+<a id="__codelineno-0-570" name="__codelineno-0-570"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">_Response</span><span class="p">):</span>
+<a id="__codelineno-0-571" name="__codelineno-0-571"></a>            <span class="kn">from</span><span class="w"> </span><span class="nn">pyclifer.core.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseContext</span>
+<a id="__codelineno-0-572" name="__codelineno-0-572"></a>
+<a id="__codelineno-0-573" name="__codelineno-0-573"></a>            <span class="n">ctx</span> <span class="o">=</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">get_current_context</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-574" name="__codelineno-0-574"></a>
+<a id="__codelineno-0-575" name="__codelineno-0-575"></a>            <span class="c1"># Use the actual context object (ctx.obj) if it is a BaseContext</span>
+<a id="__codelineno-0-576" name="__codelineno-0-576"></a>            <span class="c1"># subclass so that custom overrides (e.g., print_result_based_on_format)</span>
+<a id="__codelineno-0-577" name="__codelineno-0-577"></a>            <span class="c1"># are respected.  Fall back to a fresh BaseContext when ctx.obj is</span>
+<a id="__codelineno-0-578" name="__codelineno-0-578"></a>            <span class="c1"># absent or of an unrelated type.</span>
+<a id="__codelineno-0-579" name="__codelineno-0-579"></a>            <span class="n">obj</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+<a id="__codelineno-0-580" name="__codelineno-0-580"></a>            <span class="n">output_ctx</span> <span class="o">=</span> <span class="n">obj</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">BaseContext</span><span class="p">)</span> <span class="k">else</span> <span class="n">BaseContext</span><span class="p">()</span>
+<a id="__codelineno-0-581" name="__codelineno-0-581"></a>            <span class="n">output_format</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pyclifer.output_format&quot;</span><span class="p">,</span> <span class="s2">&quot;table&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-582" name="__codelineno-0-582"></a>
+<a id="__codelineno-0-583" name="__codelineno-0-583"></a>            <span class="c1"># Inject execution time into structured output when timer is active.</span>
+<a id="__codelineno-0-584" name="__codelineno-0-584"></a>            <span class="n">start_time</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;click_extra.start_time&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-585" name="__codelineno-0-585"></a>            <span class="k">if</span> <span class="p">(</span>
+<a id="__codelineno-0-586" name="__codelineno-0-586"></a>                <span class="n">start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<a id="__codelineno-0-587" name="__codelineno-0-587"></a>                <span class="ow">and</span> <span class="n">output_format</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="s2">&quot;yaml&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-588" name="__codelineno-0-588"></a>                <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+<a id="__codelineno-0-589" name="__codelineno-0-589"></a>            <span class="p">):</span>
+<a id="__codelineno-0-590" name="__codelineno-0-590"></a>                <span class="c1"># noinspection PyTypeChecker</span>
+<a id="__codelineno-0-591" name="__codelineno-0-591"></a>                <span class="n">elapsed</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+<a id="__codelineno-0-592" name="__codelineno-0-592"></a>                <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;execution_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-0-593" name="__codelineno-0-593"></a>                <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;execution_time_str&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elapsed</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span>
+<a id="__codelineno-0-594" name="__codelineno-0-594"></a>            <span class="n">output_ctx</span><span class="o">.</span><span class="n">output_format</span> <span class="o">=</span> <span class="n">output_format</span>
+<a id="__codelineno-0-595" name="__codelineno-0-595"></a>            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+<a id="__codelineno-0-596" name="__codelineno-0-596"></a>                <span class="s2">&quot;returns_response: ctx.obj type=</span><span class="si">%s</span><span class="s2">, using output_ctx type=</span><span class="si">%s</span><span class="s2">, &quot;</span>
+<a id="__codelineno-0-597" name="__codelineno-0-597"></a>                <span class="s2">&quot;output_format=</span><span class="si">%r</span><span class="s2">, meta keys=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-598" name="__codelineno-0-598"></a>                <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<a id="__codelineno-0-599" name="__codelineno-0-599"></a>                <span class="nb">type</span><span class="p">(</span><span class="n">output_ctx</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<a id="__codelineno-0-600" name="__codelineno-0-600"></a>                <span class="n">output_format</span><span class="p">,</span>
+<a id="__codelineno-0-601" name="__codelineno-0-601"></a>                <span class="nb">list</span><span class="p">(</span><span class="n">meta</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
 <a id="__codelineno-0-602" name="__codelineno-0-602"></a>            <span class="p">)</span>
-<a id="__codelineno-0-603" name="__codelineno-0-603"></a>        <span class="k">return</span> <span class="n">result</span>
-<a id="__codelineno-0-604" name="__codelineno-0-604"></a>
-<a id="__codelineno-0-605" name="__codelineno-0-605"></a>    <span class="k">return</span> <span class="n">wrapper</span>
+<a id="__codelineno-0-603" name="__codelineno-0-603"></a>            <span class="n">output_filter</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pyclifer.output_filter&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-604" name="__codelineno-0-604"></a>            <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;filter_value&quot;</span><span class="p">:</span> <span class="n">output_filter</span><span class="p">}</span> <span class="k">if</span> <span class="n">output_filter</span> <span class="k">else</span> <span class="p">{}</span>
+<a id="__codelineno-0-605" name="__codelineno-0-605"></a>            <span class="n">output_ctx</span><span class="o">.</span><span class="n">print_result_based_on_format</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+<a id="__codelineno-0-606" name="__codelineno-0-606"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">error_code</span> <span class="ow">and</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-607" name="__codelineno-0-607"></a>                <span class="n">ctx</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error_code</span><span class="p">)</span>
+<a id="__codelineno-0-608" name="__codelineno-0-608"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-609" name="__codelineno-0-609"></a>            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+<a id="__codelineno-0-610" name="__codelineno-0-610"></a>                <span class="s2">&quot;returns_response: result is not a Response instance — skipping output dispatch&quot;</span>
+<a id="__codelineno-0-611" name="__codelineno-0-611"></a>            <span class="p">)</span>
+<a id="__codelineno-0-612" name="__codelineno-0-612"></a>        <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-0-613" name="__codelineno-0-613"></a>
+<a id="__codelineno-0-614" name="__codelineno-0-614"></a>    <span class="k">return</span> <span class="n">wrapper</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3034,16 +3052,7 @@ def hello(ctx, name):
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/pyclifer/core/decorators.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-847">847</a></span>
-<span class="normal"><a href="#__codelineno-0-848">848</a></span>
-<span class="normal"><a href="#__codelineno-0-849">849</a></span>
-<span class="normal"><a href="#__codelineno-0-850">850</a></span>
-<span class="normal"><a href="#__codelineno-0-851">851</a></span>
-<span class="normal"><a href="#__codelineno-0-852">852</a></span>
-<span class="normal"><a href="#__codelineno-0-853">853</a></span>
-<span class="normal"><a href="#__codelineno-0-854">854</a></span>
-<span class="normal"><a href="#__codelineno-0-855">855</a></span>
-<span class="normal"><a href="#__codelineno-0-856">856</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-856">856</a></span>
 <span class="normal"><a href="#__codelineno-0-857">857</a></span>
 <span class="normal"><a href="#__codelineno-0-858">858</a></span>
 <span class="normal"><a href="#__codelineno-0-859">859</a></span>
@@ -3071,44 +3080,53 @@ def hello(ctx, name):
 <span class="normal"><a href="#__codelineno-0-881">881</a></span>
 <span class="normal"><a href="#__codelineno-0-882">882</a></span>
 <span class="normal"><a href="#__codelineno-0-883">883</a></span>
-<span class="normal"><a href="#__codelineno-0-884">884</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-847" name="__codelineno-0-847"></a><span class="k">def</span><span class="w"> </span><span class="nf">pagination_options</span><span class="p">(</span>
-<a id="__codelineno-0-848" name="__codelineno-0-848"></a>    <span class="n">default_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-<a id="__codelineno-0-849" name="__codelineno-0-849"></a>    <span class="n">max_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-0-850" name="__codelineno-0-850"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">_F</span><span class="p">]:</span>
-<a id="__codelineno-0-851" name="__codelineno-0-851"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Inject --page and --limit options into a command.</span>
-<a id="__codelineno-0-852" name="__codelineno-0-852"></a>
-<a id="__codelineno-0-853" name="__codelineno-0-853"></a><span class="sd">    Options are stored in ctx.meta under the keys &#39;pyclifer.page&#39; and</span>
-<a id="__codelineno-0-854" name="__codelineno-0-854"></a><span class="sd">    &#39;pyclifer.limit&#39; via store_in_meta.</span>
-<a id="__codelineno-0-855" name="__codelineno-0-855"></a>
-<a id="__codelineno-0-856" name="__codelineno-0-856"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-857" name="__codelineno-0-857"></a><span class="sd">        default_limit: Default number of results per page.</span>
-<a id="__codelineno-0-858" name="__codelineno-0-858"></a><span class="sd">        max_limit: Maximum allowed value for --limit (enforced via IntRange).</span>
-<a id="__codelineno-0-859" name="__codelineno-0-859"></a>
-<a id="__codelineno-0-860" name="__codelineno-0-860"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-861" name="__codelineno-0-861"></a><span class="sd">        A decorator that adds --page and --limit to the decorated function.</span>
-<a id="__codelineno-0-862" name="__codelineno-0-862"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-863" name="__codelineno-0-863"></a>
-<a id="__codelineno-0-864" name="__codelineno-0-864"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_F</span><span class="p">:</span>
-<a id="__codelineno-0-865" name="__codelineno-0-865"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add --page and --limit options to the command.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-866" name="__codelineno-0-866"></a>        <span class="n">f</span> <span class="o">=</span> <span class="n">option</span><span class="p">(</span>
-<a id="__codelineno-0-867" name="__codelineno-0-867"></a>            <span class="s2">&quot;--limit&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-868" name="__codelineno-0-868"></a>            <span class="s2">&quot;-l&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-869" name="__codelineno-0-869"></a>            <span class="n">default</span><span class="o">=</span><span class="n">default_limit</span><span class="p">,</span>
-<a id="__codelineno-0-870" name="__codelineno-0-870"></a>            <span class="nb">type</span><span class="o">=</span><span class="n">click_extra</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_limit</span><span class="p">),</span>
-<a id="__codelineno-0-871" name="__codelineno-0-871"></a>            <span class="n">help</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Results per page (max </span><span class="si">{</span><span class="n">max_limit</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-872" name="__codelineno-0-872"></a>            <span class="n">store_in_meta</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-873" name="__codelineno-0-873"></a>        <span class="p">)(</span><span class="n">f</span><span class="p">)</span>
-<a id="__codelineno-0-874" name="__codelineno-0-874"></a>        <span class="n">f</span> <span class="o">=</span> <span class="n">option</span><span class="p">(</span>
-<a id="__codelineno-0-875" name="__codelineno-0-875"></a>            <span class="s2">&quot;--page&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-876" name="__codelineno-0-876"></a>            <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-877" name="__codelineno-0-877"></a>            <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-878" name="__codelineno-0-878"></a>            <span class="nb">type</span><span class="o">=</span><span class="n">click_extra</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-<a id="__codelineno-0-879" name="__codelineno-0-879"></a>            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Page number (1-indexed).&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-880" name="__codelineno-0-880"></a>            <span class="n">store_in_meta</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-881" name="__codelineno-0-881"></a>        <span class="p">)(</span><span class="n">f</span><span class="p">)</span>
-<a id="__codelineno-0-882" name="__codelineno-0-882"></a>        <span class="k">return</span> <span class="n">f</span>
-<a id="__codelineno-0-883" name="__codelineno-0-883"></a>
-<a id="__codelineno-0-884" name="__codelineno-0-884"></a>    <span class="k">return</span> <span class="n">decorator</span>
+<span class="normal"><a href="#__codelineno-0-884">884</a></span>
+<span class="normal"><a href="#__codelineno-0-885">885</a></span>
+<span class="normal"><a href="#__codelineno-0-886">886</a></span>
+<span class="normal"><a href="#__codelineno-0-887">887</a></span>
+<span class="normal"><a href="#__codelineno-0-888">888</a></span>
+<span class="normal"><a href="#__codelineno-0-889">889</a></span>
+<span class="normal"><a href="#__codelineno-0-890">890</a></span>
+<span class="normal"><a href="#__codelineno-0-891">891</a></span>
+<span class="normal"><a href="#__codelineno-0-892">892</a></span>
+<span class="normal"><a href="#__codelineno-0-893">893</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-856" name="__codelineno-0-856"></a><span class="k">def</span><span class="w"> </span><span class="nf">pagination_options</span><span class="p">(</span>
+<a id="__codelineno-0-857" name="__codelineno-0-857"></a>    <span class="n">default_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-0-858" name="__codelineno-0-858"></a>    <span class="n">max_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-0-859" name="__codelineno-0-859"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">_F</span><span class="p">]:</span>
+<a id="__codelineno-0-860" name="__codelineno-0-860"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Inject --page and --limit options into a command.</span>
+<a id="__codelineno-0-861" name="__codelineno-0-861"></a>
+<a id="__codelineno-0-862" name="__codelineno-0-862"></a><span class="sd">    Options are stored in ctx.meta under the keys &#39;pyclifer.page&#39; and</span>
+<a id="__codelineno-0-863" name="__codelineno-0-863"></a><span class="sd">    &#39;pyclifer.limit&#39; via store_in_meta.</span>
+<a id="__codelineno-0-864" name="__codelineno-0-864"></a>
+<a id="__codelineno-0-865" name="__codelineno-0-865"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-866" name="__codelineno-0-866"></a><span class="sd">        default_limit: Default number of results per page.</span>
+<a id="__codelineno-0-867" name="__codelineno-0-867"></a><span class="sd">        max_limit: Maximum allowed value for --limit (enforced via IntRange).</span>
+<a id="__codelineno-0-868" name="__codelineno-0-868"></a>
+<a id="__codelineno-0-869" name="__codelineno-0-869"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-870" name="__codelineno-0-870"></a><span class="sd">        A decorator that adds --page and --limit to the decorated function.</span>
+<a id="__codelineno-0-871" name="__codelineno-0-871"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-872" name="__codelineno-0-872"></a>
+<a id="__codelineno-0-873" name="__codelineno-0-873"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_F</span><span class="p">:</span>
+<a id="__codelineno-0-874" name="__codelineno-0-874"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Add --page and --limit options to the command.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-875" name="__codelineno-0-875"></a>        <span class="n">f</span> <span class="o">=</span> <span class="n">option</span><span class="p">(</span>
+<a id="__codelineno-0-876" name="__codelineno-0-876"></a>            <span class="s2">&quot;--limit&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-877" name="__codelineno-0-877"></a>            <span class="s2">&quot;-l&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-878" name="__codelineno-0-878"></a>            <span class="n">default</span><span class="o">=</span><span class="n">default_limit</span><span class="p">,</span>
+<a id="__codelineno-0-879" name="__codelineno-0-879"></a>            <span class="nb">type</span><span class="o">=</span><span class="n">click_extra</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_limit</span><span class="p">),</span>
+<a id="__codelineno-0-880" name="__codelineno-0-880"></a>            <span class="n">help</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Results per page (max </span><span class="si">{</span><span class="n">max_limit</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-881" name="__codelineno-0-881"></a>            <span class="n">store_in_meta</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-882" name="__codelineno-0-882"></a>        <span class="p">)(</span><span class="n">f</span><span class="p">)</span>
+<a id="__codelineno-0-883" name="__codelineno-0-883"></a>        <span class="n">f</span> <span class="o">=</span> <span class="n">option</span><span class="p">(</span>
+<a id="__codelineno-0-884" name="__codelineno-0-884"></a>            <span class="s2">&quot;--page&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-885" name="__codelineno-0-885"></a>            <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-886" name="__codelineno-0-886"></a>            <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-887" name="__codelineno-0-887"></a>            <span class="nb">type</span><span class="o">=</span><span class="n">click_extra</span><span class="o">.</span><span class="n">IntRange</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-0-888" name="__codelineno-0-888"></a>            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Page number (1-indexed).&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-889" name="__codelineno-0-889"></a>            <span class="n">store_in_meta</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-890" name="__codelineno-0-890"></a>        <span class="p">)(</span><span class="n">f</span><span class="p">)</span>
+<a id="__codelineno-0-891" name="__codelineno-0-891"></a>        <span class="k">return</span> <span class="n">f</span>
+<a id="__codelineno-0-892" name="__codelineno-0-892"></a>
+<a id="__codelineno-0-893" name="__codelineno-0-893"></a>    <span class="k">return</span> <span class="n">decorator</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
