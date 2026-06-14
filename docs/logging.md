@@ -41,6 +41,38 @@ The logging system lives in `src/pyclifer/core/log/`:
     - `setup_file_logging()`: Time-based rotating log files
     - `create_log_file_callback()`: Click callback for `--log-file`
 
+`PYCLIFER_LOG_LEVELS` extends click-extra's standard levels with `TRACE`:
+
+```python
+from pyclifer import PYCLIFER_LOG_LEVELS
+# {"TRACE": 5, "DEBUG": 10, "INFO": 20, "WARNING": 30, "ERROR": 40, "CRITICAL": 50}
+```
+
+For advanced handler setup — when wiring pyclifer logging into an existing logging config:
+
+```python
+from pyclifer import (
+    RichExtraFormatter,
+    RichExtraStreamHandler,
+    add_trace_method,
+    TRACE,
+)
+import logging
+
+# Add .trace() method to any logger
+logger = logging.getLogger("myapp")
+add_trace_method(logger)
+logger.trace("low-level trace message")  # level 5
+
+# Build a handler manually
+handler = RichExtraStreamHandler()
+handler.setFormatter(RichExtraFormatter())
+handler.setLevel(TRACE)
+```
+
+Most projects use `configure_rich_logging()` or `@app_group(use_rich_logging=True)` instead —
+these primitives are for custom setups.
+
 ## Usage
 
 ### Automatic Rich Logging with `@app_group`
@@ -145,9 +177,16 @@ logger = get_logger()  # Automatically Rich-enabled
 
 ### Custom Sensitive Fields
 
-`SecretsMasker` ships with a built-in set of field names it always masks (`password`, `api_key`,
-`token`, `secret`, `access_token`, etc.). Pass `sensitive_fields` to extend this list — the
-defaults are never removed.
+`SecretsMasker` ships with a built-in set of field names it always masks. Pass `sensitive_fields`
+to extend this list — the defaults are never removed.
+
+Default masked fields (`SecretsMasker.DEFAULT_FIELDS`):
+
+```
+access_token, api_key, apikey, authorization, keyfile_dict,
+passphrase, passwd, password, private_key, pwd,
+secret, service_account, token
+```
 
 ```python
 @app_group(
