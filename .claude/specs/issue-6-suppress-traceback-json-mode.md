@@ -17,7 +17,7 @@ escape hatch — no new flag is needed.
 
 ## Items
 
-### 1 — Suppress traceback in structured output modes, restore via verbosity
+### ✅ 1 — Suppress traceback in structured output modes, restore via verbosity
 
 In `returns_response`, read `output_format` and the **effective logger level** before the
 `_log.log()` call.
@@ -38,7 +38,7 @@ ERROR  Unhandled exception in command 'my_command': KeyError: 'some_field'
 
 No new option, no new config field.
 
-### 2 — Tests
+### ✅ 2 — Tests
 
 Add/extend tests in `tests/core/test_decorators.py`:
 

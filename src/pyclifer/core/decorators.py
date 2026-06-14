@@ -546,11 +546,20 @@ def returns_response(f: Callable) -> Callable:
             result = f(*args, **kwargs)
         except Exception as e:
             log_level = meta.get("pyclifer.unhandled_exception_log_level", "error")
+            output_format = meta.get("pyclifer.output_format", "table")
+            structured = output_format in ("json", "yaml")
+            use_exc_info = not structured or _log.isEnabledFor(logging.DEBUG)
+            msg = (
+                "Unhandled exception in command '%s'"
+                if use_exc_info
+                else "Unhandled exception in command '%s': %s"
+            )
             _log.log(
                 getattr(logging, log_level.upper(), logging.ERROR),
-                "Unhandled exception in command '%s'",
+                msg,
                 f.__name__,
-                exc_info=True,
+                *(() if use_exc_info else (str(e),)),
+                exc_info=use_exc_info,
             )
             result = _Response(success=False, message=str(e), error_code=ExitCode.ERROR)
         _log.debug(

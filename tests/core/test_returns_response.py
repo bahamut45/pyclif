@@ -1,5 +1,7 @@
 """Tests for the returns_response decorator and command/group handle_response support."""
 
+from unittest.mock import patch
+
 import click
 from click.testing import CliRunner
 
@@ -577,3 +579,95 @@ class TestCtxExitIntegration:
         runner = CliRunner()
         runner.invoke(app, ["probe"])
         assert captured["cls"] is ExitCode
+
+
+# ---------------------------------------------------------------------------
+# Traceback suppression in structured output modes
+# ---------------------------------------------------------------------------
+
+
+def _unhandled_log_call(mock_log):
+    """Extract the single _log.log() call for an unhandled exception, or None."""
+    matches = [c for c in mock_log.log.call_args_list if "Unhandled exception" in str(c)]
+    return matches[0] if matches else None
+
+
+class TestTracebackSuppression:
+    """Tests for exc_info suppression when output format is json or yaml."""
+
+    def test_returns_response_suppresses_traceback_in_json_mode(self):
+        """Exception in JSON mode at WARNING level emits exc_info=False."""
+        app = _make_app(handle_response_at_group=True, output_format_default="json")
+
+        @app.command()
+        @click.pass_context
+        def boom(ctx):
+            """Raise unexpectedly"""
+            raise KeyError("some_field")
+
+        with patch("pyclifer.core.decorators._log") as mock_log:
+            mock_log.isEnabledFor.return_value = False
+            runner = CliRunner()
+            runner.invoke(app, ["boom"])
+            call = _unhandled_log_call(mock_log)
+            assert call is not None, "Expected a log call for unhandled exception"
+            _, kwargs = call
+            assert kwargs.get("exc_info") is False
+
+    def test_returns_response_keeps_traceback_in_table_mode(self):
+        """Exception in table mode emits exc_info=True regardless of verbosity."""
+        app = _make_app(handle_response_at_group=True, output_format_default="table")
+
+        @app.command()
+        @click.pass_context
+        def boom(ctx):
+            """Raise unexpectedly"""
+            raise RuntimeError("broken")
+
+        with patch("pyclifer.core.decorators._log") as mock_log:
+            mock_log.isEnabledFor.return_value = False
+            runner = CliRunner()
+            runner.invoke(app, ["boom"])
+            call = _unhandled_log_call(mock_log)
+            assert call is not None
+            _, kwargs = call
+            assert kwargs.get("exc_info") is True
+
+    def test_returns_response_debug_verbosity_restores_traceback_in_json_mode(self):
+        """Exception in JSON mode with logger at DEBUG level emits exc_info=True."""
+        app = _make_app(handle_response_at_group=True, output_format_default="json")
+
+        @app.command()
+        @click.pass_context
+        def boom(ctx):
+            """Raise unexpectedly"""
+            raise RuntimeError("broken")
+
+        with patch("pyclifer.core.decorators._log") as mock_log:
+            mock_log.isEnabledFor.return_value = True  # DEBUG enabled
+            runner = CliRunner()
+            runner.invoke(app, ["boom"])
+            call = _unhandled_log_call(mock_log)
+            assert call is not None
+            _, kwargs = call
+            assert kwargs.get("exc_info") is True
+
+    def test_returns_response_trace_verbosity_restores_traceback_in_json_mode(self):
+        """Exception in JSON mode with logger at TRACE (5) emits exc_info=True."""
+        app = _make_app(handle_response_at_group=True, output_format_default="json")
+
+        @app.command()
+        @click.pass_context
+        def boom(ctx):
+            """Raise unexpectedly"""
+            raise RuntimeError("broken")
+
+        with patch("pyclifer.core.decorators._log") as mock_log:
+            # TRACE=5, isEnabledFor(DEBUG=10) returns True when effective level <= 10
+            mock_log.isEnabledFor.side_effect = lambda level: level >= 5
+            runner = CliRunner()
+            runner.invoke(app, ["boom"])
+            call = _unhandled_log_call(mock_log)
+            assert call is not None
+            _, kwargs = call
+            assert kwargs.get("exc_info") is True
