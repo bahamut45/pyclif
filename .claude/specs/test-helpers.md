@@ -416,7 +416,59 @@ Attendu : aucune ligne — le module est disponible mais non ré-exporté.
 
 ---
 
-## Tâche 4 : Lint et commit
+## Tâche 4 : Documentation
+
+**Fichier :** `docs/development.md`
+
+- [ ] **Étape 1 : Ajouter une section "Tester avec pyclifer.testing"**
+
+Repérer la section existante sur les tests (probablement autour de `CliRunner` ou `pytest`).
+Ajouter ou remplacer par :
+
+```markdown
+## Tester vos commandes avec `pyclifer.testing`
+
+pyclifer fournit un module `pyclifer.testing` qui simplifie l'écriture des tests de commandes.
+
+### Installation
+
+`pyclifer.testing` est disponible sans dépendance supplémentaire — `pytest` est déjà
+dans votre `dev` extra.
+
+### Utilisation basique
+
+```python
+from pyclifer.testing import invoke
+
+def test_list_articles(cli):
+    result = invoke(cli, ["articles", "list", "-o", "json"])
+    assert result.exit_code == 0
+    assert result.json["success"] is True
+```
+
+### `CliResult` — propriétés disponibles
+
+| Propriété | Type | Description |
+|-----------|------|-------------|
+| `exit_code` | `int` | Code de sortie |
+| `output` | `str` | Stdout complet |
+| `json` | `Any` | Output parsé JSON — lève `ValueError` si invalide |
+| `yaml` | `Any` | Output parsé YAML — lève `ValueError` si invalide |
+| `exception` | `Exception \| None` | Exception capturée |
+
+### Fixtures pytest
+
+Importez les fixtures depuis `pyclifer.testing` dans votre `conftest.py` :
+
+```python
+# conftest.py
+from pyclifer.testing import cli_runner, cli_invoke
+```
+```
+
+---
+
+## Tâche 5 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -428,7 +480,7 @@ ruff format src/ tests/
 - [ ] **Étape 2 : Commit**
 
 ```bash
-git add src/pyclifer/testing.py tests/test_testing.py
+git add src/pyclifer/testing.py tests/test_testing.py docs/development.md
 git commit -m "$(cat <<'EOF'
 ✨ feat(testing): add pyclifer.testing module with pytest helpers
 

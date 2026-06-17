@@ -332,7 +332,51 @@ Les deux branches de `if hook(ctx) is False` et le bloc `finally` doivent être 
 
 ---
 
-## Tâche 7 : Lint et commit
+## Tâche 7 : Documentation
+
+**Fichiers :** `docs/api/decorators.md`
+
+- [ ] **Étape 1 : Documenter `before_invoke` et `after_invoke` dans `docs/api/decorators.md`**
+
+Dans la section de `app_group()`, ajouter les deux nouveaux paramètres :
+
+```markdown
+#### `before_invoke`
+
+Liste de callables exécutés avant chaque sous-commande.
+Chaque hook reçoit le contexte Click racine (`ctx`).
+Retourner `False` bloque l'exécution de la commande.
+
+```python
+def require_auth(ctx):
+    if not ctx.meta.get("token"):
+        raise click.UsageError("Non authentifié.")
+
+@app_group(before_invoke=[require_auth])
+def cli(): ...
+```
+
+#### `after_invoke`
+
+Liste de callables exécutés après chaque sous-commande, même en cas d'erreur (bloc `finally`).
+Chaque hook reçoit le contexte Click racine (`ctx`).
+
+```python
+def audit(ctx):
+    logger.info("Invoked: %s", ctx.info_name)
+
+@app_group(after_invoke=[audit])
+def cli(): ...
+```
+```
+
+- [ ] **Étape 2 : Documenter `HooksMixin` dans `docs/api/mixins.md`**
+
+Ajouter une section `HooksMixin` avec sa description et ses attributs clés.
+
+---
+
+## Tâche 8 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -348,7 +392,7 @@ Dans `src/pyclifer/__init__.py`, ajouter `"HooksMixin"` dans `__all__`.
 - [ ] **Étape 3 : Commit**
 
 ```bash
-git add src/ tests/core/test_hooks.py
+git add src/ tests/core/test_hooks.py docs/api/decorators.md docs/api/mixins.md
 git commit -m "$(cat <<'EOF'
 ✨ feat(mixins): add before_invoke / after_invoke middleware hooks
 

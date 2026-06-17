@@ -386,7 +386,83 @@ Ajouter dans la section `Notable options` :
 
 ---
 
-## Tâche 7 : Lint et commit
+## Tâche 7 : Documentation
+
+**Fichiers :** `docs/api/decorators.md`, `docs/plugins.md` (nouveau), `mkdocs.yml`
+
+- [ ] **Étape 1 : Documenter `plugins_entry_point` dans `docs/api/decorators.md`**
+
+Dans la section paramètres de `app_group()`, ajouter :
+
+```markdown
+#### `plugins_entry_point`
+
+Défaut : `None`. Nom du groupe d'entry points `importlib.metadata` à scanner
+au démarrage. Chaque entry point doit pointer vers un Click `Command`/`Group`
+ou une callable sans argument qui en retourne un.
+
+```python
+@app_group(plugins_entry_point="myapp.commands")
+def cli(): ...
+```
+
+Les plugins défaillants (import error) sont ignorés avec un warning — le CLI
+reste utilisable.
+```
+
+- [ ] **Étape 2 : Créer `docs/plugins.md`**
+
+```markdown
+# Système de plugins
+
+pyclifer permet d'étendre un CLI existant par des packages tiers sans modifier le code source.
+
+## Déclarer un plugin (côté package tiers)
+
+```toml
+# pyproject.toml du plugin
+[project.entry-points."myapp.commands"]
+billing = "myapp_billing.commands:billing_group"
+```
+
+Après `pip install myapp-billing`, la commande `myapp billing` est automatiquement disponible.
+
+## Activer la découverte dans votre CLI
+
+```python
+@app_group(plugins_entry_point="myapp.commands")
+def cli(): ...
+```
+
+## Enregistrement programmatique
+
+Pour des modules internes qui ne nécessitent pas de packaging :
+
+```python
+from myapp.apps.admin import admin_group
+cli.register_plugin(admin_group)
+```
+
+`register_plugin()` est un alias ergonomique pour `add_command()` — il valide que
+l'argument est bien un Click command et documente clairement l'intention.
+
+## Comportement en cas d'erreur
+
+Un plugin défaillant (dépendance manquante, erreur d'import) est ignoré avec un
+warning dans les logs. Les autres commandes restent disponibles.
+```
+
+- [ ] **Étape 3 : Ajouter `plugins.md` dans la nav de `mkdocs.yml`**
+
+Dans la section `User Guide` :
+
+```yaml
+      - Plugins: plugins.md
+```
+
+---
+
+## Tâche 8 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -398,7 +474,7 @@ ruff format src/ tests/
 - [ ] **Étape 2 : Commit**
 
 ```bash
-git add src/ tests/core/test_plugins.py
+git add src/ tests/core/test_plugins.py docs/api/decorators.md docs/plugins.md mkdocs.yml
 git commit -m "$(cat <<'EOF'
 ✨ feat(plugins): add entry_point discovery and register_plugin()
 

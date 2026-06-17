@@ -309,7 +309,65 @@ rm -f test_cfg.toml
 
 ---
 
-## Tâche 5 : Lint et commit
+## Tâche 5 : Documentation
+
+**Fichier :** `docs/configuration.md`
+
+- [ ] **Étape 1 : Ajouter une section "Validation du schéma de configuration"**
+
+Repérer la section qui décrit le chargement des fichiers de configuration.
+Ajouter après :
+
+```markdown
+## Validation du schéma
+
+Déclarez un modèle Pydantic pour valider automatiquement la configuration au démarrage.
+
+```python
+from pyclifer import BaseModel, app_group
+
+class AppConfig(BaseModel):
+    api_url: str
+    timeout: int = 30
+    debug: bool = False
+
+@app_group(config_schema=AppConfig)
+def cli(): ...
+```
+
+Si la configuration chargée est invalide, pyclifer affiche un message d'erreur précis
+et quitte avec le code 2 :
+
+```
+Error: Config validation failed — timeout: Input should be a valid integer
+```
+
+La configuration validée est accessible dans toutes les commandes :
+
+```python
+@cli.command()
+@pass_context
+def info(ctx):
+    config: AppConfig = ctx.meta["pyclifer.config"]
+    print(config.api_url)
+```
+```
+
+- [ ] **Étape 2 : Documenter `config_schema` dans `docs/api/decorators.md`**
+
+Dans la section paramètres de `app_group()`, ajouter :
+
+```markdown
+#### `config_schema`
+
+Défaut : `None`. Sous-classe de `BaseModel` (Pydantic) utilisée pour valider la
+configuration chargée. En cas d'erreur de validation, une `UsageError` claire est levée
+et la config validée est stockée dans `ctx.meta["pyclifer.config"]`.
+```
+
+---
+
+## Tâche 6 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -321,7 +379,7 @@ ruff format src/ tests/
 - [ ] **Étape 2 : Commit**
 
 ```bash
-git add src/ tests/core/test_config_schema.py
+git add src/ tests/core/test_config_schema.py docs/configuration.md docs/api/decorators.md
 git commit -m "$(cat <<'EOF'
 ✨ feat(decorators): add config_schema validation on @app_group
 

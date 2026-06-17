@@ -335,7 +335,74 @@ Confirmer que `pyclifer.dry_run` est bien la clé dans `ctx.meta`.
 
 ---
 
-## Tâche 7 : Lint et commit
+## Tâche 7 : Documentation
+
+**Fichiers :** `docs/api/decorators.md`, `docs/how-to/dry-run.md` (nouveau), `mkdocs.yml`
+
+- [ ] **Étape 1 : Documenter `add_dry_run_option` dans `docs/api/decorators.md`**
+
+Dans la section des paramètres de `app_group()`, ajouter :
+
+```markdown
+#### `add_dry_run_option`
+
+Défaut : `False`. Quand `True`, injecte `--dry-run` comme option globale.
+La valeur est stockée dans `ctx.meta["pyclifer.dry_run"]` et accessible via
+`BaseInterface.is_dry_run`.
+```
+
+- [ ] **Étape 2 : Créer `docs/how-to/dry-run.md`**
+
+```markdown
+# Implémenter le mode dry-run
+
+Le mode dry-run permet à l'utilisateur de simuler des opérations destructives sans
+modifier d'état réel.
+
+## Activation
+
+```python
+@app_group(add_dry_run_option=True)
+def cli(): ...
+```
+
+## Utilisation dans une interface
+
+```python
+class ArticleInterface(BaseInterface):
+    def delete(self, article_id: int) -> list[OperationResult]:
+        if self.is_dry_run:
+            return [OperationResult.dry_run(
+                item=str(article_id),
+                message=f"Would delete article {article_id}",
+            )]
+        # Suppression réelle
+        self.api.delete(article_id)
+        return [OperationResult.ok(item=str(article_id), message="Deleted")]
+```
+
+## Exemple d'invocation
+
+```bash
+myapp articles delete 42 --dry-run
+# → [DRY-RUN] Would delete article 42
+
+myapp articles delete 42
+# → Deleted
+```
+```
+
+- [ ] **Étape 3 : Ajouter `dry-run.md` dans la nav de `mkdocs.yml`**
+
+Dans la section `How-to Guides` de `mkdocs.yml`, ajouter :
+
+```yaml
+      - how-to/dry-run.md
+```
+
+---
+
+## Tâche 8 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -347,7 +414,7 @@ ruff format src/ tests/
 - [ ] **Étape 2 : Commit**
 
 ```bash
-git add src/ tests/core/test_dry_run.py
+git add src/ tests/core/test_dry_run.py docs/api/decorators.md docs/how-to/dry-run.md mkdocs.yml
 git commit -m "$(cat <<'EOF'
 ✨ feat(decorators): add --dry-run global option
 

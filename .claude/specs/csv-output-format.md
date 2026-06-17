@@ -322,7 +322,41 @@ Bob,87
 
 ---
 
-## Tâche 6 : Lint et commit
+## Tâche 6 : Documentation
+
+**Fichiers :** `docs/output-formatting.md`, `docs/api/output.md`
+
+- [ ] **Étape 1 : Ajouter `csv` dans le tableau des formats — `docs/output-formatting.md`**
+
+Repérer le tableau ou la liste qui présente les formats disponibles
+(`json`, `yaml`, `table`, `rich`, `raw`, `text`). Ajouter la ligne csv :
+
+```markdown
+| `csv` | RFC 4180 CSV avec en-tête — idéal pour Excel / Google Sheets / `xsv` |
+```
+
+Ajouter aussi un exemple d'usage :
+
+```markdown
+### CSV
+
+```bash
+myapp articles list -o csv > articles.csv
+myapp articles list -o csv | xsv table
+```
+
+L'en-tête utilise les colonnes déclarées dans `BaseRenderer.columns`.
+Les valeurs `None` sont écrites comme chaînes vides.
+Les valeurs contenant des virgules sont automatiquement quotées (RFC 4180).
+```
+
+- [ ] **Étape 2 : Documenter `BaseRenderer.csv()` dans `docs/api/output.md`**
+
+Dans la section `BaseRenderer`, ajouter `csv()` parmi les méthodes de rendu.
+
+---
+
+## Tâche 7 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -334,7 +368,7 @@ ruff format src/ tests/
 - [ ] **Étape 2 : Commit**
 
 ```bash
-git add src/ tests/
+git add src/ tests/ docs/output-formatting.md docs/api/output.md
 git commit -m "$(cat <<'EOF'
 ✨ feat(output): add csv output format
 

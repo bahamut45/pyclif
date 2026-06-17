@@ -343,7 +343,60 @@ python -m pytest tests/core/interfaces/ -v
 
 ---
 
-## Tâche 5 : Lint et commit
+## Tâche 5 : Documentation
+
+**Fichiers :** `docs/api/interfaces.md`, `docs/examples.md`
+
+- [ ] **Étape 1 : Documenter `@interface_method` et le dispatch callable dans `docs/api/interfaces.md`**
+
+Ajouter une section après la présentation de `respond()` :
+
+```markdown
+### Dispatch typé avec callable
+
+Passer directement une méthode liée plutôt qu'un nom en string :
+
+```python
+# Avant (fragile — pas de complétion IDE, pas refactorable)
+return self.respond("list", page=page, limit=limit)
+
+# Après (typé, complétion IDE, refactorable)
+return self.respond(self.list, page=page, limit=limit)
+```
+
+### `@interface_method` — co-localiser le renderer
+
+Le décorateur `@interface_method` attache un renderer directement sur la méthode,
+rendant le dict `renderers` optionnel :
+
+```python
+from pyclifer import interface_method
+
+class ArticleInterface(BaseInterface):
+    @interface_method(renderer=ArticleListRenderer)
+    def list(self) -> list[OperationResult]:
+        ...
+
+    @interface_method(renderer=ArticleCreateRenderer)
+    def create(self, title: str) -> list[OperationResult]:
+        ...
+```
+
+**Priorité de résolution du renderer :**
+1. `@interface_method` sur la méthode
+2. Dict `renderers` de la classe
+3. `renderer_class` (fallback)
+```
+
+- [ ] **Étape 2 : Mettre à jour les exemples dans `docs/examples.md`**
+
+Repérer un exemple qui utilise `self.respond("method_name", ...)` et le mettre à jour
+pour utiliser `self.respond(self.method_name, ...)`. Ajouter une note de migration pour
+les utilisateurs existants.
+
+---
+
+## Tâche 6 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -355,7 +408,7 @@ ruff format src/ tests/
 - [ ] **Étape 2 : Commit**
 
 ```bash
-git add src/ tests/core/interfaces/
+git add src/ tests/core/interfaces/ docs/api/interfaces.md docs/examples.md
 git commit -m "$(cat <<'EOF'
 ✨ feat(interfaces): typed callable dispatch in BaseInterface.respond()
 

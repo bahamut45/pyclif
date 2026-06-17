@@ -215,7 +215,39 @@ La ligne `if inspect.iscoroutine(result):` doit être couverte par les deux bran
 
 ---
 
-## Tâche 4 : Lint et commit
+## Tâche 4 : Documentation
+
+**Fichier :** `docs/getting-started.md`
+
+- [ ] **Étape 1 : Ajouter une section "Commandes asynchrones"**
+
+Repérer la section qui décrit l'écriture d'une commande (là où `@returns_response` est
+présenté). Ajouter après :
+
+```markdown
+### Commandes asynchrones
+
+pyclifer supporte nativement les `async def` — aucune configuration requise.
+`returns_response` détecte automatiquement une coroutine et l'exécute via `asyncio.run()`.
+
+```python
+@app.command()
+@returns_response
+@pass_cli_context
+async def fetch(ctx):
+    async with httpx.AsyncClient() as client:
+        data = (await client.get("https://api.example.com/items")).json()
+    return Response(success=True, message="Fetched", data=data)
+```
+
+> **Note :** asyncio uniquement. Si une boucle événementielle est déjà active dans
+> votre contexte d'exécution, appelez `asyncio.get_event_loop().run_until_complete()`
+> manuellement à la place.
+```
+
+---
+
+## Tâche 5 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
@@ -227,7 +259,7 @@ ruff format src/ tests/
 - [ ] **Étape 2 : Stager et committer**
 
 ```bash
-git add src/pyclifer/core/decorators.py tests/core/test_decorators.py
+git add src/pyclifer/core/decorators.py tests/core/test_decorators.py docs/getting-started.md
 git commit -m "$(cat <<'EOF'
 ✨ feat(decorators): support async def commands in returns_response
 
