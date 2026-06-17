@@ -9,7 +9,7 @@ authors = [
     { name = "Nicolas JOUBERT", email = "njoubert45@gmail.com" }
 ]
 dependencies = [
-    "click-extra>=7.18.0,<8.0.0",
+    "click-extra>=7.19.0,<8.0.0",
     "rich>=15.0.0",
     "rich-click>=1.9.8,<2.0.0",
     "pyyaml>=6.0.3,<7.0.0",
@@ -48,7 +48,6 @@ dev = [
     "ruff",
     "tox>=4.0",
     "tox-uv>=1.0",
-
     "git-cliff>=2.0",
     "pre-commit>=3.0",
 ]
