@@ -217,6 +217,16 @@ The API docs in `docs/api/` mirror this structure — a symbol documented in the
 
 - Every new `docs/*.md` page must be added to the `nav` section of `mkdocs.yml` in the same
   commit. Never create a documentation page without registering it.
+- **Every spec implementation must include documentation updates in the same commit as the
+  code.** The spec's Documentation task specifies which files to update. Do not commit
+  code without the corresponding doc changes — documentation is part of the definition of done.
+- When a spec adds a new parameter, class, or decorator: update the matching `docs/api/` page
+  (see the File placement table above for which page owns which symbol).
+- When a spec adds user-facing behavior (new CLI flag, new output format, new workflow):
+  update or create the relevant `docs/` user guide page (`configuration.md`,
+  `output-formatting.md`, `getting-started.md`, or a new `how-to/` guide).
+- Run `mkdocs build --strict` locally to verify no broken links or missing pages before
+  committing documentation changes.
 
 ## Git Workflow
 
