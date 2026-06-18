@@ -211,3 +211,6 @@ __marimo__/
 
 # Git worktrees
 .worktrees/
+
+# Graphify out
+graphify-out/
