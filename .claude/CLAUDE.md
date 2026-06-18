@@ -251,3 +251,6 @@ Every commit must follow this exact structure:
 - **scope**: optional, use the module name (e.g. `tables`, `decorators`, `log`)
 - **summary**: imperative mood, ≤50 chars, no trailing period
 - **body**: bullet list, each item explains *why* not just *what*; omit if summary is self-explanatory
+# graphify
+- **graphify** (`.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
+When the user types `/graphify`, invoke the Skill tool with `skill: "graphify"` before doing anything else.
