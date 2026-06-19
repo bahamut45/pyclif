@@ -110,6 +110,40 @@ def test_missing_required_option():
     assert "Missing option" in result.output
 ```
 
+### Testing with pyclifer.testing
+
+pyclifer ships a `pyclifer.testing` module that removes the `CliRunner` boilerplate
+shown above. It is available without any extra dependency — `pytest` is already
+in the project's `dev` extra. It is not re-exported from `pyclifer.__init__` so
+`pytest` stays a dev-only dependency.
+
+```python
+from pyclifer.testing import invoke
+
+def test_hello_command():
+    result = invoke(test_cli, ["hello", "--name", "Test"])
+    assert result.exit_code == 0
+    assert "Hello Test!" in result.output
+```
+
+`CliResult` (returned by `invoke()`) exposes typed accessors:
+
+| Property | Type | Description |
+|----------|------|--------------|
+| `exit_code` | `int` | Command exit code |
+| `output` | `str` | Full stdout output |
+| `stderr` | `str` | Captured stderr output |
+| `json` | `Any` | Stdout parsed as JSON — raises `ValueError` if invalid |
+| `yaml` | `Any` | Stdout parsed as YAML — raises `ValueError` if invalid |
+| `exception` | `Exception \| None` | Unhandled exception, or None on clean exit |
+
+pytest fixtures are also available — import them into your `conftest.py`:
+
+```python
+# conftest.py
+from pyclifer.testing import cli_runner, cli_invoke
+```
+
 ### Testing Configuration Files
 
 ```python

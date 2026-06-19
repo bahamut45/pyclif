@@ -86,7 +86,7 @@ pour éviter que `pytest` soit une dépendance runtime).
 
 ---
 
-## Tâche 1 : Créer la branche et écrire les tests échouants
+## ✅ Tâche 1 : Créer la branche et écrire les tests échouants
 
 - [ ] **Étape 1 : Créer la branche**
 
@@ -228,7 +228,7 @@ Attendu : `ModuleNotFoundError: No module named 'pyclifer.testing'`
 
 ---
 
-## Tâche 2 : Créer `src/pyclifer/testing.py`
+## ✅ Tâche 2 : Créer `src/pyclifer/testing.py`
 
 **Fichier :** `src/pyclifer/testing.py` (nouveau)
 
@@ -392,7 +392,7 @@ except ImportError:
 
 ---
 
-## Tâche 3 : Vérification complète
+## ✅ Tâche 3 : Vérification complète
 
 - [ ] **Étape 1 : Tous les tests passent**
 
@@ -416,7 +416,7 @@ Attendu : aucune ligne — le module est disponible mais non ré-exporté.
 
 ---
 
-## Tâche 4 : Documentation
+## ✅ Tâche 4 : Documentation
 
 **Fichier :** `docs/development.md`
 
@@ -468,7 +468,7 @@ from pyclifer.testing import cli_runner, cli_invoke
 
 ---
 
-## Tâche 5 : Lint et commit
+## ✅ Tâche 5 : Lint et commit
 
 - [ ] **Étape 1 : Ruff**
 
