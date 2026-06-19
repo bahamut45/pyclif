@@ -1,0 +1,44 @@
+# graphify corpus exclusions.
+# Note: presence of this file disables .gitignore fallback for graphify scans
+# (graphify prefers .graphifyignore over .gitignore, it does not merge them),
+# so the usual Python/tooling noise is repeated here to avoid regressing.
+
+# Byte-compiled / build / packaging
+__pycache__/
+*.py[codz]
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Test / coverage / cache
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+
+# Docs build / site
+docs/_build/
+/site
+
+# Git worktrees
+.worktrees/
+
+# graphify's own output
+graphify-out/
+
+# Archived specs - historical design rationale, noisy for the live graph
+.claude/specs/archived/
