@@ -6,7 +6,6 @@ import importlib
 from unittest.mock import MagicMock
 
 import pytest
-from click.testing import CliRunner
 
 _demo_context_mod = importlib.import_module("pyclifer.apps.demo.core.context")
 
@@ -15,12 +14,6 @@ _demo_context_mod = importlib.import_module("pyclifer.apps.demo.core.context")
 def storage() -> MagicMock:
     """Return a fresh MagicMock pre-wired as a Storage instance."""
     return MagicMock()
-
-
-@pytest.fixture
-def runner() -> CliRunner:
-    """Return a Click test runner."""
-    return CliRunner()
 
 
 @pytest.fixture

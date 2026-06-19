@@ -2,10 +2,10 @@
 
 import click
 import pytest
-from click.testing import CliRunner
 
 from pyclifer.core import app_group, command, group, option
 from pyclifer.core.mixins.cli import GlobalOptionsMixin
+from pyclifer.testing import invoke
 
 
 @pytest.fixture
@@ -39,18 +39,16 @@ class TestGlobalOptionPropagation:
 
     def test_global_option_accessible_by_subcommand(self, sample_cli):
         """Ensure that an option marked as global is available to child commands."""
-        runner = CliRunner()
 
-        result = runner.invoke(sample_cli, ["fetch-data", "--api-key", "secret-key-123"])
+        result = invoke(sample_cli, ["fetch-data", "--api-key", "secret-key-123"])
 
         assert result.exit_code == 0, f"Command failed with output: {result.output}"
         assert "Using API Key: secret-key-123" in result.output
 
     def test_global_option_in_subcommand_help(self, sample_cli):
         """Ensure the global option is displayed in the subcommand's help output."""
-        runner = CliRunner()
 
-        result = runner.invoke(sample_cli, ["fetch-data", "--help"])
+        result = invoke(sample_cli, ["fetch-data", "--help"])
 
         print(
             f"\n--- Help Output for fetch-data ---\n"
@@ -64,7 +62,6 @@ class TestGlobalOptionPropagation:
 
     def test_global_option_with_add_command(self):
         """Ensure global options propagate when commands are registered via add_command."""
-        runner = CliRunner()
 
         # noinspection PyUnusedLocal
         @app_group()
@@ -83,7 +80,7 @@ class TestGlobalOptionPropagation:
 
         cli.add_command(external_fetch)
 
-        result = runner.invoke(cli, ["external-fetch", "--api-key", "secret-456"])
+        result = invoke(cli, ["external-fetch", "--api-key", "secret-456"])
 
         assert result.exit_code == 0, f"Command failed with output: {result.output}"
         assert "External API Key: secret-456" in result.output
@@ -115,7 +112,6 @@ class TestGlobalOptionPropagation:
 
     def test_global_option_propagation_in_nested_groups(self):
         """Ensure global options propagate through multi-level nested groups."""
-        runner = CliRunner()
 
         # noinspection PyUnusedLocal
         @app_group()
@@ -141,7 +137,7 @@ class TestGlobalOptionPropagation:
         subsystem.add_command(do_work)
         cli.add_command(subsystem)
 
-        result = runner.invoke(cli, ["subsystem", "do-work", "--verbosity", "TRACE"])
+        result = invoke(cli, ["subsystem", "do-work", "--verbosity", "TRACE"])
 
         print(
             f"\n--- Help Output for do-work ---\n{result.output}----------------------------------"

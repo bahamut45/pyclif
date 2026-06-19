@@ -5,10 +5,10 @@ from logging.handlers import TimedRotatingFileHandler
 
 import click
 import pytest
-from click.testing import CliRunner
 
 from pyclifer.core.decorators import app_group
 from pyclifer.core.log.config import setup_file_logging
+from pyclifer.testing import invoke
 
 
 @pytest.fixture(autouse=True)
@@ -77,10 +77,9 @@ def test_cli_log_file_option(tmp_path):
         logger = logging.getLogger("test_cli")
         logger.warning({"action": "Executing work", "token": "SECRET_TOKEN_123"})
 
-    runner = CliRunner()
     log_file = tmp_path / "cli_output.log"
 
-    result = runner.invoke(cli, ["--log-file", str(log_file), "do-work"])
+    result = invoke(cli, ["--log-file", str(log_file), "do-work"])
 
     assert result.exit_code == 0
     assert log_file.exists()
@@ -108,10 +107,9 @@ def test_cli_log_file_level_decorator(tmp_path):
         logger.info("Info message")
         logger.warning("Warning message")
 
-    runner = CliRunner()
     log_file = tmp_path / "cli_level.log"
 
-    result = runner.invoke(cli, ["--log-file", str(log_file), "do-work"])
+    result = invoke(cli, ["--log-file", str(log_file), "do-work"])
 
     assert result.exit_code == 0
     assert log_file.exists()
@@ -163,8 +161,7 @@ def test_setup_file_logging_no_verbosity_param_in_ctx(tmp_path):
         """Command with no verbosity option."""
         setup_file_logging(str(log_file))
 
-    runner = CliRunner()
-    result = runner.invoke(cmd, [])
+    result = invoke(cmd, [])
     assert result.exit_code == 0
     root_logger = logging.getLogger()
     file_handlers = [h for h in root_logger.handlers if isinstance(h, TimedRotatingFileHandler)]

@@ -1,12 +1,10 @@
 """Tests for the timer option integration in app_group."""
 
-import json
-
 import click
-from click.testing import CliRunner
 
 from pyclifer.core import app_group
 from pyclifer.core.output import Response
+from pyclifer.testing import invoke
 
 
 def _make_timed_app(output_format_default: str = "raw"):
@@ -35,8 +33,7 @@ class TestTimerOptionWiring:
 
     def test_time_flag_appears_in_help(self):
         """--time/--no-time option is present when timer=True."""
-        runner = CliRunner()
-        result = runner.invoke(_make_timed_app(), ["--help"])
+        result = invoke(_make_timed_app(), ["--help"])
         assert "--time" in result.output
 
     def test_no_timer_by_default(self):
@@ -47,8 +44,7 @@ class TestTimerOptionWiring:
         def app(ctx):
             """App without timer."""
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["--help"])
+        result = invoke(app, ["--help"])
         assert "--time" not in result.output
 
 
@@ -57,14 +53,12 @@ class TestTimerRichOutput:
 
     def test_elapsed_time_printed_in_raw_mode(self):
         """Execution time line appears in output when --time is passed in raw mode."""
-        runner = CliRunner()
-        result = runner.invoke(_make_timed_app(output_format_default="raw"), ["--time", "run"])
+        result = invoke(_make_timed_app(output_format_default="raw"), ["--time", "run"])
         assert "Execution time:" in result.output
 
     def test_no_elapsed_time_without_flag(self):
         """No execution time line when --time is not passed."""
-        runner = CliRunner()
-        result = runner.invoke(_make_timed_app(output_format_default="raw"), ["run"])
+        result = invoke(_make_timed_app(output_format_default="raw"), ["run"])
         assert "Execution time:" not in result.output
 
 
@@ -73,22 +67,19 @@ class TestTimerJsonOutput:
 
     def test_execution_time_injected_in_json(self):
         """execution_time and execution_time_str are injected in JSON output with --time."""
-        runner = CliRunner()
-        result = runner.invoke(_make_timed_app(output_format_default="json"), ["--time", "run"])
-        payload = json.loads(result.output)
+        result = invoke(_make_timed_app(output_format_default="json"), ["--time", "run"])
+        payload = result.json
         assert "execution_time" in payload["data"]
         assert "execution_time_str" in payload["data"]
         assert isinstance(payload["data"]["execution_time"], float)
 
     def test_no_execution_time_in_json_without_flag(self):
         """execution_time is absent from JSON output when --time is not passed."""
-        runner = CliRunner()
-        result = runner.invoke(_make_timed_app(output_format_default="json"), ["run"])
-        payload = json.loads(result.output)
+        result = invoke(_make_timed_app(output_format_default="json"), ["run"])
+        payload = result.json
         assert "execution_time" not in payload.get("data", {})
 
     def test_no_echo_in_json_mode(self):
         """No 'Execution time:' text line is printed in JSON mode."""
-        runner = CliRunner()
-        result = runner.invoke(_make_timed_app(output_format_default="json"), ["--time", "run"])
+        result = invoke(_make_timed_app(output_format_default="json"), ["--time", "run"])
         assert "Execution time:" not in result.output

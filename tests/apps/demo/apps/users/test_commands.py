@@ -1,17 +1,16 @@
-"""CLI integration tests for user commands — invoked via CliRunner through the full pyclifer app."""
+"""CLI integration tests for user commands — invoked via pyclifer.testing through the full app."""
 
 from __future__ import annotations
 
 import datetime
 import importlib
-import json
 from unittest.mock import MagicMock, patch
 
 import pytest
-from click.testing import CliRunner
 
 from pyclifer.apps.demo.apps.users.models import User
 from pyclifer.cli import app
+from pyclifer.testing import invoke
 
 _demo_context_mod = importlib.import_module("pyclifer.apps.demo.core.context")
 _users_iface_mod = importlib.import_module("pyclifer.apps.demo.apps.users.interfaces")
@@ -28,54 +27,49 @@ def storage() -> MagicMock:
     return MagicMock()
 
 
-@pytest.fixture
-def runner() -> CliRunner:
-    return CliRunner()
-
-
-def _run(runner, storage, *args, **kwargs):
+def _run(storage, *args, **kwargs):
     """Invoke an app command with Storage mocked."""
     with patch.object(_demo_context_mod, "Storage", return_value=storage):
-        return runner.invoke(app, list(args), **kwargs)
+        return invoke(app, list(args), **kwargs)
 
 
 class TestListUsersCommand:
-    def test_success_with_users(self, runner, storage):
+    def test_success_with_users(self, storage):
         storage.get_users.return_value = [_user()]
-        result = _run(runner, storage, "demo", "users", "list")
+        result = _run(storage, "demo", "users", "list")
         assert result.exit_code == 0
 
-    def test_empty_shows_no_dataset(self, runner, storage):
+    def test_empty_shows_no_dataset(self, storage):
         storage.get_users.side_effect = [[], []]
-        result = _run(runner, storage, "demo", "users", "list")
+        result = _run(storage, "demo", "users", "list")
         assert result.exit_code == 0
 
-    def test_json_output_includes_username(self, runner, storage):
+    def test_json_output_includes_username(self, storage):
         storage.get_users.return_value = [_user(username="carol")]
-        result = _run(runner, storage, "--output-format", "json", "demo", "users", "list")
+        result = _run(storage, "--output-format", "json", "demo", "users", "list")
         assert result.exit_code == 0
-        data = json.loads(result.output)
+        data = result.json
         assert data["data"]["results"][0]["username"] == "carol"
 
 
 class TestWhoamiCommand:
-    def test_success_exits_zero(self, runner, storage):
+    def test_success_exits_zero(self, storage):
         storage.get_user.return_value = _user()
         with patch.object(_users_iface_mod.os, "getenv", return_value="alice"):
-            result = _run(runner, storage, "demo", "users", "whoami")
+            result = _run(storage, "demo", "users", "whoami")
         assert result.exit_code == 0
 
-    def test_json_output_shows_username(self, runner, storage):
+    def test_json_output_shows_username(self, storage):
         storage.get_user.return_value = _user(username="alice")
         with patch.object(_users_iface_mod.os, "getenv", return_value="alice"):
-            result = _run(runner, storage, "--output-format", "json", "demo", "users", "whoami")
+            result = _run(storage, "--output-format", "json", "demo", "users", "whoami")
         assert result.exit_code == 0
-        data = json.loads(result.output)
+        data = result.json
         assert data["data"]["results"][0]["username"] == "alice"
 
-    def test_creates_profile_when_user_absent(self, runner, storage):
+    def test_creates_profile_when_user_absent(self, storage):
         storage.get_user.return_value = None
         with patch.object(_users_iface_mod.os, "getenv", return_value="newperson"):
-            result = _run(runner, storage, "demo", "users", "whoami")
+            result = _run(storage, "demo", "users", "whoami")
         assert result.exit_code == 0
         storage.upsert_user.assert_called_once()

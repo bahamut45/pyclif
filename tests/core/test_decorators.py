@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock, patch
 
 import click
-from click.testing import CliRunner
 
 from pyclifer.core.classes import GroupConfig, PycliferOption
 from pyclifer.core.decorators import (
@@ -18,6 +17,7 @@ from pyclifer.core.decorators import (
     verbosity_option,
 )
 from pyclifer.core.output.exit_codes import ExitCode
+from pyclifer.testing import invoke
 
 # ---------------------------------------------------------------------------
 # GroupDecorator — _setup_logging
@@ -58,8 +58,7 @@ class TestGroupDecoratorApplyRichHelp:
             def app(ctx):
                 """App"""
 
-            runner = CliRunner()
-            result = runner.invoke(app, ["--help"])
+            result = invoke(app, ["--help"])
             assert result.exit_code == 0
 
 
@@ -105,8 +104,7 @@ class TestGroupDecoratorVersionKwarg:
         def app(ctx):
             """App"""
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["--version"])
+        result = invoke(app, ["--version"])
         assert "2.5.0" in result.output
 
 
@@ -205,8 +203,7 @@ class TestOptionStoreInMetaFallback:
             """App"""
             captured["meta"] = dict(ctx.meta)
 
-        runner = CliRunner()
-        runner.invoke(app, ["--tag", "hello"])
+        invoke(app, ["--tag", "hello"])
         assert captured["meta"].get("pyclifer.tag") == "hello"
 
 
@@ -358,7 +355,6 @@ class TestPaginationOptions:
 
     def test_max_limit_enforced(self):
         """--limit rejects values above max_limit."""
-        runner = CliRunner()
 
         @app_group()
         @click.pass_context
@@ -371,12 +367,11 @@ class TestPaginationOptions:
         def cmd(ctx):
             """Cmd"""
 
-        result = runner.invoke(app, ["cmd", "--limit", "11"])
+        result = invoke(app, ["cmd", "--limit", "11"])
         assert result.exit_code != 0
 
     def test_values_stored_in_meta(self):
         """--page and --limit values are stored in ctx.meta."""
-        runner = CliRunner()
         captured: dict = {}
 
         @app_group()
@@ -392,7 +387,7 @@ class TestPaginationOptions:
             captured["page"] = ctx.meta.get("pyclifer.page")
             captured["limit"] = ctx.meta.get("pyclifer.limit")
 
-        runner.invoke(app, ["cmd", "--page", "3", "--limit", "5"])
+        invoke(app, ["cmd", "--page", "3", "--limit", "5"])
         assert captured["page"] == 3
         assert captured["limit"] == 5
 
@@ -467,8 +462,7 @@ class TestPatchMakeContextEarlyVerbosity:
             """App"""
             click.echo("root")
 
-        runner = CliRunner()
-        result = runner.invoke(app, [])
+        result = invoke(app, [])
         assert result.exit_code == 0
         assert "root" in result.output
 
@@ -481,8 +475,7 @@ class TestPatchMakeContextEarlyVerbosity:
             """App"""
             click.echo("root")
 
-        runner = CliRunner()
-        result = runner.invoke(app, [])
+        result = invoke(app, [])
         assert result.exit_code == 0
         assert "root" in result.output
 
@@ -501,8 +494,7 @@ class TestPatchMakeContextEarlyVerbosity:
             click.echo("ok")
 
         with patch.object(GroupDecorator, "_extract_early_verbosity", return_value="NOTINLEVELS"):
-            runner = CliRunner()
-            result = runner.invoke(app, ["probe"])
+            result = invoke(app, ["probe"])
 
         assert "ok" in result.output
 
@@ -587,8 +579,7 @@ class TestPatchMakeContextIntegration:
             if ctx.invoked_subcommand is None:
                 captured["meta"] = dict(ctx.meta)
 
-        runner = CliRunner()
-        result = runner.invoke(myapp, [])
+        result = invoke(myapp, [])
         assert result.exit_code == 0
         assert "pyclifer.unhandled_exception_log_level" in captured["meta"]
         assert "pyclifer.exit_codes_class" in captured["meta"]
@@ -944,39 +935,34 @@ class TestContextTrueNonGlobal:
     def test_token_after_boundary_received_by_root_callback(self):
         """Token placed after subcommand name is received by root callback."""
         app, captured = self._make_app(required=True)
-        runner = CliRunner()
-        result = runner.invoke(app, ["serve", "--host", "prod"])
+        result = invoke(app, ["serve", "--host", "prod"])
         assert result.exit_code == 0, result.output
         assert captured["host"] == "prod"
 
     def test_token_before_boundary_wins_over_after_boundary(self):
         """Pre-boundary value wins when same option appears both before and after."""
         app, captured = self._make_app(required=False)
-        runner = CliRunner()
-        result = runner.invoke(app, ["--host", "before", "serve", "--host", "after"])
+        result = invoke(app, ["--host", "before", "serve", "--host", "after"])
         assert result.exit_code == 0, result.output
         assert captured["host"] == "before"
 
     def test_required_option_after_boundary_no_missing_parameter(self):
         """required=True option placed after boundary does not raise MissingParameter."""
         app, captured = self._make_app(required=True)
-        runner = CliRunner()
-        result = runner.invoke(app, ["serve", "--host", "prod"])
+        result = invoke(app, ["serve", "--host", "prod"])
         assert result.exit_code == 0, result.output
 
     def test_env_var_does_not_override_token_after_boundary(self):
         """Explicit token after boundary wins over env var (direct CLI parse priority)."""
         app, captured = self._make_app(required=False)
-        runner = CliRunner()
-        result = runner.invoke(app, ["serve", "--host", "from-cli"], env={"APP_HOST": "from-env"})
+        result = invoke(app, ["serve", "--host", "from-cli"], env={"APP_HOST": "from-env"})
         assert result.exit_code == 0, result.output
         assert captured["host"] == "from-cli"
 
     def test_context_factory_not_set_root_callback_receives_value(self):
         """Without context_factory, root callback still receives the value."""
         app, captured = self._make_app(required=True)
-        runner = CliRunner()
-        result = runner.invoke(app, ["serve", "--host", "direct"])
+        result = invoke(app, ["serve", "--host", "direct"])
         assert result.exit_code == 0, result.output
         assert captured["host"] == "direct"
 
@@ -1013,32 +999,28 @@ class TestIsGlobalPrescan:
     def test_post_boundary_token_received_by_root_callback(self):
         """Token after subcommand boundary reaches root callback."""
         app, root, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["items", "--resource", "acme"])
+        result = invoke(app, ["items", "--resource", "acme"])
         assert result.exit_code == 0, result.output
         assert root["resource"] == "acme"
 
     def test_subcommand_still_sees_its_token(self):
         """Subcommand receives its own copy of the token (not consumed)."""
         app, _, sub = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["items", "--resource", "acme"])
+        result = invoke(app, ["items", "--resource", "acme"])
         assert result.exit_code == 0, result.output
         assert sub["resource"] == "acme"
 
     def test_pre_boundary_value_wins_over_post_boundary(self):
         """Pre-boundary explicit arg wins when same option appears on both sides."""
         app, root, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["--resource", "before", "items", "--resource", "after"])
+        result = invoke(app, ["--resource", "before", "items", "--resource", "after"])
         assert result.exit_code == 0, result.output
         assert root["resource"] == "before"
 
     def test_no_op_when_no_post_boundary_global_tokens(self):
         """No-op when all global tokens are already before the boundary."""
         app, root, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["--resource", "explicit", "items"])
+        result = invoke(app, ["--resource", "explicit", "items"])
         assert result.exit_code == 0, result.output
         assert root["resource"] == "explicit"
 
@@ -1075,16 +1057,14 @@ class TestContextTrueIsGlobalCombo:
     def test_root_callback_receives_post_boundary_value(self):
         """Root callback gets the value even when placed after subcommand name."""
         app, root, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["items", "--resource", "acme"])
+        result = invoke(app, ["items", "--resource", "acme"])
         assert result.exit_code == 0, result.output
         assert root["resource"] == "acme"
 
     def test_subcommand_receives_propagated_value(self):
         """Subcommand receives its own copy via GlobalOptionsMixin propagation."""
         app, _, sub = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["items", "--resource", "acme"])
+        result = invoke(app, ["items", "--resource", "acme"])
         assert result.exit_code == 0, result.output
         assert sub["resource"] == "acme"
 
@@ -1125,8 +1105,7 @@ class TestContextFactoryBehavior:
                 self.host = host
 
         app, captured = self._make_app_with_factory(factory=AppCtx)
-        runner = CliRunner()
-        result = runner.invoke(app, ["--host", "prod"])
+        result = invoke(app, ["--host", "prod"])
         assert result.exit_code == 0, result.output
         assert isinstance(captured["obj"], AppCtx)
         assert captured["obj"].host == "prod"
@@ -1141,15 +1120,13 @@ class TestContextFactoryBehavior:
             return object()
 
         app, _ = self._make_app_with_factory(factory=factory)
-        runner = CliRunner()
-        runner.invoke(app, ["--host", "myhost"])
+        invoke(app, ["--host", "myhost"])
         assert received.get("host") == "myhost"
 
     def test_context_factory_none_ctx_obj_not_set(self):
         """When context_factory=None, ctx.obj is not set by pyclifer."""
         app, captured = self._make_app_with_factory(factory=None, required=False)
-        runner = CliRunner()
-        result = runner.invoke(app, [])
+        result = invoke(app, [])
         assert result.exit_code == 0, result.output
         assert captured["obj"] is None
 
@@ -1163,8 +1140,7 @@ class TestContextFactoryBehavior:
             return object()
 
         app, _ = self._make_app_with_factory(factory=factory)
-        runner = CliRunner()
-        runner.invoke(app, ["serve"])
+        invoke(app, ["serve"])
         # factory called once: for root context, not for subcommand context
         assert len(call_count) == 1
 
@@ -1178,8 +1154,7 @@ class TestContextFactoryBehavior:
             return object()
 
         app, _ = self._make_app_with_factory(factory=factory, required=False)
-        runner = CliRunner()
-        runner.invoke(app, [])
+        invoke(app, [])
         assert "host" in received
         assert received["host"] is None
 
@@ -1191,8 +1166,7 @@ class TestContextFactoryBehavior:
             raise ValueError("factory broken")
 
         app, _ = self._make_app_with_factory(factory=broken_factory)
-        runner = CliRunner()
-        result = runner.invoke(app, ["--host", "x"])
+        result = invoke(app, ["--host", "x"])
         assert result.exit_code != 0
 
 
@@ -1288,32 +1262,28 @@ class TestHelpShortCircuit:
     def test_subcommand_help_does_not_raise_missing_option(self):
         """--help on a direct subcommand exits 0 even when required option absent."""
         app, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["serve", "--help"])
+        result = invoke(app, ["serve", "--help"])
         assert result.exit_code == 0, result.output
         assert "Missing option" not in result.output
 
     def test_subcommand_help_short_flag_works(self):
         """-h on a direct subcommand exits 0 even when required option absent."""
         app, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["serve", "-h"])
+        result = invoke(app, ["serve", "-h"])
         assert result.exit_code == 0, result.output
         assert "Missing option" not in result.output
 
     def test_nested_subcommand_help_does_not_raise(self):
         """--help on a nested subcommand exits 0 even when required option absent."""
         app, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["infra", "status", "--help"])
+        result = invoke(app, ["infra", "status", "--help"])
         assert result.exit_code == 0, result.output
         assert "Missing option" not in result.output
 
     def test_normal_invocation_still_validates_required(self):
         """Without --help, a missing required option still raises MissingParameter."""
         app, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["serve"])
+        result = invoke(app, ["serve"])
         assert result.exit_code == 2  # Click UsageError / MissingParameter exit code
 
     def test_context_factory_not_called_during_help(self):
@@ -1336,13 +1306,11 @@ class TestHelpShortCircuit:
         def serve(ctx):
             """Serve."""
 
-        runner = CliRunner()
-        runner.invoke(app, ["serve", "--help"])
+        invoke(app, ["serve", "--help"])
         assert call_count == []
 
     def test_help_flag_before_boundary_still_shows_root_help(self):
         """--help placed before any subcommand shows root help (no regression)."""
         app, _ = self._make_app()
-        runner = CliRunner()
-        result = runner.invoke(app, ["--help"])
+        result = invoke(app, ["--help"])
         assert result.exit_code == 0, result.output

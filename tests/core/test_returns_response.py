@@ -3,11 +3,11 @@
 from unittest.mock import patch
 
 import click
-from click.testing import CliRunner
 
 from pyclifer.core import app_group, command, group, option, output_filter_option, returns_response
 from pyclifer.core.output import Response
 from pyclifer.core.output.exit_codes import ExitCode
+from pyclifer.testing import invoke
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -47,8 +47,7 @@ class TestReturnsResponseDecorator:
             """Greet"""
             return Response(success=True, message="hello", data={"key": "value"})
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "hello" in result.output
 
@@ -63,8 +62,7 @@ class TestReturnsResponseDecorator:
             """Greet"""
             return Response(success=True, message="hello", data={"key": "value"})
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["-o", "json", "greet"])
+        result = invoke(app, ["-o", "json", "greet"])
         assert result.exit_code == 0
         assert '"message"' in result.output
         assert '"hello"' in result.output
@@ -81,8 +79,7 @@ class TestReturnsResponseDecorator:
             click.echo("plain output")
             return "plain string"
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "plain output" in result.output
 
@@ -97,8 +94,7 @@ class TestReturnsResponseDecorator:
             """Greet"""
             click.echo("done")
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "done" in result.output
 
@@ -124,8 +120,7 @@ class TestCommandHandleResponse:
 
         app.add_command(greet)
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet", "--name", "Alice"])
+        result = invoke(app, ["greet", "--name", "Alice"])
         assert result.exit_code == 0
         assert "Hello Alice" in result.output
 
@@ -142,8 +137,7 @@ class TestCommandHandleResponse:
 
         app.add_command(greet)
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "explicit echo" in result.output
         assert "ignored" not in result.output
@@ -167,8 +161,7 @@ class TestGroupHandleResponse:
             """Greet"""
             return Response(success=True, message="from group default", data={})
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "from group default" in result.output
 
@@ -183,8 +176,7 @@ class TestGroupHandleResponse:
             click.echo("manual output")
             return Response(success=True, message="should not appear")
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "manual output" in result.output
         assert "should not appear" not in result.output
@@ -200,8 +192,7 @@ class TestGroupHandleResponse:
             click.echo("raw")
             return Response(success=True, message="not printed")
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "raw" in result.output
         assert "not printed" not in result.output
@@ -218,8 +209,7 @@ class TestGroupHandleResponse:
 
         app.add_command(status)
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["status"])
+        result = invoke(app, ["status"])
         assert result.exit_code == 0
         assert "via add_command" in result.output
 
@@ -236,8 +226,7 @@ class TestGroupHandleResponse:
 
         app.add_command(status)
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["status"])
+        result = invoke(app, ["status"])
         assert result.exit_code == 0
         assert "manual" in result.output
         assert "not printed" not in result.output
@@ -260,8 +249,7 @@ class TestGroupHandleResponse:
         storage.add_command(status)
         app.add_command(storage)
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["storage", "status"])
+        result = invoke(app, ["storage", "status"])
         assert result.exit_code == 0
         assert "from subgroup" in result.output
 
@@ -286,8 +274,7 @@ class TestGroupHandleResponse:
         storage.add_command(status)
         app.add_command(storage)
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["storage", "status"])
+        result = invoke(app, ["storage", "status"])
         assert result.exit_code == 0
         assert result.output.count("once") == 1
         assert call_count["n"] == 1
@@ -317,8 +304,7 @@ class TestOutputFilterOption:
                 data={"message": "Hello", "status": "ok"},
             )
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet", "--output-filter", "message"])
+        result = invoke(app, ["greet", "--output-filter", "message"])
         assert result.exit_code == 0
         assert "Hello" in result.output
         assert "status" not in result.output
@@ -339,8 +325,7 @@ class TestOutputFilterOption:
                 data={"message": "Hello", "status": "ok"},
             )
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet", "-f", "status"])
+        result = invoke(app, ["greet", "-f", "status"])
         assert result.exit_code == 0
         assert "ok" in result.output
         assert "message" not in result.output
@@ -361,8 +346,7 @@ class TestOutputFilterOption:
                 data={"message": "Hello", "status": "ok"},
             )
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet"])
+        result = invoke(app, ["greet"])
         assert result.exit_code == 0
         assert "Hello" in result.output
         assert "ok" in result.output
@@ -384,8 +368,7 @@ class TestOutputFilterOption:
                 data={"message": "Hello"},
             )
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["greet", "-f", "nonexistent"])
+        result = invoke(app, ["greet", "-f", "nonexistent"])
         assert result.exit_code == 2
         assert "nonexistent" in result.output
 
@@ -408,8 +391,7 @@ class TestLastResortHandler:
             """Raise unexpectedly"""
             raise RuntimeError("something broke")
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["boom"])
+        result = invoke(app, ["boom"])
         assert result.exit_code == 1
         assert "something broke" in result.output
 
@@ -435,8 +417,7 @@ class TestLastResortHandler:
                 root = root.parent
             captured["level"] = root.meta.get("pyclifer.unhandled_exception_log_level")
 
-        runner = CliRunner()
-        runner.invoke(app, ["probe"])
+        invoke(app, ["probe"])
         assert captured["level"] == "warning"
 
     def test_output_format_respected_on_unhandled_exception(self):
@@ -449,8 +430,7 @@ class TestLastResortHandler:
             """Raise unexpectedly"""
             raise ValueError("bad input")
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["boom"])
+        result = invoke(app, ["boom"])
         assert result.exit_code == 1
         assert '"success"' in result.output
 
@@ -511,8 +491,7 @@ class TestCtxExitIntegration:
             """Fail"""
             return Response(success=False, message="nope", error_code=ExitCode.NOT_FOUND)
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["fail"])
+        result = invoke(app, ["fail"])
         assert result.exit_code == ExitCode.NOT_FOUND
 
     def test_successful_response_does_not_call_ctx_exit(self):
@@ -525,8 +504,7 @@ class TestCtxExitIntegration:
             """Succeed"""
             return Response(success=True, message="ok")
 
-        runner = CliRunner()
-        result = runner.invoke(app, ["succeed"])
+        result = invoke(app, ["succeed"])
         assert result.exit_code == 0
 
     def test_exit_codes_class_stored_in_ctx_meta(self):
@@ -554,8 +532,7 @@ class TestCtxExitIntegration:
                 root = root.parent
             captured["cls"] = root.meta.get("pyclifer.exit_codes_class")
 
-        runner = CliRunner()
-        runner.invoke(app, ["probe"])
+        invoke(app, ["probe"])
         assert captured["cls"] is MyExitCode
 
     def test_default_exit_codes_class_is_base_exit_code(self):
@@ -576,8 +553,7 @@ class TestCtxExitIntegration:
                 root = root.parent
             captured["cls"] = root.meta.get("pyclifer.exit_codes_class")
 
-        runner = CliRunner()
-        runner.invoke(app, ["probe"])
+        invoke(app, ["probe"])
         assert captured["cls"] is ExitCode
 
 
@@ -607,8 +583,7 @@ class TestTracebackSuppression:
 
         with patch("pyclifer.core.decorators._log") as mock_log:
             mock_log.isEnabledFor.return_value = False
-            runner = CliRunner()
-            runner.invoke(app, ["boom"])
+            invoke(app, ["boom"])
             call = _unhandled_log_call(mock_log)
             assert call is not None, "Expected a log call for unhandled exception"
             _, kwargs = call
@@ -626,8 +601,7 @@ class TestTracebackSuppression:
 
         with patch("pyclifer.core.decorators._log") as mock_log:
             mock_log.isEnabledFor.return_value = False
-            runner = CliRunner()
-            runner.invoke(app, ["boom"])
+            invoke(app, ["boom"])
             call = _unhandled_log_call(mock_log)
             assert call is not None
             _, kwargs = call
@@ -645,8 +619,7 @@ class TestTracebackSuppression:
 
         with patch("pyclifer.core.decorators._log") as mock_log:
             mock_log.isEnabledFor.return_value = True  # DEBUG enabled
-            runner = CliRunner()
-            runner.invoke(app, ["boom"])
+            invoke(app, ["boom"])
             call = _unhandled_log_call(mock_log)
             assert call is not None
             _, kwargs = call
@@ -665,8 +638,7 @@ class TestTracebackSuppression:
         with patch("pyclifer.core.decorators._log") as mock_log:
             # TRACE=5, isEnabledFor(DEBUG=10) returns True when effective level <= 10
             mock_log.isEnabledFor.side_effect = lambda level: level >= 5
-            runner = CliRunner()
-            runner.invoke(app, ["boom"])
+            invoke(app, ["boom"])
             call = _unhandled_log_call(mock_log)
             assert call is not None
             _, kwargs = call

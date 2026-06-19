@@ -2,10 +2,9 @@
 
 import logging
 
-from click.testing import CliRunner
-
 from pyclifer.core.decorators import app_group
 from pyclifer.core.log.config import configure_rich_logging
+from pyclifer.testing import invoke
 
 # Store original logging state to restore after tests
 original_level = logging.getLogger().level
@@ -63,8 +62,7 @@ class TestVerbosityDefaultLevel:
             logger = logging.getLogger()
             print(f"ROOT_LEVEL:{logger.level}")
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["do-work"])
+        result = invoke(cli, ["do-work"])
 
         assert result.exit_code == 0
         assert f"ROOT_LEVEL:{logging.WARNING}" in result.output
@@ -83,8 +81,7 @@ class TestVerbosityDefaultLevel:
             logger = logging.getLogger()
             print(f"ROOT_LEVEL:{logger.level}")
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["do-work"])
+        result = invoke(cli, ["do-work"])
 
         assert result.exit_code == 0
         assert f"ROOT_LEVEL:{logging.INFO}" in result.output
@@ -103,8 +100,7 @@ class TestVerbosityDefaultLevel:
             logger = logging.getLogger()
             print(f"ROOT_LEVEL:{logger.level}")
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["--verbosity", "DEBUG", "do-work"])
+        result = invoke(cli, ["--verbosity", "DEBUG", "do-work"])
 
         assert result.exit_code == 0
         assert f"ROOT_LEVEL:{logging.DEBUG}" in result.output
@@ -240,8 +236,7 @@ class TestVerbosityIsGlobalPropagation:
             logger = logging.getLogger()
             print(f"ROOT_LEVEL:{logger.level}")
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["--verbosity", "DEBUG", "sub", "do-work"])
+        result = invoke(cli, ["--verbosity", "DEBUG", "sub", "do-work"])
 
         assert result.exit_code == 0, f"Unexpected error: {result.output}"
         assert f"ROOT_LEVEL:{logging.DEBUG}" in result.output, (
@@ -268,8 +263,7 @@ class TestVerbosityIsGlobalPropagation:
             logger = logging.getLogger()
             print(f"ROOT_LEVEL:{logger.level}")
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["sub", "--verbosity", "INFO", "do-work"])
+        result = invoke(cli, ["sub", "--verbosity", "INFO", "do-work"])
 
         assert result.exit_code == 0, f"Unexpected error: {result.output}"
         assert f"ROOT_LEVEL:{logging.INFO}" in result.output, (

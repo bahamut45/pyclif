@@ -4,6 +4,7 @@ import click_extra
 
 from pyclifer.core.classes import PycliferOption
 from pyclifer.core.mixins.cli import CONTEXT_OPTIONS_PANEL, GlobalOptionsMixin
+from pyclifer.testing import invoke
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -231,8 +232,6 @@ class TestContextOptionsInHelpText:
 
     def test_context_options_appear_in_subcommand_help(self):
         """Subcommand --help output lists context=True options in the panel."""
-        from click.testing import CliRunner
-
         group = _Group(
             name="myapp",
             params=[
@@ -248,8 +247,7 @@ class TestContextOptionsInHelpText:
 
         group.add_command(status_cmd)
 
-        runner = CliRunner()
-        result = runner.invoke(group, ["status", "--help"])
+        result = invoke(group, ["status", "--help"])
 
         assert result.exit_code == 0
         assert "--host" in result.output
@@ -257,8 +255,6 @@ class TestContextOptionsInHelpText:
 
     def test_hidden_context_option_absent_from_subcommand_help(self):
         """Options with show_in_subcommand_help=False do not appear in subcommand help."""
-        from click.testing import CliRunner
-
         group = _Group(
             name="myapp",
             params=[
@@ -274,8 +270,7 @@ class TestContextOptionsInHelpText:
 
         group.add_command(ping_cmd)
 
-        runner = CliRunner()
-        result = runner.invoke(group, ["ping", "--help"])
+        result = invoke(group, ["ping", "--help"])
 
         assert result.exit_code == 0
         assert "--host" in result.output
@@ -283,8 +278,6 @@ class TestContextOptionsInHelpText:
 
     def test_panel_absent_when_all_options_hidden(self):
         """Panel section is absent when all context options have show_in_subcommand_help=False."""
-        from click.testing import CliRunner
-
         group = _Group(
             name="myapp",
             params=[_make_context_opt("--token", show_in_subcommand_help=False)],
@@ -297,8 +290,7 @@ class TestContextOptionsInHelpText:
 
         group.add_command(ping_cmd)
 
-        runner = CliRunner()
-        result = runner.invoke(group, ["ping", "--help"])
+        result = invoke(group, ["ping", "--help"])
 
         assert result.exit_code == 0
         # Plain click does not render rich_help_panel labels, so we only assert
@@ -308,8 +300,6 @@ class TestContextOptionsInHelpText:
 
     def test_subcommand_does_not_error_without_required_context_option(self):
         """Subcommand runs without error when required context option not re-provided."""
-        from click.testing import CliRunner
-
         group = _Group(
             name="myapp",
             params=[_make_context_opt("--host", required=True)],
@@ -322,7 +312,6 @@ class TestContextOptionsInHelpText:
 
         group.add_command(ping_cmd)
 
-        runner = CliRunner()
         # --host provided at root level, not repeated before subcommand
-        result = runner.invoke(group, ["--host", "10.0.0.1", "ping"])
+        result = invoke(group, ["--host", "10.0.0.1", "ping"])
         assert result.exit_code == 0
