@@ -2,7 +2,7 @@
 
 import pytest
 
-from pyclifer import Response, app_group, pass_context, returns_response
+from pyclifer import Response, app_group, echo, pass_context, returns_response
 from pyclifer.testing import CliResult, invoke
 
 
@@ -64,11 +64,32 @@ class TestCliResult:
             _ = result.json
 
     def test_yaml_raises_value_error_on_non_yaml(self):
-        cli = make_cli()
-        result = invoke(cli, ["hello"])
-        # JSON is valid YAML, so use a format that produces non-parseable YAML
-        # Just verify the attribute exists
-        assert hasattr(result, "yaml")
+        @app_group(add_version_option=False)
+        @pass_context
+        def cli(ctx):
+            pass
+
+        @cli.command()
+        def bad():
+            echo("{unbalanced")
+
+        result = invoke(cli, ["bad"])
+        with pytest.raises(ValueError, match="output is not valid YAML"):
+            _ = result.yaml
+
+    def test_stderr_captures_output_written_to_stderr(self):
+        @app_group(add_version_option=False)
+        @pass_context
+        def cli(ctx):
+            pass
+
+        @cli.command()
+        def warn():
+            echo("careful now", err=True)
+
+        result = invoke(cli, ["warn"])
+        assert "careful now" in result.stderr
+        assert "careful now" not in result.output
 
     def test_exception_is_none_on_success(self):
         cli = make_cli()
@@ -118,12 +139,13 @@ class TestInvokeHelper:
 class TestPytestFixtures:
     """pytest fixtures from pyclifer.testing are importable and functional."""
 
-    def test_cli_runner_fixture_importable(self):
-        from pyclifer.testing import cli_runner
+    def test_cli_runner_fixture_returns_a_runner(self, cli_runner):
+        from click.testing import CliRunner
 
-        assert callable(cli_runner)
+        assert isinstance(cli_runner, CliRunner)
 
-    def test_cli_invoke_fixture_importable(self):
-        from pyclifer.testing import cli_invoke
-
-        assert callable(cli_invoke)
+    def test_cli_invoke_fixture_invokes_a_command(self, cli_invoke):
+        cli = make_cli()
+        result = cli_invoke(cli, ["hello"])
+        assert isinstance(result, CliResult)
+        assert result.exit_code == 0

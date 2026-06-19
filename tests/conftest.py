@@ -5,6 +5,8 @@ from unittest.mock import Mock
 
 import pytest
 
+from pyclifer.testing import cli_invoke, cli_runner  # noqa: F401 — re-exported pytest fixtures
+
 DEPENDENCIES = [
     "click-extra",
     "rich-click",

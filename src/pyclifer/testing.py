@@ -39,8 +39,13 @@ class CliResult:
 
     @property
     def output(self) -> str:
-        """Return the full stdout output."""
-        return self._result.output
+        """Return the stdout output, excluding stderr.
+
+        Click's Result.output is the merged stdout+stderr stream; this
+        property uses Result.stdout instead so JSON/YAML parsing is not
+        polluted by log messages written to stderr.
+        """
+        return self._result.stdout
 
     @property
     def stderr(self) -> str:
@@ -63,9 +68,9 @@ class CliResult:
             ValueError: When stdout is not valid JSON.
         """
         try:
-            return json.loads(self._result.output)
+            return json.loads(self.output)
         except json.JSONDecodeError as exc:
-            raise ValueError(f"output is not valid JSON. Got:\n{self._result.output}") from exc
+            raise ValueError(f"output is not valid JSON. Got:\n{self.output}") from exc
 
     @property
     def yaml(self) -> Any:
@@ -78,9 +83,9 @@ class CliResult:
             ValueError: When stdout is not valid YAML.
         """
         try:
-            return yaml.safe_load(self._result.output)
+            return yaml.safe_load(self.output)
         except yaml.YAMLError as exc:
-            raise ValueError(f"output is not valid YAML. Got:\n{self._result.output}") from exc
+            raise ValueError(f"output is not valid YAML. Got:\n{self.output}") from exc
 
 
 def invoke(
@@ -136,6 +141,6 @@ try:
         """Return the pyclifer invoke() helper pre-configured for testing."""
         return invoke
 
-except ImportError:
+except ImportError:  # pragma: no cover — pytest is always installed in this project's dev env
     # pytest not installed — fixtures not available, but invoke() and CliResult still work
     pass
