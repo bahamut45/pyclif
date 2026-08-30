@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-08-30
+
+### Bug Fixes
+
+- **testing**: Separate CliResult.output from merged stderr stream
+
+### Documentation
+
+- **specs**: Add 8 independent feature specs
+- **specs**: Add documentation tasks to all 8 feature specs
+- **claude**: Enforce documentation updates as part of spec definition of done
+- **specs**: Rename decorator to with_renderer_class, add scaffolding migration
+- Add graphify skill instructions to CLAUDE.md
+- **specs**: Add issue-7 lazy-command-loading spec
+- **specs**: Add issue-8 interactive-encrypted-configuration spec
+- **specs**: Add click-extra-8-upgrade spec
+
+### Features
+
+- **testing**: Add pyclifer.testing module with pytest helpers
+
+### Miscellaneous
+
+- **gitignore**: Ignore graphify-out directory
+- **graphify**: Add .graphifyignore file for custom corpus exclusions
+- **specs**: Prefix spec files with priority order
+- **specs**: Archive 01-test-helpers spec
+
 ## [0.7.5] - 2026-06-14
 
 ### Bug Fixes
