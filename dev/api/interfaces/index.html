@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/favicon-96x96.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1780,7 +1780,7 @@ def create(self, title: str) -&gt; list[OperationResult]:
 <span class="normal"><a href="#__codelineno-0-86">86</a></span>
 <span class="normal"><a href="#__codelineno-0-87">87</a></span>
 <span class="normal"><a href="#__codelineno-0-88">88</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">BaseInterface</span><span class="p">:</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for pyclifer service-layer interfaces.</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">    </span><span class="sd">"""Base class for pyclifer service-layer interfaces.</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16"></a>
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    Subclass and declare a renderers dict to associate each method with its</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">    renderer. Call respond() from commands — it handles list vs generator</span>
@@ -1795,8 +1795,8 @@ def create(self, title: str) -&gt; list[OperationResult]:
 <a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">        class ArticleInterface(BaseInterface):</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="sd">            renderers = {</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">                &quot;list&quot;: ArticleListRenderer,</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">                &quot;create&quot;: ArticleCreateRenderer,</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">                "list": ArticleListRenderer,</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">                "create": ArticleCreateRenderer,</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">            }</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33"></a>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">            def list(self) -&gt; list[OperationResult]:</span>
@@ -1804,21 +1804,21 @@ def create(self, title: str) -&gt; list[OperationResult]:
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">            def create(self, title: str) -&gt; list[OperationResult]:</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">                ...</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    """</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">renderers</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseRenderer</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">renderer_class</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">BaseRenderer</span><span class="p">]]</span> <span class="o">=</span> <span class="n">BaseRenderer</span>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Store the CLI context for use in interface methods.</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">        </span><span class="sd">"""Store the CLI context for use in interface methods.</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">            ctx: The pyclifer CLI context passed from the command.</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        """</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">respond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Call a method and wrap its output in a Response with the right renderer.</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="sd">"""Call a method and wrap its output in a Response with the right renderer.</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        Auto-detects whether the method returns a list or a generator and</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        picks from_results() vs from_stream() accordingly.</span>
@@ -1833,7 +1833,7 @@ def create(self, title: str) -&gt; list[OperationResult]:
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">            A Response ready for the framework to dispatch to the renderer.</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        """</span>
 <a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="c1"># Lazy import — breaks the circular dependency between interfaces/base.py</span>
 <a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="c1"># and output/responses.py (Response imports nothing from interfaces, but</span>
 <a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="c1"># keeping this at module level would require responses.py to import</span>
@@ -1924,11 +1924,11 @@ def create(self, title: str) -&gt; list[OperationResult]:
 <span class="normal"><a href="#__codelineno-0-48">48</a></span>
 <span class="normal"><a href="#__codelineno-0-49">49</a></span>
 <span class="normal"><a href="#__codelineno-0-50">50</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Store the CLI context for use in interface methods.</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">    </span><span class="sd">"""Store the CLI context for use in interface methods.</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">        ctx: The pyclifer CLI context passed from the command.</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">    """</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2084,7 +2084,7 @@ a wrong method_name is a programming error, not a business failure.</p>
 <span class="normal"><a href="#__codelineno-0-86">86</a></span>
 <span class="normal"><a href="#__codelineno-0-87">87</a></span>
 <span class="normal"><a href="#__codelineno-0-88">88</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="k">def</span><span class="w"> </span><span class="nf">respond</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Call a method and wrap its output in a Response with the right renderer.</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">"""Call a method and wrap its output in a Response with the right renderer.</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    Auto-detects whether the method returns a list or a generator and</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">    picks from_results() vs from_stream() accordingly.</span>
@@ -2099,7 +2099,7 @@ a wrong method_name is a programming error, not a business failure.</p>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        A Response ready for the framework to dispatch to the renderer.</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    """</span>
 <a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="c1"># Lazy import — breaks the circular dependency between interfaces/base.py</span>
 <a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="c1"># and output/responses.py (Response imports nothing from interfaces, but</span>
 <a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="c1"># keeping this at module level would require responses.py to import</span>
@@ -2139,19 +2139,19 @@ a wrong method_name is a programming error, not a business failure.</p>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ArticleRenderer</span><span class="p">(</span><span class="n">BaseRenderer</span><span class="p">):</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">,</span> <span class="s2">&quot;published&quot;</span><span class="p">]</span>  <span class="c1"># JSON / YAML / raw</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">]</span>               <span class="c1"># table columns</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">rich_title</span> <span class="o">=</span> <span class="s2">&quot;Articles&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;Articles retrieved.&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">failure_message</span> <span class="o">=</span> <span class="s2">&quot;Failed to retrieve articles.&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"title"</span><span class="p">,</span> <span class="s2">"author"</span><span class="p">,</span> <span class="s2">"published"</span><span class="p">]</span>  <span class="c1"># JSON / YAML / raw</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"title"</span><span class="p">,</span> <span class="s2">"author"</span><span class="p">]</span>               <span class="c1"># table columns</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">rich_title</span> <span class="o">=</span> <span class="s2">"Articles"</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"Articles retrieved."</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">failure_message</span> <span class="o">=</span> <span class="s2">"Failed to retrieve articles."</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">ArticleCreateRenderer</span><span class="p">(</span><span class="n">BaseRenderer</span><span class="p">):</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">,</span> <span class="s2">&quot;success&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">rich_title</span> <span class="o">=</span> <span class="s2">&quot;Create Article&quot;</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;Article created.&quot;</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">failure_message</span> <span class="o">=</span> <span class="s2">&quot;Article creation failed.&quot;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"item"</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">,</span> <span class="s2">"success"</span><span class="p">]</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"item"</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">]</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">rich_title</span> <span class="o">=</span> <span class="s2">"Create Article"</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"Article created."</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">failure_message</span> <span class="o">=</span> <span class="s2">"Article creation failed."</span>
 </code></pre></div>
 <h3 id="2-implement-the-interface">2. Implement the interface<a class="headerlink" href="#2-implement-the-interface" title="Permanent link">&para;</a></h3>
 <p>Interface methods return <code>list[OperationResult]</code> for batch operations, or
@@ -2163,32 +2163,32 @@ failures — return <code>OperationResult.error()</code> instead.</p>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">ArticleInterface</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">renderers</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="s2">&quot;list_articles&quot;</span><span class="p">:</span> <span class="n">ArticleRenderer</span><span class="p">,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="s2">&quot;create_article&quot;</span><span class="p">:</span> <span class="n">ArticleCreateRenderer</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="s2">&quot;import_articles&quot;</span><span class="p">:</span> <span class="n">ArticleCreateRenderer</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="s2">"list_articles"</span><span class="p">:</span> <span class="n">ArticleRenderer</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="s2">"create_article"</span><span class="p">:</span> <span class="n">ArticleCreateRenderer</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="s2">"import_articles"</span><span class="p">:</span> <span class="n">ArticleCreateRenderer</span><span class="p">,</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">}</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">list_articles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">]:</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return all articles as a list of results.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="sd">"""Return all articles as a list of results."""</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="n">articles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="k">return</span> <span class="p">[</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">author</span><span class="p">})</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"title"</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="s2">"author"</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">author</span><span class="p">})</span>
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">articles</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="p">]</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_article</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">]:</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a single article.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="sd">"""Create a single article."""</span>
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">):</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            <span class="k">return</span> <span class="p">[</span><span class="n">OperationResult</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&#39; already exists.&quot;</span><span class="p">,</span> <span class="n">error_code</span><span class="o">=</span><span class="mi">2</span><span class="p">)]</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            <span class="k">return</span> <span class="p">[</span><span class="n">OperationResult</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">' already exists."</span><span class="p">,</span> <span class="n">error_code</span><span class="o">=</span><span class="mi">2</span><span class="p">)]</span>
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="n">article</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="n">author</span><span class="p">)</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        <span class="k">return</span> <span class="p">[</span><span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">article</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">article</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;created&quot;</span><span class="p">})]</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>        <span class="k">return</span> <span class="p">[</span><span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">article</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">article</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">:</span> <span class="s2">"created"</span><span class="p">})]</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">import_articles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">OperationResult</span><span class="p">]:</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Import articles from files — yields one result per file for live output.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">        </span><span class="sd">"""Import articles from files — yields one result per file for live output."""</span>
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
 <a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>                <span class="n">article</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_import_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>                <span class="k">yield</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">article</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;created&quot;</span><span class="p">})</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>                <span class="k">yield</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">ok</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">article</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">:</span> <span class="s2">"created"</span><span class="p">})</span>
 <a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
 <a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>                <span class="k">yield</span> <span class="n">OperationResult</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
 </code></pre></div>
@@ -2203,26 +2203,26 @@ wiring.</p>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nd">@command</span><span class="p">()</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nd">@pass_context</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">list_articles</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List all articles.&quot;&quot;&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">&quot;list_articles&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="sd">"""List all articles."""</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">"list_articles"</span><span class="p">)</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nd">@command</span><span class="p">()</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nd">@argument</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nd">@option</span><span class="p">(</span><span class="s2">&quot;--author&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nd">@argument</span><span class="p">(</span><span class="s2">"title"</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nd">@option</span><span class="p">(</span><span class="s2">"--author"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nd">@pass_context</span>
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_article</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new article.&quot;&quot;&quot;</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">&quot;create_article&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="sd">"""Create a new article."""</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">"create_article"</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">author</span><span class="p">)</span>
 </code></pre></div>
 <p>For streaming commands (generator methods), <code>respond()</code> automatically wraps the generator in
 <code>Response.from_stream()</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@command</span><span class="p">()</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nd">@argument</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nd">@argument</span><span class="p">(</span><span class="s2">"paths"</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nd">@pass_context</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">import_articles</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">paths</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Import articles from files.&quot;&quot;&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">&quot;import_articles&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">paths</span><span class="p">))</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="sd">"""Import articles from files."""</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">"import_articles"</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">paths</span><span class="p">))</span>
 </code></pre></div>
 <p>With <code>--output-format rich</code>, the framework drives a <code>Live</code> context and calls
 <code>renderer.rich_on_item()</code> after each yielded result. With all other formats the stream is
@@ -2232,7 +2232,7 @@ materialized first, then dispatched normally.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ArticleInterface</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">renderer_class</span> <span class="o">=</span> <span class="n">ArticleRenderer</span>   <span class="c1"># fallback for methods not in renderers</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">renderers</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="s2">&quot;create_article&quot;</span><span class="p">:</span> <span class="n">ArticleCreateRenderer</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="s2">"create_article"</span><span class="p">:</span> <span class="n">ArticleCreateRenderer</span><span class="p">,</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">}</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="c1"># list_articles, import_articles, etc. will use ArticleRenderer automatically</span>
 </code></pre></div>
@@ -2350,7 +2350,7 @@ materialized first, then dispatched normally.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/favicon-96x96.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2037,7 +2037,7 @@ loggers that automatically benefit from Rich enhancements.</p>
 <span class="normal"><a href="#__codelineno-0-39">39</a></span>
 <span class="normal"><a href="#__codelineno-0-40">40</a></span>
 <span class="normal"><a href="#__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SupportsTraceLogger</span><span class="p">:</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function for creating loggers with Rich capabilities.</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">    </span><span class="sd">"""Factory function for creating loggers with Rich capabilities.</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a>
 <a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">    This function uses the global configuration system to provide</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">    loggers that automatically benefit from Rich enhancements.</span>
@@ -2047,7 +2047,7 @@ loggers that automatically benefit from Rich enhancements.</p>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">        Logger configured with Rich capabilities.</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    """</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_configured_logger</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">return</span> <span class="n">get_configured_logger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -2147,7 +2147,7 @@ inherits the global Rich configuration.</p>
 <span class="normal"><a href="#__codelineno-0-317">317</a></span>
 <span class="normal"><a href="#__codelineno-0-318">318</a></span>
 <span class="normal"><a href="#__codelineno-0-319">319</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-305" name="__codelineno-0-305"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_configured_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SupportsTraceLogger</span><span class="p">:</span>
-<a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a logger that automatically benefits from global Rich configuration.</span>
+<a id="__codelineno-0-306" name="__codelineno-0-306"></a><span class="w">    </span><span class="sd">"""Get a logger that automatically benefits from global Rich configuration.</span>
 <a id="__codelineno-0-307" name="__codelineno-0-307"></a>
 <a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="sd">    This function simply retrieves a standard logger that automatically</span>
 <a id="__codelineno-0-309" name="__codelineno-0-309"></a><span class="sd">    inherits the global Rich configuration.</span>
@@ -2157,7 +2157,7 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-313" name="__codelineno-0-313"></a>
 <a id="__codelineno-0-314" name="__codelineno-0-314"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-315" name="__codelineno-0-315"></a><span class="sd">        Logger automatically configured with Rich capabilities.</span>
-<a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="sd">    """</span>
 <a id="__codelineno-0-317" name="__codelineno-0-317"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">pyclifer</span><span class="w"> </span><span class="kn">import</span> <span class="n">__app_name__</span>
 <a id="__codelineno-0-318" name="__codelineno-0-318"></a>
 <a id="__codelineno-0-319" name="__codelineno-0-319"></a>    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="n">__app_name__</span><span class="p">)</span>  <span class="c1"># type: ignore[return-value]</span>
@@ -2364,7 +2364,7 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="n">sensitive_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="n">force_reconfigure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure the Rich logging system once and centrally.</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="w">    </span><span class="sd">"""Configure the Rich logging system once and centrally.</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">    This function sets up the entire logging system in one place:</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    - Global configuration via extraBasicConfig</span>
@@ -2378,12 +2378,12 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">        sensitive_fields: Additional field names to mask on top of the defaults.</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="sd">                          Merged into SecretsMasker.DEFAULT_FIELDS — does not replace them.</span>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="sd">        force_reconfigure: Force reconfiguration even if already configured.</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">    """</span>
 <a id="__codelineno-0-109" name="__codelineno-0-109"></a>    <span class="c1"># Check if Rich configuration is already active</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">force_reconfigure</span><span class="p">:</span>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a>        <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="n">has_rich_handler</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
-<a id="__codelineno-0-113" name="__codelineno-0-113"></a>            <span class="nb">hasattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;_rich_handler&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">root_logger</span><span class="o">.</span><span class="n">handlers</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113"></a>            <span class="nb">hasattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">"_rich_handler"</span><span class="p">)</span> <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">root_logger</span><span class="o">.</span><span class="n">handlers</span>
 <a id="__codelineno-0-114" name="__codelineno-0-114"></a>        <span class="p">)</span>
 <a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="k">if</span> <span class="n">has_rich_handler</span><span class="p">:</span>
 <a id="__codelineno-0-116" name="__codelineno-0-116"></a>            <span class="k">return</span>  <span class="c1"># Already configured, do nothing</span>
@@ -2532,24 +2532,24 @@ inherits the global Rich configuration.</p>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_trace_method</span><span class="p">(</span><span class="n">logger_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a trace method to a logger class.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="sd">"""Add a trace method to a logger class.</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        logger_class: Logger class to extend.</span>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        The updated logger class.</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    """</span>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="c1"># noinspection PyIncorrectDocstring</span>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Log a message at TRACE level.</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">        </span><span class="sd">"""Log a message at TRACE level.</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">            msg: Message to log.</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">            *args: Additional positional arguments for formatting.</span>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">            **kwargs: Additional keyword arguments for logging.</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        """</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">TRACE</span><span class="p">):</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">TRACE</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>
@@ -2716,25 +2716,25 @@ inherits the global Rich configuration.</p>
 <span class="normal"><a href="#__codelineno-0-167">167</a></span>
 <span class="normal"><a href="#__codelineno-0-168">168</a></span>
 <span class="normal"><a href="#__codelineno-0-169">169</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="k">class</span><span class="w"> </span><span class="nc">SecretsMasker</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Redact secrets from logs.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">    </span><span class="sd">"""Redact secrets from logs."""</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="n">ALREADY_FILTERED_FLAG</span> <span class="o">=</span> <span class="s2">&quot;__SecretsMasker_filtered&quot;</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="n">ALREADY_FILTERED_FLAG</span> <span class="o">=</span> <span class="s2">"__SecretsMasker_filtered"</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="n">DEFAULT_FIELDS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">DEFAULT_SENSITIVE_FIELDS</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sensitive_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the masker, merging sensitive_fields into DEFAULT_FIELDS.</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="sd">"""Initialize the masker, merging sensitive_fields into DEFAULT_FIELDS.</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">            sensitive_fields: Additional field names to mask on top of DEFAULT_FIELDS.</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">                              None and [] are equivalent — only DEFAULT_FIELDS are used.</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">        """</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="n">all_fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_FIELDS</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">sensitive_fields</span> <span class="ow">or</span> <span class="p">[])</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_fields</span><span class="p">))</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;\b(</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="n">pattern</span> <span class="o">=</span> <span class="s2">"|"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_fields</span><span class="p">))</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"\b(</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">)\b"</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter a log record by redacting sensitive values.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">        </span><span class="sd">"""Filter a log record by redacting sensitive values.</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        Checks whether the record was already processed to avoid duplicate</span>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        redaction. If not processed, applies redaction to all record fields</span>
@@ -2746,7 +2746,7 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">            True if the record was successfully filtered or already processed,</span>
 <a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">            False if no regex is configured.</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">        """</span>
 <a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="n">record_dict</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="vm">__dict__</span>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a>
 <a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALREADY_FILTERED_FLAG</span> <span class="ow">in</span> <span class="n">record_dict</span><span class="p">:</span>
@@ -2762,9 +2762,9 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-90" name="__codelineno-0-90"></a>        <span class="k">return</span> <span class="kc">True</span>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_redact_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively replace all string values with a censored placeholder.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="w">        </span><span class="sd">"""Recursively replace all string values with a censored placeholder."""</span>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>            <span class="k">return</span> <span class="s2">&quot;*CENSORED*&quot;</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>            <span class="k">return</span> <span class="s2">"*CENSORED*"</span>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>            <span class="k">return</span> <span class="p">{</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>                <span class="n">dict_key</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redact_all</span><span class="p">(</span><span class="n">nested_item</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -2778,12 +2778,12 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>            <span class="k">return</span> <span class="n">item</span>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_redact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively redact sensitive fields from a value based on the key name.</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="w">        </span><span class="sd">"""Recursively redact sensitive fields from a value based on the key name.</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">        Depth is bounded to avoid spending excessive effort on deeply nested</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">        structures and to prevent infinite recursion when a structure holds a</span>
 <a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="sd">        reference to itself.</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="sd">        """</span>
 <a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-116" name="__codelineno-0-116"></a>            <span class="k">if</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">should_hide_value_for_key</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
 <a id="__codelineno-0-117" name="__codelineno-0-117"></a>                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redact_all</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
@@ -2792,7 +2792,7 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>                    <span class="n">dict_key</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redact</span><span class="p">(</span><span class="n">nested_item</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">dict_key</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="p">(</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>                    <span class="k">for</span> <span class="n">dict_key</span><span class="p">,</span> <span class="n">nested_item</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a>                <span class="p">}</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a>            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;_asdict&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;_fields&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-123" name="__codelineno-0-123"></a>            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">"_asdict"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">"_fields"</span><span class="p">):</span>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>                <span class="n">named_tuple</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>                <span class="c1"># noinspection PyProtectedMember</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>                <span class="n">item</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
@@ -2817,7 +2817,7 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a>                <span class="k">return</span> <span class="n">item</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># security filter must never crash — log and return item unredacted</span>
 <a id="__codelineno-0-147" name="__codelineno-0-147"></a>            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-<a id="__codelineno-0-148" name="__codelineno-0-148"></a>                <span class="s2">&quot;Unable to redact </span><span class="si">%s</span><span class="s2">. Error was: </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148"></a>                <span class="s2">"Unable to redact </span><span class="si">%s</span><span class="s2">. Error was: </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
 <a id="__codelineno-0-149" name="__codelineno-0-149"></a>                <span class="nb">repr</span><span class="p">(</span><span class="n">item</span><span class="p">),</span>
 <a id="__codelineno-0-150" name="__codelineno-0-150"></a>                <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a>                <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
@@ -2826,7 +2826,7 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-154" name="__codelineno-0-154"></a>            <span class="k">return</span> <span class="n">item</span>
 <a id="__codelineno-0-155" name="__codelineno-0-155"></a>
 <a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">redact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Redact sensitive information from the given input data.</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="w">        </span><span class="sd">"""Redact sensitive information from the given input data.</span>
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="sd">        Processes the provided item and optionally uses the name for context</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">        during redaction to securely obfuscate sensitive fields.</span>
@@ -2837,7 +2837,7 @@ inherits the global Rich configuration.</p>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">            The redacted version of the input data.</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">        """</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redact</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2914,16 +2914,16 @@ inherits the global Rich configuration.</p>
 <span class="normal"><a href="#__codelineno-0-60">60</a></span>
 <span class="normal"><a href="#__codelineno-0-61">61</a></span>
 <span class="normal"><a href="#__codelineno-0-62">62</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sensitive_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the masker, merging sensitive_fields into DEFAULT_FIELDS.</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">"""Initialize the masker, merging sensitive_fields into DEFAULT_FIELDS.</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        sensitive_fields: Additional field names to mask on top of DEFAULT_FIELDS.</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">                          None and [] are equivalent — only DEFAULT_FIELDS are used.</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">    """</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="n">all_fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_FIELDS</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">sensitive_fields</span> <span class="ow">or</span> <span class="p">[])</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_fields</span><span class="p">))</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;\b(</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">"|"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_fields</span><span class="p">))</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"\b(</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">)\b"</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3040,7 +3040,7 @@ containing sensitive data.</p>
 <span class="normal"><a href="#__codelineno-0-88">88</a></span>
 <span class="normal"><a href="#__codelineno-0-89">89</a></span>
 <span class="normal"><a href="#__codelineno-0-90">90</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter a log record by redacting sensitive values.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">    </span><span class="sd">"""Filter a log record by redacting sensitive values.</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    Checks whether the record was already processed to avoid duplicate</span>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    redaction. If not processed, applies redaction to all record fields</span>
@@ -3052,7 +3052,7 @@ containing sensitive data.</p>
 <a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">        True if the record was successfully filtered or already processed,</span>
 <a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">        False if no regex is configured.</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">    """</span>
 <a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="n">record_dict</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="vm">__dict__</span>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a>
 <a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ALREADY_FILTERED_FLAG</span> <span class="ow">in</span> <span class="n">record_dict</span><span class="p">:</span>
@@ -3174,7 +3174,7 @@ during redaction to securely obfuscate sensitive fields.</p>
 <span class="normal"><a href="#__codelineno-0-167">167</a></span>
 <span class="normal"><a href="#__codelineno-0-168">168</a></span>
 <span class="normal"><a href="#__codelineno-0-169">169</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-156" name="__codelineno-0-156"></a><span class="k">def</span><span class="w"> </span><span class="nf">redact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Redact sensitive information from the given input data.</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="w">    </span><span class="sd">"""Redact sensitive information from the given input data.</span>
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="sd">    Processes the provided item and optionally uses the name for context</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    during redaction to securely obfuscate sensitive fields.</span>
@@ -3185,7 +3185,7 @@ during redaction to securely obfuscate sensitive fields.</p>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">        The redacted version of the input data.</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    """</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_redact</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3268,26 +3268,26 @@ while preserving a click-extra's colorization system.</p>
 <span class="normal"><a href="#__codelineno-0-43">43</a></span>
 <span class="normal"><a href="#__codelineno-0-44">44</a></span>
 <span class="normal"><a href="#__codelineno-0-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">RichExtraFormatter</span><span class="p">(</span><span class="n">ExtraFormatter</span><span class="p">):</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Enhanced ExtraFormatter with Rich text capabilities and TRACE level support.</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">    </span><span class="sd">"""Enhanced ExtraFormatter with Rich text capabilities and TRACE level support.</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="sd">    Extends click-extra&#39;s ExtraFormatter to support Rich markup and custom TRACE level</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="sd">    while preserving a click-extra&#39;s colorization system.</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="sd">    Extends click-extra's ExtraFormatter to support Rich markup and custom TRACE level</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="sd">    while preserving a click-extra's colorization system.</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    """</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">formatMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Enhanced formatting with Rich support and TRACE level.</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">        </span><span class="sd">"""Enhanced formatting with Rich support and TRACE level.</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">        TRACE records are styled directly because click-extra&#39;s theme has no</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">        TRACE entry; all other levels delegate to the parent&#39;s colorization system.</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">        TRACE records are styled directly because click-extra's theme has no</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">        TRACE entry; all other levels delegate to the parent's colorization system.</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">            record: LogRecord to format.</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27"></a>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="sd">            Formatted message string.</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">        """</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31"></a>        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">==</span> <span class="n">TRACE</span><span class="p">:</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>            <span class="n">record</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="n">style</span><span class="p">(</span><span class="s2">&quot;TRACE&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>            <span class="n">record</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="n">style</span><span class="p">(</span><span class="s2">"TRACE"</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33"></a>        <span class="k">else</span><span class="p">:</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a>            <span class="n">level</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">levelname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a>            <span class="n">level_style</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">get_default_theme</span><span class="p">(),</span> <span class="n">level</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -3296,7 +3296,7 @@ while preserving a click-extra's colorization system.</p>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="n">message</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">formatMessage</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;rich&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">record</span><span class="o">.</span><span class="n">rich</span><span class="p">:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">"rich"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">record</span><span class="o">.</span><span class="n">rich</span><span class="p">:</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>            <span class="n">rich_text</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">())</span>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a>            <span class="n">record</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">rich_text</span><span class="o">.</span><span class="n">markup</span>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a>
@@ -3416,19 +3416,19 @@ TRACE entry; all other levels delegate to the parent's colorization system.</p>
 <span class="normal"><a href="#__codelineno-0-43">43</a></span>
 <span class="normal"><a href="#__codelineno-0-44">44</a></span>
 <span class="normal"><a href="#__codelineno-0-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">def</span><span class="w"> </span><span class="nf">formatMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Enhanced formatting with Rich support and TRACE level.</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">    </span><span class="sd">"""Enhanced formatting with Rich support and TRACE level.</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    TRACE records are styled directly because click-extra&#39;s theme has no</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">    TRACE entry; all other levels delegate to the parent&#39;s colorization system.</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    TRACE records are styled directly because click-extra's theme has no</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">    TRACE entry; all other levels delegate to the parent's colorization system.</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        record: LogRecord to format.</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27"></a>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="sd">        Formatted message string.</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">    """</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">==</span> <span class="n">TRACE</span><span class="p">:</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="n">record</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="n">style</span><span class="p">(</span><span class="s2">&quot;TRACE&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="n">record</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="n">style</span><span class="p">(</span><span class="s2">"TRACE"</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="k">else</span><span class="p">:</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a>        <span class="n">level</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">levelname</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a>        <span class="n">level_style</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">get_default_theme</span><span class="p">(),</span> <span class="n">level</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -3437,7 +3437,7 @@ TRACE entry; all other levels delegate to the parent's colorization system.</p>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">message</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">formatMessage</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;rich&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">record</span><span class="o">.</span><span class="n">rich</span><span class="p">:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">"rich"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">record</span><span class="o">.</span><span class="n">rich</span><span class="p">:</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>        <span class="n">rich_text</span> <span class="o">=</span> <span class="n">Text</span><span class="o">.</span><span class="n">from_markup</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">())</span>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a>        <span class="n">record</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">rich_text</span><span class="o">.</span><span class="n">markup</span>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a>
@@ -3544,12 +3544,12 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span>
 <span class="normal"><a href="#__codelineno-0-71">71</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="k">class</span><span class="w"> </span><span class="nc">RichExtraStreamHandler</span><span class="p">(</span><span class="n">ExtraStreamHandler</span><span class="p">):</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Enhanced ExtraStreamHandler with Rich support and built-in security filtering.</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">    </span><span class="sd">"""Enhanced ExtraStreamHandler with Rich support and built-in security filtering.</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">    Extends click-extra&#39;s ExtraStreamHandler to use Rich for beautiful logging</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">    Extends click-extra's ExtraStreamHandler to use Rich for beautiful logging</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="sd">    while maintaining compatibility with click.echo() and color support.</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="sd">    Automatically includes SecretsMasker for sensitive data protection.</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="sd">    """</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="bp">self</span><span class="p">,</span>
@@ -3559,7 +3559,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="n">sensitive_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Rich Extra Stream Handler.</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">        </span><span class="sd">"""Initialize the Rich Extra Stream Handler.</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32"></a>
 <a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">            stream: Output stream (defaults to sys.stderr).</span>
@@ -3568,7 +3568,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">            sensitive_fields: Additional field names to mask on top of the defaults.</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">                              Merged into SecretsMasker.DEFAULT_FIELDS — does not replace them.</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">            **kwargs: Additional keyword arguments passed to RichHandler.</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        """</span>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stream</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">rich_console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span>
@@ -3586,11 +3586,11 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="n">SecretsMasker</span><span class="p">(</span><span class="n">sensitive_fields</span><span class="o">=</span><span class="n">sensitive_fields</span><span class="p">))</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Use Rich handler for enhanced output while maintaining click-extra compatibility.</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">        </span><span class="sd">"""Use Rich handler for enhanced output while maintaining click-extra compatibility.</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">            record: LogRecord to emit.</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">        """</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="c1"># noinspection PyBroadException</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>            <span class="c1"># Use Rich handlers emit method for better formatting</span>
@@ -3598,7 +3598,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="k">except</span> <span class="ne">RecursionError</span><span class="p">:</span>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="k">raise</span>
 <a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="c1"># Fallback to parent&#39;s behavior</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="c1"># Fallback to parent's behavior</span>
 <a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3768,7 +3768,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">sensitive_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the Rich Extra Stream Handler.</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">    </span><span class="sd">"""Initialize the Rich Extra Stream Handler.</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32"></a>
 <a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">        stream: Output stream (defaults to sys.stderr).</span>
@@ -3777,7 +3777,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">        sensitive_fields: Additional field names to mask on top of the defaults.</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">                          Merged into SecretsMasker.DEFAULT_FIELDS — does not replace them.</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        **kwargs: Additional keyword arguments passed to RichHandler.</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    """</span>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stream</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">rich_console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span>
@@ -3861,11 +3861,11 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span>
 <span class="normal"><a href="#__codelineno-0-71">71</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Use Rich handler for enhanced output while maintaining click-extra compatibility.</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">    </span><span class="sd">"""Use Rich handler for enhanced output while maintaining click-extra compatibility.</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">        record: LogRecord to emit.</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    """</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="c1"># noinspection PyBroadException</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="c1"># Use Rich handlers emit method for better formatting</span>
@@ -3873,7 +3873,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="k">except</span> <span class="ne">RecursionError</span><span class="p">:</span>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="k">raise</span>
 <a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="c1"># Fallback to parent&#39;s behavior</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="c1"># Fallback to parent's behavior</span>
 <a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3916,7 +3916,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
 
 
 <h2 id="pyclifer.PYCLIFER_LOG_LEVELS" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">pyclifer</span><span class="o">.</span><span class="n">PYCLIFER_LOG_LEVELS</span> <span class="o">=</span> <span class="p">{</span><span class="kc">None</span><span class="p">:</span> <span class="n">LOG_LEVELS</span><span class="p">,</span> <span class="s1">&#39;TRACE&#39;</span><span class="p">:</span> <span class="n">TRACE</span><span class="p">}</span></code>
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">pyclifer</span><span class="o">.</span><span class="n">PYCLIFER_LOG_LEVELS</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">LOG_LEVELS</span><span class="p">,</span> <span class="s1">'TRACE'</span><span class="p">:</span> <span class="n">TRACE</span><span class="p">}</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
@@ -4044,7 +4044,7 @@ Automatically includes SecretsMasker for sensitive data protection.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

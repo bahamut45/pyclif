@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/favicon-96x96.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1890,24 +1890,24 @@ connections, API clients, config, …). Commands receive an instance of the subc
 <span class="normal"><a href="#__codelineno-0-32">32</a></span>
 <span class="normal"><a href="#__codelineno-0-33">33</a></span>
 <span class="normal"><a href="#__codelineno-0-34">34</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="k">class</span><span class="w"> </span><span class="nc">BaseContext</span><span class="p">(</span><span class="n">RichHelpersMixin</span><span class="p">,</span> <span class="n">OutputFormatMixin</span><span class="p">):</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BaseContext class initializes state and combines output and rich helpers for CLI commands.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">    </span><span class="sd">"""BaseContext class initializes state and combines output and rich helpers for CLI commands."""</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the context with a console and detect TTY mode.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">        </span><span class="sd">"""Initialize the context with a console and detect TTY mode."""</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">is_atty</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">output_format</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23"></a>
 <a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">click</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">Context</span><span class="p">:</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the current Click context.</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="w">        </span><span class="sd">"""Return the current Click context.</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27"></a>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">        Provides access to the full Click context (meta, params, info_name, etc.)</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="sd">        from any BaseContext subclass without importing Click in command files.</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30"></a>
 <a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">            The active Click context for the running command.</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">        """</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a>        <span class="k">return</span> <span class="n">click_extra</span><span class="o">.</span><span class="n">get_current_context</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1993,7 +1993,7 @@ from any BaseContext subclass without importing Click in command files.</p>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
 <span class="normal"><a href="#__codelineno-0-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the context with a console and detect TTY mode.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">"""Initialize the context with a console and detect TTY mode."""</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">is_atty</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">output_format</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2021,7 +2021,7 @@ console and TTY detection from <code>BaseContext</code>.</p>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyContext</span><span class="p">(</span><span class="n">BaseContext</span><span class="p">):</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Project context carrying the active Database connection.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="sd">"""Project context carrying the active Database connection."""</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -2029,7 +2029,7 @@ console and TTY detection from <code>BaseContext</code>.</p>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">db</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Database</span><span class="p">:</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the lazily initialized Database instance.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="sd">"""Return the lazily initialized Database instance."""</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span>
@@ -2050,7 +2050,7 @@ on the context stack — commands never need to check for <code>None</code>.</p>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nd">@app_group</span><span class="p">(</span><span class="n">handle_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nd">@pass_context</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">cli</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;My CLI application.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="sd">"""My CLI application."""</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyContext</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="3-use-in-commands">3. Use in commands<a class="headerlink" href="#3-use-in-commands" title="Permanent link">&para;</a></h3>
@@ -2064,8 +2064,8 @@ on the context stack — commands never need to check for <code>None</code>.</p>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nd">@command</span><span class="p">()</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nd">@pass_my_context</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">list_articles</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">MyContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List all articles.&quot;&quot;&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">&quot;list_articles&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="sd">"""List all articles."""</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">return</span> <span class="n">ArticleInterface</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span><span class="o">.</span><span class="n">respond</span><span class="p">(</span><span class="s2">"list_articles"</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="rich-helpers">Rich helpers<a class="headerlink" href="#rich-helpers" title="Permanent link">&para;</a></h2>
@@ -2073,26 +2073,26 @@ on the context stack — commands never need to check for <code>None</code>.</p>
 <h3 id="rich_panel">rich_panel<a class="headerlink" href="#rich_panel" title="Permanent link">&para;</a></h3>
 <p>Creates a Rich <code>Panel</code>. Pass <code>console_print=True</code> to print it immediately, or use the return
 value to embed it in a layout.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">ctx</span><span class="o">.</span><span class="n">rich_panel</span><span class="p">(</span><span class="s2">&quot;Operation complete.&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Success&quot;</span><span class="p">,</span> <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">console_print</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">ctx</span><span class="o">.</span><span class="n">rich_panel</span><span class="p">(</span><span class="s2">"Operation complete."</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Success"</span><span class="p">,</span> <span class="n">border_style</span><span class="o">=</span><span class="s2">"green"</span><span class="p">,</span> <span class="n">console_print</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="display_rule">display_rule<a class="headerlink" href="#display_rule" title="Permanent link">&para;</a></h3>
 <p>Prints a horizontal rule — useful to visually separate output sections.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">ctx</span><span class="o">.</span><span class="n">display_rule</span><span class="p">(</span><span class="s2">&quot;Results&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">ctx</span><span class="o">.</span><span class="n">display_rule</span><span class="p">(</span><span class="s2">"Results"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="show_status">show_status<a class="headerlink" href="#show_status" title="Permanent link">&para;</a></h3>
 <p>Returns a Rich <code>Status</code> context manager for long-running operations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">with</span> <span class="n">ctx</span><span class="o">.</span><span class="n">show_status</span><span class="p">(</span><span class="s2">&quot;Fetching articles…&quot;</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">with</span> <span class="n">ctx</span><span class="o">.</span><span class="n">show_status</span><span class="p">(</span><span class="s2">"Fetching articles…"</span><span class="p">):</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">articles</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">fetch_all</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="ask_user">ask_user<a class="headerlink" href="#ask_user" title="Permanent link">&para;</a></h3>
 <p>Prompts the user for text input.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">name</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_user</span><span class="p">(</span><span class="s2">&quot;Enter your name&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;anonymous&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">token</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_user</span><span class="p">(</span><span class="s2">&quot;API token&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">role</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_user</span><span class="p">(</span><span class="s2">&quot;Role&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;editor&quot;</span><span class="p">,</span> <span class="s2">&quot;viewer&quot;</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">name</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_user</span><span class="p">(</span><span class="s2">"Enter your name"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"anonymous"</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">token</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_user</span><span class="p">(</span><span class="s2">"API token"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">role</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_user</span><span class="p">(</span><span class="s2">"Role"</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">"admin"</span><span class="p">,</span> <span class="s2">"editor"</span><span class="p">,</span> <span class="s2">"viewer"</span><span class="p">])</span>
 </code></pre></div>
 <h3 id="ask_confirmation">ask_confirmation<a class="headerlink" href="#ask_confirmation" title="Permanent link">&para;</a></h3>
 <p>Asks a yes/no question. Returns <code>True</code> on confirmation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_confirmation</span><span class="p">(</span><span class="s2">&quot;Delete all records?&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ask_confirmation</span><span class="p">(</span><span class="s2">"Delete all records?"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">db</span><span class="o">.</span><span class="n">delete_all</span><span class="p">()</span>
 </code></pre></div>
 <hr />
@@ -2286,9 +2286,9 @@ context for rich output, or materialized first for all other formats.</p>
 <span class="normal"><a href="#__codelineno-0-167">167</a></span>
 <span class="normal"><a href="#__codelineno-0-168">168</a></span>
 <span class="normal"><a href="#__codelineno-0-169">169</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="k">def</span><span class="w"> </span><span class="nf">print_result_based_on_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-115" name="__codelineno-0-115"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print a Response using its renderer.</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115"></a><span class="w">    </span><span class="sd">"""Print a Response using its renderer.</span>
 <a id="__codelineno-0-116" name="__codelineno-0-116"></a>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">    Streaming responses (data[&quot;stream&quot;] present) are handled via the Live</span>
+<a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">    Streaming responses (data["stream"] present) are handled via the Live</span>
 <a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">    context for rich output, or materialized first for all other formats.</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">    Args:</span>
@@ -2297,26 +2297,26 @@ context for rich output, or materialized first for all other formats.</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="sd">        RuntimeError: When result.renderer is None — a programming error.</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">    """</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="n">renderer</span><span class="p">:</span> <span class="n">BaseRenderer</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">renderer</span> <span class="ow">or</span> <span class="n">BaseRenderer</span><span class="p">()</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="n">result</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">renderer</span>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="n">opts</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">options</span> <span class="ow">or</span> <span class="p">{}</span>
-<a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;output_format&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"output_format"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>
-<a id="__codelineno-0-133" name="__codelineno-0-133"></a>    <span class="k">if</span> <span class="s2">&quot;stream&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-<a id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;rich&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a>    <span class="k">if</span> <span class="s2">"stream"</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">"rich"</span><span class="p">:</span>
 <a id="__codelineno-0-135" name="__codelineno-0-135"></a>            <span class="n">renderable</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">rich_setup</span><span class="p">()</span>
 <a id="__codelineno-0-136" name="__codelineno-0-136"></a>            <span class="n">items</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
 <a id="__codelineno-0-137" name="__codelineno-0-137"></a>            <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">renderable</span><span class="p">,</span> <span class="n">console</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="p">):</span>  <span class="c1"># type: ignore[attr-defined]</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;stream&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"stream"</span><span class="p">):</span>
 <a id="__codelineno-0-139" name="__codelineno-0-139"></a>                    <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <a id="__codelineno-0-140" name="__codelineno-0-140"></a>                    <span class="n">renderer</span><span class="o">.</span><span class="n">rich_on_item</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>            <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>            <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">"results"</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span>
 <a id="__codelineno-0-142" name="__codelineno-0-142"></a>            <span class="n">renderer</span><span class="o">.</span><span class="n">rich_summary</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
 <a id="__codelineno-0-143" name="__codelineno-0-143"></a>            <span class="k">return</span>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_materialise_stream</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<a id="__codelineno-0-145" name="__codelineno-0-145"></a>    <span class="n">filter_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;filter_value&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145"></a>    <span class="n">filter_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">opts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"filter_value"</span><span class="p">)</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a>
 <a id="__codelineno-0-147" name="__codelineno-0-147"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-148" name="__codelineno-0-148"></a>        <span class="n">serialized</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
@@ -2333,14 +2333,14 @@ context for rich output, or materialized first for all other formats.</p>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_print_yaml</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">dispatch</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="n">_json</span><span class="p">,</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a>        <span class="s2">&quot;yaml&quot;</span><span class="p">:</span> <span class="n">_yaml</span><span class="p">,</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a>        <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">result</span><span class="p">)),</span>  <span class="c1"># type: ignore[attr-defined]</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a>        <span class="s2">&quot;rich&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">renderer</span><span class="o">.</span><span class="n">rich</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="p">),</span>  <span class="c1"># type: ignore[attr-defined]</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="s2">&quot;raw&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_print_raw_dict</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">raw</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="n">filter_key</span><span class="p">),</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a>        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">result</span><span class="p">)),</span>  <span class="c1"># type: ignore[attr-defined]</span>
+<a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="s2">"json"</span><span class="p">:</span> <span class="n">_json</span><span class="p">,</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a>        <span class="s2">"yaml"</span><span class="p">:</span> <span class="n">_yaml</span><span class="p">,</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a>        <span class="s2">"table"</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">result</span><span class="p">)),</span>  <span class="c1"># type: ignore[attr-defined]</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a>        <span class="s2">"rich"</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">renderer</span><span class="o">.</span><span class="n">rich</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="p">),</span>  <span class="c1"># type: ignore[attr-defined]</span>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="s2">"raw"</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_print_raw_dict</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">raw</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="n">filter_key</span><span class="p">),</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a>        <span class="s2">"text"</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">result</span><span class="p">)),</span>  <span class="c1"># type: ignore[attr-defined]</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a>    <span class="p">}</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="n">dispatch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">output_format</span> <span class="ow">or</span> <span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">])()</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="n">dispatch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">output_format</span> <span class="ow">or</span> <span class="s2">"table"</span><span class="p">,</span> <span class="n">dispatch</span><span class="p">[</span><span class="s2">"table"</span><span class="p">])()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2460,7 +2460,7 @@ context for rich output, or materialized first for all other formats.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
